@@ -1,4 +1,4 @@
-package com.tipi.conversations.domains;
+package com.tipi.conversations.domains.users;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +14,10 @@ public class User {
 
 	public User(String userId) {
 		this.userId = userId;
+	}
+
+	public String getUserId() {
+		return userId;
 	}
 
 	public void addFriend(User newFriend) {
@@ -39,4 +43,5 @@ public class User {
 	public int hashCode() {
 		return Objects.hash(userId);
 	}
+
 }

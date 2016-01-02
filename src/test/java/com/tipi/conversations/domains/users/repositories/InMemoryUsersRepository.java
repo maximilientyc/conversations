@@ -1,9 +1,10 @@
-package com.tipi.conversations.domains.com.tipi.conversations.domains.repositories;
+package com.tipi.conversations.domains.users.repositories;
 
-import com.tipi.conversations.domains.User;
+import com.tipi.conversations.domains.users.User;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -26,6 +27,16 @@ public class InMemoryUsersRepository implements CrudRepository<User, String> {
 
 	@Override
 	public User findOne(String userId) {
+		if (userId == null) {
+			throw new IllegalArgumentException("userId parameter should not be null.");
+		}
+		Iterator<User> iterator = findAll().iterator();
+		while (iterator.hasNext()) {
+			User currentUser = iterator.next();
+			if (currentUser.getUserId().equals(userId)) {
+				return currentUser;
+			}
+		}
 		return null;
 	}
 

@@ -1,6 +1,6 @@
-package com.tipi.conversations.domains;
+package com.tipi.conversations.domains.users;
 
-import com.tipi.conversations.domains.com.tipi.conversations.domains.repositories.InMemoryUsersRepository;
+import com.tipi.conversations.domains.users.repositories.InMemoryUsersRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.data.repository.CrudRepository;
@@ -16,12 +16,12 @@ public class UsersTest {
 	private CrudRepository usersRepository;
 
 	@Before
-	public void prepareUsersRepository() {
+	public void prepareUsers() {
 		users = new Users(new InMemoryUsersRepository());
 	}
 
 	@Test
-	public void should_return_one_user() {
+	public void should_contain_one_user() {
 		// given
 		users.addUser(new User("0001"));
 
@@ -33,7 +33,7 @@ public class UsersTest {
 	}
 
 	@Test
-	public void should_return_two_users() {
+	public void should_cotnain_two_users() {
 		// given
 		users.addUser(new User("0001"));
 		users.addUser(new User("0002"));
@@ -49,11 +49,15 @@ public class UsersTest {
 		// given
 		User firstUser = new User("0001");
 		User secondUser = new User("0002");
+		users.addUser(firstUser);
+		users.addUser(secondUser);
 
 		// when
 		firstUser.addFriend(secondUser);
 
 		// then
+		firstUser = users.getUserByUserId("0001");
+		secondUser = users.getUserByUserId("0002");
 		assertThat(firstUser.isFriendWith(secondUser)).isTrue();
 		assertThat(secondUser.isFriendWith(firstUser)).isTrue();
 	}
@@ -63,10 +67,14 @@ public class UsersTest {
 		// given
 		User firstUser = new User("0001");
 		User secondUser = new User("0002");
+		users.addUser(firstUser);
+		users.addUser(secondUser);
 
 		// when
 
 		// then
+		firstUser = users.getUserByUserId("0001");
+		secondUser = users.getUserByUserId("0002");
 		assertThat(firstUser.isFriendWith(secondUser)).isFalse();
 		assertThat(secondUser.isFriendWith(firstUser)).isFalse();
 	}

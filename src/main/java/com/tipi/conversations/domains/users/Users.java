@@ -1,4 +1,4 @@
-package com.tipi.conversations.domains;
+package com.tipi.conversations.domains.users;
 
 import org.springframework.data.repository.CrudRepository;
 
@@ -15,6 +15,10 @@ public class Users {
 
 	public User addUser(User user) {
 		return usersRepository.save(user);
+	}
+
+	public User getUserByUserId(String userId) {
+		return usersRepository.findOne(userId);
 	}
 
 	public long getTotalUserCount() {
