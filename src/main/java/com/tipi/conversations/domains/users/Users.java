@@ -13,11 +13,11 @@ public class Users {
 		this.usersRepository = usersRepository;
 	}
 
-	public User addUser(User user) {
+	public User add(User user) {
 		return usersRepository.save(user);
 	}
 
-	public User getUserByUserId(String userId) {
+	public User getByUserId(String userId) {
 		return usersRepository.findOne(userId);
 	}
 

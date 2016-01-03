@@ -23,7 +23,7 @@ public class UsersTest {
 	@Test
 	public void should_contain_one_user() {
 		// given
-		users.addUser(new User("0001"));
+		users.add(new User("0001"));
 
 		// when
 		long userCount = users.getTotalUserCount();
@@ -35,8 +35,8 @@ public class UsersTest {
 	@Test
 	public void should_cotnain_two_users() {
 		// given
-		users.addUser(new User("0001"));
-		users.addUser(new User("0002"));
+		users.add(new User("0001"));
+		users.add(new User("0002"));
 
 		long userCount = users.getTotalUserCount();
 
@@ -48,16 +48,16 @@ public class UsersTest {
 	public void should_be_friends() {
 		// given
 		User firstUser = new User("0001");
+		users.add(firstUser);
 		User secondUser = new User("0002");
-		users.addUser(firstUser);
-		users.addUser(secondUser);
+		users.add(secondUser);
 
 		// when
 		firstUser.addFriend(secondUser);
 
 		// then
-		firstUser = users.getUserByUserId("0001");
-		secondUser = users.getUserByUserId("0002");
+		firstUser = users.getByUserId("0001");
+		secondUser = users.getByUserId("0002");
 		assertThat(firstUser.isFriendWith(secondUser)).isTrue();
 		assertThat(secondUser.isFriendWith(firstUser)).isTrue();
 	}
@@ -66,15 +66,15 @@ public class UsersTest {
 	public void should_not_be_friends() {
 		// given
 		User firstUser = new User("0001");
+		users.add(firstUser);
 		User secondUser = new User("0002");
-		users.addUser(firstUser);
-		users.addUser(secondUser);
+		users.add(secondUser);
 
 		// when
 
 		// then
-		firstUser = users.getUserByUserId("0001");
-		secondUser = users.getUserByUserId("0002");
+		firstUser = users.getByUserId("0001");
+		secondUser = users.getByUserId("0002");
 		assertThat(firstUser.isFriendWith(secondUser)).isFalse();
 		assertThat(secondUser.isFriendWith(firstUser)).isFalse();
 	}
