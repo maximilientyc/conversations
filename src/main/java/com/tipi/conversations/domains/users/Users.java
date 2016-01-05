@@ -7,9 +7,9 @@ import org.springframework.data.repository.CrudRepository;
  */
 public class Users {
 
-	private CrudRepository<User, String> usersRepository;
+	private UsersRepository usersRepository;
 
-	public Users(CrudRepository usersRepository) {
+	public Users(UsersRepository usersRepository) {
 		this.usersRepository = usersRepository;
 	}
 

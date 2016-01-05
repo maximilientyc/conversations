@@ -2,6 +2,7 @@ package com.tipi.conversations.domains.users;
 
 import com.tipi.conversations.domains.users.repositories.InMemoryUsersRepository;
 import com.tipi.conversations.infrastructure.sequences.Sequences;
+import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.data.repository.CrudRepository;
@@ -36,7 +37,7 @@ public class UsersTest {
 		long userCount = users.getTotalUserCount();
 
 		// then
-		assertThat(userCount).isEqualTo(1);
+		Assertions.assertThat(userCount).isEqualTo(1);
 	}
 
 	@Test
@@ -48,7 +49,7 @@ public class UsersTest {
 		long userCount = users.getTotalUserCount();
 
 		// then
-		assertThat(userCount).isEqualTo(2);
+		Assertions.assertThat(userCount).isEqualTo(2);
 	}
 
 	@Test
@@ -65,8 +66,8 @@ public class UsersTest {
 		// then
 		firstUser = users.getByUserId(firstUser.getUserId());
 		secondUser = users.getByUserId(secondUser.getUserId());
-		assertThat(firstUser.isFriendWith(secondUser)).isTrue();
-		assertThat(secondUser.isFriendWith(firstUser)).isTrue();
+		Assertions.assertThat(firstUser.isFriendWith(secondUser)).isTrue();
+		Assertions.assertThat(secondUser.isFriendWith(firstUser)).isTrue();
 	}
 
 	@Test
@@ -82,8 +83,8 @@ public class UsersTest {
 		// then
 		firstUser = users.getByUserId(firstUser.getUserId());
 		secondUser = users.getByUserId(secondUser.getUserId());
-		assertThat(firstUser.isFriendWith(secondUser)).isFalse();
-		assertThat(secondUser.isFriendWith(firstUser)).isFalse();
+		Assertions.assertThat(firstUser.isFriendWith(secondUser)).isFalse();
+		Assertions.assertThat(secondUser.isFriendWith(firstUser)).isFalse();
 	}
 
 }

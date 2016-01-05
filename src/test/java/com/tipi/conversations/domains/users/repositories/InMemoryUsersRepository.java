@@ -1,7 +1,7 @@
 package com.tipi.conversations.domains.users.repositories;
 
 import com.tipi.conversations.domains.users.User;
-import org.springframework.data.repository.CrudRepository;
+import com.tipi.conversations.domains.users.UsersRepository;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * Created by Maximilien on 30/12/2015.
  */
-public class InMemoryUsersRepository implements CrudRepository<User, String> {
+public class InMemoryUsersRepository implements UsersRepository {
 
 	private List<User> users = new ArrayList<>();
 
@@ -18,11 +18,6 @@ public class InMemoryUsersRepository implements CrudRepository<User, String> {
 	public User save(User user) {
 		users.add(user);
 		return user;
-	}
-
-	@Override
-	public <S extends User> Iterable<S> save(Iterable<S> iterable) {
-		return null;
 	}
 
 	@Override
@@ -41,18 +36,8 @@ public class InMemoryUsersRepository implements CrudRepository<User, String> {
 	}
 
 	@Override
-	public boolean exists(String userId) {
-		return false;
-	}
-
-	@Override
 	public Iterable<User> findAll() {
 		return users;
-	}
-
-	@Override
-	public Iterable<User> findAll(Iterable<String> stringIterable) {
-		return null;
 	}
 
 	@Override
@@ -60,23 +45,4 @@ public class InMemoryUsersRepository implements CrudRepository<User, String> {
 		return users.size();
 	}
 
-	@Override
-	public void delete(String userId) {
-
-	}
-
-	@Override
-	public void delete(User user) {
-		users.remove(user);
-	}
-
-	@Override
-	public void delete(Iterable<? extends User> userIterable) {
-
-	}
-
-	@Override
-	public void deleteAll() {
-		users.clear();
-	}
 }
