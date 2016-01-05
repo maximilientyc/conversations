@@ -39,8 +39,6 @@ public class ConversationsTest {
 	@Test
 	public void should_contain_two_participants() {
 		// given
-		UUID uuid = java.util.UUID.randomUUID();
-		System.out.println(uuid.toString());
 		User firstParticipant = new User("0001");
 		users.add(firstParticipant);
 		User secondParticipant = new User("0002");
