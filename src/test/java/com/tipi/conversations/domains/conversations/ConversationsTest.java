@@ -4,6 +4,7 @@ import com.tipi.conversations.domains.conversations.repositories.InMemoryConvers
 import com.tipi.conversations.domains.users.User;
 import com.tipi.conversations.domains.users.Users;
 import com.tipi.conversations.domains.users.repositories.InMemoryUsersRepository;
+import com.tipi.conversations.infrastructure.sequences.Sequences;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -20,8 +21,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class ConversationsTest {
 
 	private Users users;
-	private CrudRepository usersRepository;
 	private Conversations conversations;
+	private Sequences sequences;
+	private CrudRepository usersRepository;
 
 	@Rule
 	public ExpectedException expectedException = ExpectedException.none();
@@ -36,12 +38,17 @@ public class ConversationsTest {
 		conversations = new Conversations(new InMemoryConversationsRepository());
 	}
 
+	@Before
+	public void prepareSequences() {
+		sequences = new Sequences();
+	}
+
 	@Test
 	public void should_contain_two_participants() {
 		// given
-		User firstParticipant = new User("0001");
+		User firstParticipant = new User(sequences.getNextUserId());
 		users.add(firstParticipant);
-		User secondParticipant = new User("0002");
+		User secondParticipant = new User(sequences.getNextUserId());
 		users.add(secondParticipant);
 
 		// when
@@ -58,7 +65,7 @@ public class ConversationsTest {
 	@Test
 	public void should_return_an_error_when_conversation_has_only_one_participant() {
 		// given
-		User firstParticipant = new User("0001");
+		User firstParticipant = new User(sequences.getNextUserId());
 		users.add(firstParticipant);
 		expectedException.expect(IllegalArgumentException.class);
 		expectedException.expectMessage("Cannot add conversation, reason: not enough participants.");
