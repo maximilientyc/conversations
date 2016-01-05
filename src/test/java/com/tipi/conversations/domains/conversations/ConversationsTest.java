@@ -52,13 +52,13 @@ public class ConversationsTest {
 		users.add(secondParticipant);
 
 		// when
-		Conversation conversation = new Conversation("0001");
+		Conversation conversation = new Conversation(sequences.getNextConversationId());
 		conversation.addParticipant(firstParticipant);
 		conversation.addParticipant(secondParticipant);
 		conversations.add(conversation);
 
 		// then
-		Conversation storedConversation = conversations.getByConversationId("0001");
+		Conversation storedConversation = conversations.getByConversationId(conversation.getConversationId());
 		assertThat(storedConversation.getParticipants()).hasSize(2);
 	}
 
@@ -71,7 +71,7 @@ public class ConversationsTest {
 		expectedException.expectMessage("Cannot add conversation, reason: not enough participants.");
 
 		// when
-		Conversation conversation = new Conversation("0001");
+		Conversation conversation = new Conversation(sequences.getNextConversationId());
 		conversation.addParticipant(firstParticipant);
 		conversations.add(conversation);
 	}
