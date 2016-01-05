@@ -10,6 +10,8 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.springframework.data.repository.CrudRepository;
 
+import java.util.UUID;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
@@ -37,6 +39,8 @@ public class ConversationsTest {
 	@Test
 	public void should_contain_two_participants() {
 		// given
+		UUID uuid = java.util.UUID.randomUUID();
+		System.out.println(uuid.toString());
 		User firstParticipant = new User("0001");
 		users.add(firstParticipant);
 		User secondParticipant = new User("0002");
