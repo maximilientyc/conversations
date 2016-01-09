@@ -1,5 +1,7 @@
 package com.tipi.conversations.domain.model.conversations;
 
+import java.util.UUID;
+
 /**
  * Created by Maximilien on 03/01/2016.
  */
@@ -22,4 +24,7 @@ public class ConversationService {
 		return conversationRepository.findOne(conversationId);
 	}
 
+	public String getNextConversationId() {
+		return UUID.randomUUID().toString();
+	}
 }

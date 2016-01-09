@@ -15,15 +15,15 @@ public class Conversation {
 		this.conversationId = conversationId;
 	}
 
-	public void addParticipant(Participant participant) {
-		participants.add(participant);
-	}
-
 	public List<Participant> getParticipants() {
 		return participants;
 	}
 
 	public String getConversationId() {
 		return conversationId;
+	}
+
+	public void addParticipants(List<Participant> participants) {
+		this.participants.addAll(participants);
 	}
 }

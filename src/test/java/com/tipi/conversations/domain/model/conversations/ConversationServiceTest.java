@@ -1,11 +1,13 @@
 package com.tipi.conversations.domain.model.conversations;
 
 import com.tipi.conversations.domain.model.conversations.repositories.InMemoryConversationsRepository;
-import com.tipi.conversations.infrastructure.sequences.Sequences;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -15,7 +17,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class ConversationServiceTest {
 
 	private ConversationService conversationService;
-	private Sequences sequences;
+	private ConversationFactory conversationFactory;
 
 	@Rule
 	public ExpectedException expectedException = ExpectedException.none();
@@ -23,11 +25,7 @@ public class ConversationServiceTest {
 	@Before
 	public void prepareConversations() {
 		conversationService = new ConversationService(new InMemoryConversationsRepository());
-	}
-
-	@Before
-	public void prepareSequences() {
-		sequences = new Sequences();
+		conversationFactory = new ConversationFactory(conversationService);
 	}
 
 	@Test
@@ -35,11 +33,12 @@ public class ConversationServiceTest {
 		// given
 		Participant firstParticipant = new Participant();
 		Participant secondParticipant = new Participant();
+		List<Participant> participants = new ArrayList<>();
+		participants.add(firstParticipant);
+		participants.add(secondParticipant);
 
 		// when
-		Conversation conversation = new Conversation(sequences.getNextConversationId());
-		conversation.addParticipant(firstParticipant);
-		conversation.addParticipant(secondParticipant);
+		Conversation conversation = conversationFactory.createConversation(participants);
 		conversationService.add(conversation);
 
 		// then
@@ -51,12 +50,13 @@ public class ConversationServiceTest {
 	public void should_return_an_error_when_conversation_has_only_one_participant() {
 		// given
 		Participant firstParticipant = new Participant();
+		List<Participant> participants = new ArrayList<>();
+		participants.add(firstParticipant);
 		expectedException.expect(IllegalArgumentException.class);
 		expectedException.expectMessage("Cannot add conversation, reason: not enough participants.");
 
 		// when
-		Conversation conversation = new Conversation(sequences.getNextConversationId());
-		conversation.addParticipant(firstParticipant);
+		Conversation conversation = conversationFactory.createConversation(participants);
 		conversationService.add(conversation);
 	}
 
