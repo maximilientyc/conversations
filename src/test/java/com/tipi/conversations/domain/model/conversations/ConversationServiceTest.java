@@ -1,6 +1,6 @@
-package com.tipi.conversations.domains.conversations;
+package com.tipi.conversations.domain.model.conversations;
 
-import com.tipi.conversations.domains.conversations.repositories.InMemoryConversationsRepository;
+import com.tipi.conversations.domain.model.conversations.repositories.InMemoryConversationsRepository;
 import com.tipi.conversations.infrastructure.sequences.Sequences;
 import org.junit.Before;
 import org.junit.Rule;

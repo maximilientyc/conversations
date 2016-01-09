@@ -1,15 +1,13 @@
-package com.tipi.conversations.domains.conversations;
-
-import org.springframework.data.repository.CrudRepository;
+package com.tipi.conversations.domain.model.conversations;
 
 /**
  * Created by Maximilien on 03/01/2016.
  */
 public class ConversationService {
 
-	private CrudRepository<Conversation, String> conversationRepository;
+	private ConversationRepository conversationRepository;
 
-	public ConversationService(CrudRepository conversationRepository) {
+	public ConversationService(ConversationRepository conversationRepository) {
 		this.conversationRepository = conversationRepository;
 	}
 

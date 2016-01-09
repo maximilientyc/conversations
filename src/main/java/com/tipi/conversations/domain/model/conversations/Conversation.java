@@ -1,4 +1,4 @@
-package com.tipi.conversations.domains.conversations;
+package com.tipi.conversations.domain.model.conversations;
 
 import java.util.ArrayList;
 import java.util.List;
