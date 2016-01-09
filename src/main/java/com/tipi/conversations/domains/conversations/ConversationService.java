@@ -5,11 +5,11 @@ import org.springframework.data.repository.CrudRepository;
 /**
  * Created by Maximilien on 03/01/2016.
  */
-public class Conversations {
+public class ConversationService {
 
 	private CrudRepository<Conversation, String> conversationRepository;
 
-	public Conversations(CrudRepository conversationRepository) {
+	public ConversationService(CrudRepository conversationRepository) {
 		this.conversationRepository = conversationRepository;
 	}
 

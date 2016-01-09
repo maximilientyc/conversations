@@ -1,7 +1,6 @@
 package com.tipi.conversations.domains.conversations.repositories;
 
 import com.tipi.conversations.domains.conversations.Conversation;
-import com.tipi.conversations.domains.users.User;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.ArrayList;

@@ -1,9 +1,6 @@
 package com.tipi.conversations.domains.conversations;
 
-import com.tipi.conversations.domains.users.User;
-
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -12,17 +9,17 @@ import java.util.List;
 public class Conversation {
 
 	private final String conversationId;
-	private List<User> participants = new ArrayList<>();
+	private List<Participant> participants = new ArrayList<>();
 
 	public Conversation(String conversationId) {
 		this.conversationId = conversationId;
 	}
 
-	public void addParticipant(User participant) {
+	public void addParticipant(Participant participant) {
 		participants.add(participant);
 	}
 
-	public List<User> getParticipants() {
+	public List<Participant> getParticipants() {
 		return participants;
 	}
 
