@@ -13,10 +13,9 @@ public class ConversationFactory {
 		this.conversationService = conversationService;
 	}
 
-	public Conversation createConversation(List<Participant> participants) {
+	public Conversation createConversation() {
 		String conversationId = conversationService.getNextConversationId();
 		Conversation conversation = new Conversation(conversationId);
-		conversation.addParticipants(participants);
 		return conversation;
 	}
 

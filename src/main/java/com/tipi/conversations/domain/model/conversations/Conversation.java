@@ -23,7 +23,9 @@ public class Conversation {
 		return conversationId;
 	}
 
-	public void addParticipants(List<Participant> participants) {
-		this.participants.addAll(participants);
+	public Conversation addParticipant(Participant participant) {
+		this.participants.add(participant);
+		return this;
 	}
+
 }

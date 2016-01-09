@@ -6,9 +6,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
@@ -33,12 +30,11 @@ public class ConversationServiceTest {
 		// given
 		Participant firstParticipant = new Participant();
 		Participant secondParticipant = new Participant();
-		List<Participant> participants = new ArrayList<>();
-		participants.add(firstParticipant);
-		participants.add(secondParticipant);
 
 		// when
-		Conversation conversation = conversationFactory.createConversation(participants);
+		Conversation conversation = conversationFactory.createConversation()
+				.addParticipant(firstParticipant)
+				.addParticipant(secondParticipant);
 		conversationService.add(conversation);
 
 		// then
@@ -50,13 +46,12 @@ public class ConversationServiceTest {
 	public void should_return_an_error_when_conversation_has_only_one_participant() {
 		// given
 		Participant firstParticipant = new Participant();
-		List<Participant> participants = new ArrayList<>();
-		participants.add(firstParticipant);
 		expectedException.expect(IllegalArgumentException.class);
 		expectedException.expectMessage("Cannot add conversation, reason: not enough participants.");
 
 		// when
-		Conversation conversation = conversationFactory.createConversation(participants);
+		Conversation conversation = conversationFactory.createConversation()
+				.addParticipant(firstParticipant);
 		conversationService.add(conversation);
 	}
 
