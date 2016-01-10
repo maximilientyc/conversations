@@ -1,8 +1,5 @@
 package com.tipi.conversations.domain.model.conversations;
 
-import com.tipi.conversations.domain.model.conversations.Conversation;
-import com.tipi.conversations.domain.model.conversations.ConversationRepository;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -35,7 +32,7 @@ public class InMemoryConversationsRepository implements ConversationRepository {
 	}
 
 	@Override
-	public Iterable<Conversation> findAll() {
+	public List<Conversation> findAll() {
 		return conversations;
 	}
 
