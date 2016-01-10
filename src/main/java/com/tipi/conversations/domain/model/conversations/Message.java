@@ -21,4 +21,11 @@ public class Message {
 		return this;
 	}
 
+	public String getMessageId() {
+		return messageId;
+	}
+
+	public Date postedOn() {
+		return postedOn;
+	}
 }

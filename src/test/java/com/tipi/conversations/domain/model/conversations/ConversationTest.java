@@ -86,6 +86,29 @@ public class ConversationTest {
 	}
 
 	@Test
+	public void should_second_message_be_most_recent_than_first_message() throws InterruptedException {
+		// given
+		Participant firstParticipant = new Participant();
+		Participant secondParticipant = new Participant();
+		Conversation conversation = conversationFactory.createConversation()
+				.addParticipant(firstParticipant)
+				.addParticipant(secondParticipant);
+
+		// when
+		Message firstMessage = messageFactory.buildMessage().setContent("This is the first message content !");
+		conversation.postMessage(firstMessage);
+		conversationService.add(conversation);
+		Thread.sleep(1);
+		Message secondMessage = messageFactory.buildMessage().setContent("This is the second message content !");
+		conversation.postMessage(secondMessage);
+		conversationService.update(conversation);
+
+		// then
+		Conversation storedConversation = conversationService.getByConversationId(conversation.getConversationId());
+		assertThat(storedConversation.getMessage(firstMessage.getMessageId()).postedOn()).isBefore(storedConversation.getMessage(secondMessage.getMessageId()).postedOn());
+	}
+
+	@Test
 	public void should_return_an_error_when_conversation_has_only_one_participant() {
 		// given
 		Participant firstParticipant = new Participant();

@@ -39,4 +39,13 @@ public class Conversation {
 		return messages;
 	}
 
+	public Message getMessage(String messageId) {
+		for (Message message : messages) {
+			if (message.getMessageId().equals(messageId)) {
+				return message;
+			}
+		}
+		return null;
+	}
+
 }
