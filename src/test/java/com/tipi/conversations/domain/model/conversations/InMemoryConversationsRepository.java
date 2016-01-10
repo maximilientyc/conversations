@@ -1,4 +1,4 @@
-package com.tipi.conversations.domain.model.conversations.repositories;
+package com.tipi.conversations.domain.model.conversations;
 
 import com.tipi.conversations.domain.model.conversations.Conversation;
 import com.tipi.conversations.domain.model.conversations.ConversationRepository;
