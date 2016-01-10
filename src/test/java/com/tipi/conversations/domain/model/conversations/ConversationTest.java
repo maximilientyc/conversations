@@ -10,7 +10,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 /**
  * Created by Maximilien on 03/01/2016.
  */
-public class ConversationServiceTest {
+public class ConversationTest {
 
 	private ConversationService conversationService;
 	private ConversationFactory conversationFactory;
@@ -52,6 +52,24 @@ public class ConversationServiceTest {
 		Conversation conversation = conversationFactory.createConversation()
 				.addParticipant(firstParticipant);
 		conversationService.add(conversation);
+	}
+
+	@Test
+	public void should_contain_one_message() {
+		// given
+		Participant firstParticipant = new Participant();
+		Participant secondParticipant = new Participant();
+		Conversation conversation = conversationFactory.createConversation()
+				.addParticipant(firstParticipant)
+				.addParticipant(secondParticipant);
+
+		// when
+		conversation.postMessage("This is the message content !");
+		conversationService.add(conversation);
+
+		// then
+		Conversation storedConversation = conversationService.getByConversationId(conversation.getConversationId());
+		assertThat(storedConversation.getMessages()).hasSize(1);
 	}
 
 }

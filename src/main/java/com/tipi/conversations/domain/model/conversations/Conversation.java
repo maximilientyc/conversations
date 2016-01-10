@@ -9,14 +9,13 @@ import java.util.List;
 public class Conversation {
 
 	private final String conversationId;
-	private List<Participant> participants = new ArrayList<>();
+	private List<Participant> participants;
+	private List<String> messages;
 
 	public Conversation(String conversationId) {
 		this.conversationId = conversationId;
-	}
-
-	public List<Participant> getParticipants() {
-		return participants;
+		this.participants = new ArrayList<>();
+		this.messages = new ArrayList<>();
 	}
 
 	public String getConversationId() {
@@ -28,4 +27,15 @@ public class Conversation {
 		return this;
 	}
 
+	public List<Participant> getParticipants() {
+		return participants;
+	}
+
+	public void postMessage(String message) {
+		messages.add(message);
+	}
+
+	public List<String> getMessages() {
+		return messages;
+	}
 }
