@@ -13,6 +13,10 @@ public class InMemoryConversationsRepository implements ConversationRepository {
 
 	@Override
 	public void save(Conversation conversation) {
+		if (exists(conversation.getConversationId())) {
+			Conversation storedConversation = findOne(conversation.getConversationId());
+			conversations.remove(storedConversation);
+		}
 		conversations.add(conversation);
 	}
 
@@ -20,6 +24,9 @@ public class InMemoryConversationsRepository implements ConversationRepository {
 	public Conversation findOne(String conversationId) {
 		if (conversationId == null) {
 			throw new IllegalArgumentException("conversationId parameter should not be null.");
+		}
+		if (!exists(conversationId)) {
+			return null;
 		}
 		Iterator<Conversation> iterator = findAll().iterator();
 		while (iterator.hasNext()) {
@@ -34,6 +41,17 @@ public class InMemoryConversationsRepository implements ConversationRepository {
 	@Override
 	public List<Conversation> findAll() {
 		return conversations;
+	}
+
+	private boolean exists(String conversationId) {
+		Iterator<Conversation> iterator = findAll().iterator();
+		while (iterator.hasNext()) {
+			Conversation conversation = iterator.next();
+			if (conversation.getConversationId().equals(conversationId)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 }

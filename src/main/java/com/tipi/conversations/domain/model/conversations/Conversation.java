@@ -38,4 +38,5 @@ public class Conversation {
 	public List<String> getMessages() {
 		return messages;
 	}
+
 }

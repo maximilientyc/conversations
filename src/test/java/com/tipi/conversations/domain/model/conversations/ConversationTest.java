@@ -72,4 +72,24 @@ public class ConversationTest {
 		assertThat(storedConversation.getMessages()).hasSize(1);
 	}
 
+	@Test
+	public void should_contain_two_messages() {
+		// given
+		Participant firstParticipant = new Participant();
+		Participant secondParticipant = new Participant();
+		Conversation conversation = conversationFactory.createConversation()
+				.addParticipant(firstParticipant)
+				.addParticipant(secondParticipant);
+
+		// when
+		conversation.postMessage("This is the first message content !");
+		conversationService.add(conversation);
+		conversation.postMessage("This is the second message content !");
+		conversationService.update(conversation);
+
+		// then
+		Conversation storedConversation = conversationService.getByConversationId(conversation.getConversationId());
+		assertThat(storedConversation.getMessages()).hasSize(2);
+	}
+
 }

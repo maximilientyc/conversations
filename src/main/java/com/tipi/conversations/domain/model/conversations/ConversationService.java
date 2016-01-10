@@ -20,6 +20,13 @@ public class ConversationService {
 		conversationRepository.save(conversation);
 	}
 
+	public void update(Conversation conversation) {
+		if (conversation.getParticipants().size() < 2) {
+			throw new IllegalArgumentException("Cannot update conversation, reason: not enough participants.");
+		}
+		conversationRepository.save(conversation);
+	}
+
 	public Conversation getByConversationId(String conversationId) {
 		return conversationRepository.findOne(conversationId);
 	}
@@ -27,4 +34,6 @@ public class ConversationService {
 	public String getNextConversationId() {
 		return UUID.randomUUID().toString();
 	}
+
+
 }
