@@ -44,4 +44,8 @@ public class ConversationService {
 	}
 
 
+	public String getNextMessageId() {
+		return UUID.randomUUID().toString();
+	}
+
 }

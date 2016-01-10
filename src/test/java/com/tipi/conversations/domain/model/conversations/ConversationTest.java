@@ -14,6 +14,7 @@ public class ConversationTest {
 
 	private ConversationService conversationService;
 	private ConversationFactory conversationFactory;
+	private MessageFactory messageFactory;
 
 	@Rule
 	public ExpectedException expectedException = ExpectedException.none();
@@ -22,6 +23,7 @@ public class ConversationTest {
 	public void prepareConversations() {
 		conversationService = new ConversationService(new InMemoryConversationsRepository());
 		conversationFactory = new ConversationFactory(conversationService);
+		messageFactory = new MessageFactory(conversationService);
 	}
 
 	@Test
@@ -51,7 +53,7 @@ public class ConversationTest {
 				.addParticipant(secondParticipant);
 
 		// when
-		Message message = new Message("This is the message content !");
+		Message message = messageFactory.buildMessage().setContent("This is the message content !");
 		conversation.postMessage(message);
 		conversationService.add(conversation);
 
@@ -70,11 +72,11 @@ public class ConversationTest {
 				.addParticipant(secondParticipant);
 
 		// when
-		Message firstMessage = new Message("This is the first message content !");
+		Message firstMessage = messageFactory.buildMessage().setContent("This is the first message content !");
 		conversation.postMessage(firstMessage);
 		conversationService.add(conversation);
 
-		Message secondMessage = new Message("This is the second message content !");
+		Message secondMessage = messageFactory.buildMessage().setContent("This is the second message content !");
 		conversation.postMessage(secondMessage);
 		conversationService.update(conversation);
 

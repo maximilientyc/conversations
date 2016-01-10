@@ -7,12 +7,18 @@ import java.util.Date;
  */
 public class Message {
 
+	private String messageId;
 	private String content;
 	private Date postedOn;
 
-	public Message(String content) {
-		this.content = content;
+	public Message(String messageId) {
+		this.messageId = messageId;
 		this.postedOn = new Date();
+	}
+
+	public Message setContent(String content) {
+		this.content = content;
+		return this;
 	}
 
 }
