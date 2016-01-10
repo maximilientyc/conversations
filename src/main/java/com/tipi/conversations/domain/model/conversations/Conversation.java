@@ -10,7 +10,7 @@ public class Conversation {
 
 	private final String conversationId;
 	private List<Participant> participants;
-	private List<String> messages;
+	private List<Message> messages;
 
 	public Conversation(String conversationId) {
 		this.conversationId = conversationId;
@@ -31,11 +31,11 @@ public class Conversation {
 		return participants;
 	}
 
-	public void postMessage(String message) {
+	public void postMessage(Message message) {
 		messages.add(message);
 	}
 
-	public List<String> getMessages() {
+	public List<Message> getMessages() {
 		return messages;
 	}
 

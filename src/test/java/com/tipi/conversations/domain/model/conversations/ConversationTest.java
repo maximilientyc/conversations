@@ -51,7 +51,8 @@ public class ConversationTest {
 				.addParticipant(secondParticipant);
 
 		// when
-		conversation.postMessage("This is the message content !");
+		Message message = new Message("This is the message content !");
+		conversation.postMessage(message);
 		conversationService.add(conversation);
 
 		// then
@@ -69,9 +70,12 @@ public class ConversationTest {
 				.addParticipant(secondParticipant);
 
 		// when
-		conversation.postMessage("This is the first message content !");
+		Message firstMessage = new Message("This is the first message content !");
+		conversation.postMessage(firstMessage);
 		conversationService.add(conversation);
-		conversation.postMessage("This is the second message content !");
+
+		Message secondMessage = new Message("This is the second message content !");
+		conversation.postMessage(secondMessage);
 		conversationService.update(conversation);
 
 		// then
