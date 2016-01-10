@@ -42,19 +42,6 @@ public class ConversationTest {
 	}
 
 	@Test
-	public void should_return_an_error_when_conversation_has_only_one_participant() {
-		// given
-		Participant firstParticipant = new Participant();
-		expectedException.expect(IllegalArgumentException.class);
-		expectedException.expectMessage("Cannot add conversation, reason: not enough participants.");
-
-		// when
-		Conversation conversation = conversationFactory.createConversation()
-				.addParticipant(firstParticipant);
-		conversationService.add(conversation);
-	}
-
-	@Test
 	public void should_contain_one_message() {
 		// given
 		Participant firstParticipant = new Participant();
@@ -90,6 +77,50 @@ public class ConversationTest {
 		// then
 		Conversation storedConversation = conversationService.getByConversationId(conversation.getConversationId());
 		assertThat(storedConversation.getMessages()).hasSize(2);
+	}
+
+	@Test
+	public void should_return_an_error_when_conversation_has_only_one_participant() {
+		// given
+		Participant firstParticipant = new Participant();
+		expectedException.expect(IllegalArgumentException.class);
+		expectedException.expectMessage("Cannot add conversation, reason: not enough participants.");
+
+		// when
+		Conversation conversation = conversationFactory.createConversation()
+				.addParticipant(firstParticipant);
+		conversationService.add(conversation);
+	}
+
+	@Test
+	public void should_return_an_error_when_creating_an_already_existing_conversation() {
+		// given
+		Participant firstParticipant = new Participant();
+		Participant secondParticipant = new Participant();
+		expectedException.expect(IllegalArgumentException.class);
+		expectedException.expectMessage("Cannot add conversation, reason: conversation already exists.");
+
+		// when
+		Conversation conversation = conversationFactory.createConversation()
+				.addParticipant(firstParticipant)
+				.addParticipant(secondParticipant);
+		conversationService.add(conversation);
+		conversationService.add(conversation);
+	}
+
+	@Test
+	public void should_return_an_error_when_updating_a_non_existing_conversation() {
+		// given
+		Participant firstParticipant = new Participant();
+		Participant secondParticipant = new Participant();
+		expectedException.expect(IllegalArgumentException.class);
+		expectedException.expectMessage("Cannot update conversation, reason: conversation does not exists.");
+
+		// when
+		Conversation conversation = conversationFactory.createConversation()
+				.addParticipant(firstParticipant)
+				.addParticipant(secondParticipant);
+		conversationService.update(conversation);
 	}
 
 }

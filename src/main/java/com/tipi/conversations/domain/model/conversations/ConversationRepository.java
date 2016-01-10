@@ -11,5 +11,7 @@ public interface ConversationRepository {
 
 	Conversation findOne(String conversationId);
 
+	boolean exists(String conversationId);
+
 	List<Conversation> findAll();
 }

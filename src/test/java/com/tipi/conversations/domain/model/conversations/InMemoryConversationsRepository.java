@@ -21,6 +21,18 @@ public class InMemoryConversationsRepository implements ConversationRepository {
 	}
 
 	@Override
+	public boolean exists(String conversationId) {
+		Iterator<Conversation> iterator = findAll().iterator();
+		while (iterator.hasNext()) {
+			Conversation conversation = iterator.next();
+			if (conversation.getConversationId().equals(conversationId)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	@Override
 	public Conversation findOne(String conversationId) {
 		if (conversationId == null) {
 			throw new IllegalArgumentException("conversationId parameter should not be null.");
@@ -43,15 +55,5 @@ public class InMemoryConversationsRepository implements ConversationRepository {
 		return conversations;
 	}
 
-	private boolean exists(String conversationId) {
-		Iterator<Conversation> iterator = findAll().iterator();
-		while (iterator.hasNext()) {
-			Conversation conversation = iterator.next();
-			if (conversation.getConversationId().equals(conversationId)) {
-				return true;
-			}
-		}
-		return false;
-	}
 
 }

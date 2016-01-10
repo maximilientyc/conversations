@@ -14,17 +14,25 @@ public class ConversationService {
 	}
 
 	public void add(Conversation conversation) {
-		if (conversation.getParticipants().size() < 2) {
-			throw new IllegalArgumentException("Cannot add conversation, reason: not enough participants.");
+		validateConversation(conversation, "Cannot add conversation, reason: not enough participants.");
+		if (conversationRepository.exists(conversation.getConversationId())) {
+			throw new IllegalArgumentException("Cannot add conversation, reason: conversation already exists.");
 		}
 		conversationRepository.save(conversation);
 	}
 
 	public void update(Conversation conversation) {
-		if (conversation.getParticipants().size() < 2) {
-			throw new IllegalArgumentException("Cannot update conversation, reason: not enough participants.");
+		validateConversation(conversation, "Cannot update conversation, reason: not enough participants.");
+		if (!conversationRepository.exists(conversation.getConversationId())) {
+			throw new IllegalArgumentException("Cannot update conversation, reason: conversation does not exists.");
 		}
 		conversationRepository.save(conversation);
+	}
+
+	private void validateConversation(Conversation conversation, String s) {
+		if (conversation.getParticipants().size() < 2) {
+			throw new IllegalArgumentException(s);
+		}
 	}
 
 	public Conversation getByConversationId(String conversationId) {
