@@ -23,15 +23,11 @@ public class ConversationTest {
 	public ExpectedException expectedException;
 
 	public ConversationTest() {
-		expectedException = ExpectedException.none();
-	}
-
-	@Before
-	public void prepareConversations() {
 		conversationService = new ConversationService(new InMemoryConversationsRepository());
 		conversationFactory = new ConversationFactory(conversationService);
 		messageFactory = new MessageFactory(conversationService);
 		participantFactory = new ParticipantFactory(conversationService);
+		expectedException = ExpectedException.none();
 	}
 
 	@Test
