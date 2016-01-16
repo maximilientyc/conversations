@@ -13,7 +13,7 @@ public class ConversationFactory {
 		this.conversationService = conversationService;
 	}
 
-	public Conversation createConversation() {
+	public Conversation buildConversation() {
 		String conversationId = conversationService.getNextConversationId();
 		Conversation conversation = new Conversation(conversationId);
 		return conversation;

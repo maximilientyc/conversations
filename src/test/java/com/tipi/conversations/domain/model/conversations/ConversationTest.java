@@ -33,7 +33,7 @@ public class ConversationTest {
 		Participant secondParticipant = new Participant();
 
 		// when
-		Conversation conversation = conversationFactory.createConversation()
+		Conversation conversation = conversationFactory.buildConversation()
 				.addParticipant(firstParticipant)
 				.addParticipant(secondParticipant);
 		conversationService.add(conversation);
@@ -48,14 +48,15 @@ public class ConversationTest {
 		// given
 		Participant firstParticipant = new Participant();
 		Participant secondParticipant = new Participant();
-		Conversation conversation = conversationFactory.createConversation()
+		Conversation conversation = conversationFactory.buildConversation()
 				.addParticipant(firstParticipant)
 				.addParticipant(secondParticipant);
+		conversationService.add(conversation);
 
 		// when
 		Message message = messageFactory.buildMessage().setContent("This is the message content !");
 		conversation.postMessage(message);
-		conversationService.add(conversation);
+		conversationService.update(conversation);
 
 		// then
 		Conversation storedConversation = conversationService.getByConversationId(conversation.getConversationId());
@@ -67,14 +68,15 @@ public class ConversationTest {
 		// given
 		Participant firstParticipant = new Participant();
 		Participant secondParticipant = new Participant();
-		Conversation conversation = conversationFactory.createConversation()
+		Conversation conversation = conversationFactory.buildConversation()
 				.addParticipant(firstParticipant)
 				.addParticipant(secondParticipant);
+		conversationService.add(conversation);
 
 		// when
 		Message firstMessage = messageFactory.buildMessage().setContent("This is the first message content !");
 		conversation.postMessage(firstMessage);
-		conversationService.add(conversation);
+		conversationService.update(conversation);
 
 		Message secondMessage = messageFactory.buildMessage().setContent("This is the second message content !");
 		conversation.postMessage(secondMessage);
@@ -90,14 +92,15 @@ public class ConversationTest {
 		// given
 		Participant firstParticipant = new Participant();
 		Participant secondParticipant = new Participant();
-		Conversation conversation = conversationFactory.createConversation()
+		Conversation conversation = conversationFactory.buildConversation()
 				.addParticipant(firstParticipant)
 				.addParticipant(secondParticipant);
+		conversationService.add(conversation);
 
 		// when
 		Message firstMessage = messageFactory.buildMessage().setContent("This is the first message content !");
 		conversation.postMessage(firstMessage);
-		conversationService.add(conversation);
+		conversationService.update(conversation);
 		Thread.sleep(1);
 		Message secondMessage = messageFactory.buildMessage().setContent("This is the second message content !");
 		conversation.postMessage(secondMessage);
@@ -116,8 +119,9 @@ public class ConversationTest {
 		expectedException.expectMessage("Cannot add conversation, reason: not enough participants.");
 
 		// when
-		Conversation conversation = conversationFactory.createConversation()
+		Conversation conversation = conversationFactory.buildConversation()
 				.addParticipant(firstParticipant);
+
 		conversationService.add(conversation);
 	}
 
@@ -130,9 +134,10 @@ public class ConversationTest {
 		expectedException.expectMessage("Cannot add conversation, reason: conversation already exists.");
 
 		// when
-		Conversation conversation = conversationFactory.createConversation()
+		Conversation conversation = conversationFactory.buildConversation()
 				.addParticipant(firstParticipant)
 				.addParticipant(secondParticipant);
+
 		conversationService.add(conversation);
 		conversationService.add(conversation);
 	}
@@ -146,9 +151,10 @@ public class ConversationTest {
 		expectedException.expectMessage("Cannot update conversation, reason: conversation does not exists.");
 
 		// when
-		Conversation conversation = conversationFactory.createConversation()
+		Conversation conversation = conversationFactory.buildConversation()
 				.addParticipant(firstParticipant)
 				.addParticipant(secondParticipant);
+
 		conversationService.update(conversation);
 	}
 
