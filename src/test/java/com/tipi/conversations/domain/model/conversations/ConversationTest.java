@@ -5,6 +5,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import java.util.Date;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
@@ -15,27 +17,33 @@ public class ConversationTest {
 	private ConversationService conversationService;
 	private ConversationFactory conversationFactory;
 	private MessageFactory messageFactory;
+	private ParticipantFactory participantFactory;
 
 	@Rule
-	public ExpectedException expectedException = ExpectedException.none();
+	public ExpectedException expectedException;
+
+	public ConversationTest() {
+		expectedException = ExpectedException.none();
+	}
 
 	@Before
 	public void prepareConversations() {
 		conversationService = new ConversationService(new InMemoryConversationsRepository());
 		conversationFactory = new ConversationFactory(conversationService);
 		messageFactory = new MessageFactory(conversationService);
+		participantFactory = new ParticipantFactory(conversationService);
 	}
 
 	@Test
 	public void should_contain_two_participants() {
 		// given
-		Participant firstParticipant = new Participant();
-		Participant secondParticipant = new Participant();
+		Participant maximilien = participantFactory.buildParticipant().setName("maximilien");
+		Participant bob = participantFactory.buildParticipant().setName("bob");
 
 		// when
 		Conversation conversation = conversationFactory.buildConversation()
-				.addParticipant(firstParticipant)
-				.addParticipant(secondParticipant);
+				.addParticipant(maximilien)
+				.addParticipant(bob);
 		conversationService.add(conversation);
 
 		// then
@@ -46,11 +54,11 @@ public class ConversationTest {
 	@Test
 	public void should_contain_one_message() {
 		// given
-		Participant firstParticipant = new Participant();
-		Participant secondParticipant = new Participant();
+		Participant maximilien = participantFactory.buildParticipant().setName("maximilien");
+		Participant bob = participantFactory.buildParticipant().setName("bob");
 		Conversation conversation = conversationFactory.buildConversation()
-				.addParticipant(firstParticipant)
-				.addParticipant(secondParticipant);
+				.addParticipant(maximilien)
+				.addParticipant(bob);
 		conversationService.add(conversation);
 
 		// when
@@ -66,11 +74,11 @@ public class ConversationTest {
 	@Test
 	public void should_contain_two_messages() {
 		// given
-		Participant firstParticipant = new Participant();
-		Participant secondParticipant = new Participant();
+		Participant maximilien = participantFactory.buildParticipant().setName("maximilien");
+		Participant bob = participantFactory.buildParticipant().setName("bob");
 		Conversation conversation = conversationFactory.buildConversation()
-				.addParticipant(firstParticipant)
-				.addParticipant(secondParticipant);
+				.addParticipant(maximilien)
+				.addParticipant(bob);
 		conversationService.add(conversation);
 
 		// when
@@ -88,13 +96,34 @@ public class ConversationTest {
 	}
 
 	@Test
+	public void should_contain_a_message_posted_by_maximilien() {
+		// given
+		Participant maximilien = participantFactory.buildParticipant().setName("maximilien");
+		Participant bob = participantFactory.buildParticipant().setName("bob");
+		Conversation conversation = conversationFactory.buildConversation()
+				.addParticipant(maximilien)
+				.addParticipant(bob);
+		conversationService.add(conversation);
+
+		// when
+		Message firstMessage = messageFactory.buildMessage().setContent("This is the first message content !").setPostedBy(maximilien);
+		conversation.postMessage(firstMessage);
+		conversationService.update(conversation);
+
+		// then
+		Conversation storedConversation = conversationService.getByConversationId(conversation.getConversationId());
+		Message storedMessage = storedConversation.getMessage(firstMessage.getMessageId());
+		assertThat(storedMessage.postedBy().getName()).isEqualTo("maximilien");
+	}
+
+	@Test
 	public void should_second_message_be_most_recent_than_first_message() throws InterruptedException {
 		// given
-		Participant firstParticipant = new Participant();
-		Participant secondParticipant = new Participant();
+		Participant maximilien = participantFactory.buildParticipant().setName("maximilien");
+		Participant bob = participantFactory.buildParticipant().setName("bob");
 		Conversation conversation = conversationFactory.buildConversation()
-				.addParticipant(firstParticipant)
-				.addParticipant(secondParticipant);
+				.addParticipant(maximilien)
+				.addParticipant(bob);
 		conversationService.add(conversation);
 
 		// when
@@ -108,19 +137,22 @@ public class ConversationTest {
 
 		// then
 		Conversation storedConversation = conversationService.getByConversationId(conversation.getConversationId());
-		assertThat(storedConversation.getMessage(firstMessage.getMessageId()).postedOn()).isBefore(storedConversation.getMessage(secondMessage.getMessageId()).postedOn());
+		Date firstMessagePostedOn = storedConversation.getMessage(firstMessage.getMessageId()).postedOn();
+		Date secondMessagePostedOn = storedConversation.getMessage(secondMessage.getMessageId()).postedOn();
+		
+		assertThat(firstMessagePostedOn).isBefore(secondMessagePostedOn);
 	}
 
 	@Test
 	public void should_return_an_error_when_conversation_has_only_one_participant() {
 		// given
-		Participant firstParticipant = new Participant();
+		Participant maximilien = participantFactory.buildParticipant().setName("maximilien");
 		expectedException.expect(IllegalArgumentException.class);
 		expectedException.expectMessage("Cannot add conversation, reason: not enough participants.");
 
 		// when
 		Conversation conversation = conversationFactory.buildConversation()
-				.addParticipant(firstParticipant);
+				.addParticipant(maximilien);
 
 		conversationService.add(conversation);
 	}
@@ -128,15 +160,15 @@ public class ConversationTest {
 	@Test
 	public void should_return_an_error_when_creating_an_already_existing_conversation() {
 		// given
-		Participant firstParticipant = new Participant();
-		Participant secondParticipant = new Participant();
+		Participant maximilien = participantFactory.buildParticipant().setName("maximilien");
+		Participant bob = participantFactory.buildParticipant().setName("bob");
 		expectedException.expect(IllegalArgumentException.class);
 		expectedException.expectMessage("Cannot add conversation, reason: conversation already exists.");
 
 		// when
 		Conversation conversation = conversationFactory.buildConversation()
-				.addParticipant(firstParticipant)
-				.addParticipant(secondParticipant);
+				.addParticipant(maximilien)
+				.addParticipant(bob);
 
 		conversationService.add(conversation);
 		conversationService.add(conversation);
@@ -145,15 +177,15 @@ public class ConversationTest {
 	@Test
 	public void should_return_an_error_when_updating_a_non_existing_conversation() {
 		// given
-		Participant firstParticipant = new Participant();
-		Participant secondParticipant = new Participant();
+		Participant maximilien = participantFactory.buildParticipant().setName("maximilien");
+		Participant bob = participantFactory.buildParticipant().setName("bob");
 		expectedException.expect(IllegalArgumentException.class);
 		expectedException.expectMessage("Cannot update conversation, reason: conversation does not exists.");
 
 		// when
 		Conversation conversation = conversationFactory.buildConversation()
-				.addParticipant(firstParticipant)
-				.addParticipant(secondParticipant);
+				.addParticipant(maximilien)
+				.addParticipant(bob);
 
 		conversationService.update(conversation);
 	}

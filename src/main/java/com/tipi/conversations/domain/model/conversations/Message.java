@@ -10,6 +10,7 @@ public class Message {
 	private String messageId;
 	private String content;
 	private Date postedOn;
+	private Participant postedBy;
 
 	public Message(String messageId) {
 		this.messageId = messageId;
@@ -27,5 +28,14 @@ public class Message {
 
 	public Date postedOn() {
 		return postedOn;
+	}
+
+	public Message setPostedBy(Participant postedBy) {
+		this.postedBy = postedBy;
+		return this;
+	}
+
+	public Participant postedBy() {
+		return postedBy;
 	}
 }

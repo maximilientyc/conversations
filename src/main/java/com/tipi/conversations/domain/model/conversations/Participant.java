@@ -5,4 +5,14 @@ package com.tipi.conversations.domain.model.conversations;
  */
 public class Participant {
 
+	private String name;
+
+	public String getName() {
+		return name;
+	}
+
+	public Participant setName(String name) {
+		this.name = name;
+		return this;
+	}
 }
