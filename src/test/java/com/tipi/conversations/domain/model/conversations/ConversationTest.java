@@ -96,6 +96,27 @@ public class ConversationTest {
 	}
 
 	@Test
+	public void should_not_contain_message_with_id_12345() {
+		// given
+		Participant maximilien = participantFactory.buildParticipant().setName("maximilien");
+		Participant bob = participantFactory.buildParticipant().setName("bob");
+		Conversation conversation = conversationFactory.buildConversation()
+				.addParticipant(maximilien)
+				.addParticipant(bob);
+		conversationService.add(conversation);
+
+		// when
+		Message message = messageFactory.buildMessage().setContent("This is the message content !");
+		conversation.postMessage(message);
+		conversationService.update(conversation);
+
+		// then
+		Conversation storedConversation = conversationService.getByConversationId(conversation.getConversationId());
+
+		assertThat(storedConversation.getMessage("1234")).isNull();
+	}
+
+	@Test
 	public void should_contain_a_message_posted_by_maximilien() {
 		// given
 		Participant maximilien = participantFactory.buildParticipant().setName("maximilien");
@@ -139,7 +160,7 @@ public class ConversationTest {
 		Conversation storedConversation = conversationService.getByConversationId(conversation.getConversationId());
 		Date firstMessagePostedOn = storedConversation.getMessage(firstMessage.getMessageId()).postedOn();
 		Date secondMessagePostedOn = storedConversation.getMessage(secondMessage.getMessageId()).postedOn();
-		
+
 		assertThat(firstMessagePostedOn).isBefore(secondMessagePostedOn);
 	}
 
