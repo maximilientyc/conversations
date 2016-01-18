@@ -1,4 +1,4 @@
-package com.tipi.conversations.domain.model.conversations;
+package com.tipi.conversations.domain.conversations;
 
 import java.util.Date;
 

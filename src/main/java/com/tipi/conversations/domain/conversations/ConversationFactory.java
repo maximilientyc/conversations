@@ -1,6 +1,4 @@
-package com.tipi.conversations.domain.model.conversations;
-
-import java.util.List;
+package com.tipi.conversations.domain.conversations;
 
 /**
  * Created by Maximilien on 09/01/2016.

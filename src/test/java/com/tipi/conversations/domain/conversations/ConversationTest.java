@@ -1,6 +1,6 @@
-package com.tipi.conversations.domain.model.conversations;
+package com.tipi.conversations.domain.conversations;
 
-import org.junit.Before;
+import org.assertj.core.api.Assertions;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -44,7 +44,7 @@ public class ConversationTest {
 
 		// then
 		Conversation storedConversation = conversationService.getByConversationId(conversation.getConversationId());
-		assertThat(storedConversation.getParticipants()).hasSize(2);
+		Assertions.assertThat(storedConversation.getParticipants()).hasSize(2);
 	}
 
 	@Test
@@ -64,7 +64,7 @@ public class ConversationTest {
 
 		// then
 		Conversation storedConversation = conversationService.getByConversationId(conversation.getConversationId());
-		assertThat(storedConversation.getMessages()).hasSize(1);
+		Assertions.assertThat(storedConversation.getMessages()).hasSize(1);
 	}
 
 	@Test
@@ -88,7 +88,7 @@ public class ConversationTest {
 
 		// then
 		Conversation storedConversation = conversationService.getByConversationId(conversation.getConversationId());
-		assertThat(storedConversation.getMessages()).hasSize(2);
+		Assertions.assertThat(storedConversation.getMessages()).hasSize(2);
 	}
 
 	@Test
