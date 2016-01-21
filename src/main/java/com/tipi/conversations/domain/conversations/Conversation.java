@@ -31,8 +31,13 @@ public class Conversation {
 		return participants;
 	}
 
-	public void postMessage(Message message) {
+	public int countParticipants() {
+		return participants.size();
+	}
+
+	public Conversation postMessage(Message message) {
 		messages.add(message);
+		return this;
 	}
 
 	public List<Message> getMessages() {
@@ -47,5 +52,10 @@ public class Conversation {
 		}
 		return null;
 	}
+
+	public void removeParticipant(Participant participant) {
+		participants.remove(participant);
+	}
+
 
 }

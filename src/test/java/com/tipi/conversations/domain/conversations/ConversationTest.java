@@ -132,13 +132,32 @@ public class ConversationTest {
 		// given
 		Participant maximilien = participantFactory.buildParticipant().setName("maximilien");
 		expectedException.expect(IllegalArgumentException.class);
-		expectedException.expectMessage("Cannot add conversation, reason: not enough participants.");
+		expectedException.expectMessage("Cannot add/update conversation, reason: not enough participants.");
 
 		// when
 		Conversation conversation = conversationFactory.buildConversation()
 				.addParticipant(maximilien);
 
 		conversationService.add(conversation);
+	}
+
+	@Test
+	public void should_return_an_error_when_a_participant_leave_a_2_participants_conversation() {
+		// given
+		Participant maximilien = participantFactory.buildParticipant().setName("maximilien");
+		Participant bob = participantFactory.buildParticipant().setName("bob");
+		expectedException.expect(IllegalArgumentException.class);
+		expectedException.expectMessage("Cannot add/update conversation, reason: not enough participants.");
+
+		// when
+		Conversation conversation = conversationFactory.buildConversation()
+				.addParticipant(maximilien)
+				.addParticipant(bob)
+				.postMessage(messageFactory.buildMessage().setPostedBy(maximilien));
+		conversationService.add(conversation);
+
+		maximilien.leaveConversation(conversation);
+		conversationService.update(conversation);
 	}
 
 }

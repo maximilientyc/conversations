@@ -15,4 +15,8 @@ public class Participant {
 		this.name = name;
 		return this;
 	}
+
+	public void leaveConversation(Conversation conversation) {
+		conversation.removeParticipant(this);
+	}
 }

@@ -39,7 +39,7 @@ public class ConversationService {
 
 	private void validateConversation(Conversation conversation) {
 		if (conversation.getParticipants().size() < 2) {
-			throw new IllegalArgumentException("Cannot add conversation, reason: not enough participants.");
+			throw new IllegalArgumentException("Cannot add/update conversation, reason: not enough participants.");
 		}
 	}
 
