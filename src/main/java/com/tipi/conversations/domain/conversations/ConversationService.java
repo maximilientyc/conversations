@@ -33,7 +33,7 @@ public class ConversationService {
 
 	private void validateUpdateConversation(Conversation conversation) {
 		if (!conversationRepository.exists(conversation.getConversationId())) {
-			throw new IllegalArgumentException("Cannot update conversation, reason: conversation does not exists.");
+			throw new IllegalArgumentException("Cannot update conversation, reason: conversation does not exist.");
 		}
 	}
 
