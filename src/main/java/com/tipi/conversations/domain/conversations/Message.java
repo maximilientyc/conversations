@@ -30,4 +30,8 @@ public class Message {
 	public Participant postedBy() {
 		return postedBy;
 	}
+
+	public Date postedOn() {
+		return postedOn;
+	}
 }

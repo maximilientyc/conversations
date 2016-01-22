@@ -32,6 +32,7 @@ public class ConversationTest {
 		// given
 		Participant maximilien = participantFactory.buildParticipant().setName("maximilien");
 		Participant bob = participantFactory.buildParticipant().setName("bob");
+
 		Conversation conversation = conversationFactory.buildConversation()
 				.addParticipant(maximilien)
 				.addParticipant(bob);
@@ -45,6 +46,7 @@ public class ConversationTest {
 		// given
 		Participant maximilien = participantFactory.buildParticipant().setName("maximilien");
 		Participant bob = participantFactory.buildParticipant().setName("bob");
+
 		Conversation conversation = conversationFactory.buildConversation()
 				.addParticipant(maximilien)
 				.addParticipant(bob);
@@ -62,6 +64,7 @@ public class ConversationTest {
 		// given
 		Participant maximilien = participantFactory.buildParticipant().setName("maximilien");
 		Participant bob = participantFactory.buildParticipant().setName("bob");
+
 		Conversation conversation = conversationFactory.buildConversation()
 				.addParticipant(maximilien)
 				.addParticipant(bob);
@@ -81,6 +84,7 @@ public class ConversationTest {
 		// given
 		Participant maximilien = participantFactory.buildParticipant().setName("maximilien");
 		Participant bob = participantFactory.buildParticipant().setName("bob");
+
 		Conversation conversation = conversationFactory.buildConversation()
 				.addParticipant(maximilien)
 				.addParticipant(bob);
@@ -98,6 +102,7 @@ public class ConversationTest {
 		Participant maximilien = participantFactory.buildParticipant().setName("maximilien");
 		Participant bob = participantFactory.buildParticipant().setName("bob");
 		Participant alice = participantFactory.buildParticipant().setName("alice");
+
 		Conversation conversation = conversationFactory.buildConversation()
 				.addParticipant(maximilien)
 				.addParticipant(bob)
@@ -129,6 +134,26 @@ public class ConversationTest {
 		conversation.removeParticipant(alice);
 		Message message = messageFactory.buildMessage().setContent("What are you doing maximilien next weekend ? ;)").setPostedBy(alice);
 		conversation.postMessage(message);
+	}
+
+	@Test
+	public void should_maintain_chronology_between_messages_inside_a_conversation() {
+		// given
+		Participant maximilien = participantFactory.buildParticipant().setName("maximilien");
+		Participant bob = participantFactory.buildParticipant().setName("bob");
+
+		Conversation conversation = conversationFactory.buildConversation()
+				.addParticipant(maximilien)
+				.addParticipant(bob);
+
+		// when
+		Message firstMessage = messageFactory.buildMessage().setContent("Hello ! How are you all ?)").setPostedBy(maximilien);
+		conversation.postMessage(firstMessage);
+		Message secondMessage = messageFactory.buildMessage().setContent("I'm fine, thank you max.").setPostedBy(bob);
+		conversation.postMessage(secondMessage);
+
+		// then
+		assertThat(firstMessage.postedOn()).isBeforeOrEqualsTo(secondMessage.postedOn());
 	}
 
 }
