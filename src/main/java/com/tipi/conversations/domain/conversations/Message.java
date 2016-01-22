@@ -26,10 +26,6 @@ public class Message {
 		return messageId;
 	}
 
-	public Date postedOn() {
-		return postedOn;
-	}
-
 	public Message setPostedBy(Participant postedBy) {
 		this.postedBy = postedBy;
 		return this;
