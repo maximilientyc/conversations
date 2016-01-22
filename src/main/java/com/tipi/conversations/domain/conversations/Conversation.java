@@ -27,12 +27,11 @@ public class Conversation {
 		return participants.size();
 	}
 
-	public Conversation postMessage(Message message) {
+	public void postMessage(Message message) {
 		if (!participants.contains(message.postedBy())) {
 			throw new IllegalArgumentException("Cannot post message, reason: " + message.postedBy().getName() + " is not a participant.");
 		}
 		messages.add(message);
-		return this;
 	}
 
 
