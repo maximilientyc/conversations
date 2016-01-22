@@ -22,10 +22,6 @@ public class Message {
 		return this;
 	}
 
-	public String getMessageId() {
-		return messageId;
-	}
-
 	public Message setPostedBy(Participant postedBy) {
 		this.postedBy = postedBy;
 		return this;

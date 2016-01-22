@@ -92,24 +92,6 @@ public class ConversationTest {
 	}
 
 	@Test
-	public void should_contain_a_message_posted_by_maximilien() {
-		// given
-		Participant maximilien = participantFactory.buildParticipant().setName("maximilien");
-		Participant bob = participantFactory.buildParticipant().setName("bob");
-		Conversation conversation = conversationFactory.buildConversation()
-				.addParticipant(maximilien)
-				.addParticipant(bob);
-
-		// when
-		Message firstMessage = messageFactory.buildMessage().setContent("This is the first message content !").setPostedBy(maximilien);
-		conversation.postMessage(firstMessage);
-
-		// then
-		Message message = conversation.getMessage(firstMessage.getMessageId());
-		assertThat(message.postedBy().getName()).isEqualTo("maximilien");
-	}
-
-	@Test
 	public void should_return_an_error_when_a_participant_leaves_a_two_participants_conversation() {
 		// given
 		Participant maximilien = participantFactory.buildParticipant().setName("maximilien");

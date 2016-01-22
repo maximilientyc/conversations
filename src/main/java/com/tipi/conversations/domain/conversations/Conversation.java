@@ -18,17 +18,9 @@ public class Conversation {
 		this.messages = new ArrayList<>();
 	}
 
-	public String getConversationId() {
-		return conversationId;
-	}
-
 	public Conversation addParticipant(Participant participant) {
 		this.participants.add(participant);
 		return this;
-	}
-
-	public List<Participant> getParticipants() {
-		return participants;
 	}
 
 	public int countParticipants() {
@@ -46,15 +38,6 @@ public class Conversation {
 
 	public int countMessages() {
 		return messages.size();
-	}
-
-	public Message getMessage(String messageId) {
-		for (Message message : messages) {
-			if (message.getMessageId().equals(messageId)) {
-				return message;
-			}
-		}
-		return null;
 	}
 
 	public void removeParticipant(Participant participant) {
