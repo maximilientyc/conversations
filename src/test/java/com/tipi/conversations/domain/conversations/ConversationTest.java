@@ -28,21 +28,6 @@ public class ConversationTest {
 	}
 
 	@Test
-	public void should_contain_at_least_two_participants_when_new() {
-		// given
-		Participant maximilien = participantFactory.buildParticipant().setName("maximilien");
-		Participant bob = participantFactory.buildParticipant().setName("bob");
-
-		// when
-		Conversation conversation = conversationFactory.buildConversation()
-				.addParticipant(maximilien)
-				.addParticipant(bob);
-
-		// then
-		assertThat(conversation.countParticipants()).isGreaterThanOrEqualTo(2);
-	}
-
-	@Test
 	public void should_not_contain_messages_when_new() {
 		// given
 		Participant maximilien = participantFactory.buildParticipant().setName("maximilien");
