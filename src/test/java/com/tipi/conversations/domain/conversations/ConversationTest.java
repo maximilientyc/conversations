@@ -89,7 +89,7 @@ public class ConversationTest {
 		expectedException.expectMessage("Cannot leave conversation, reason: not enough participants.");
 
 		// when
-		maximilien.leaveConversation(conversation);
+		conversation.removeParticipant(maximilien);
 	}
 
 	@Test
@@ -104,7 +104,7 @@ public class ConversationTest {
 				.addParticipant(alice);
 
 		// when
-		maximilien.leaveConversation(conversation);
+		conversation.removeParticipant(alice);
 
 		// then
 		assertThat(conversation.countParticipants()).isEqualTo(2);
@@ -116,6 +116,7 @@ public class ConversationTest {
 		Participant maximilien = participantFactory.buildParticipant().setName("maximilien");
 		Participant bob = participantFactory.buildParticipant().setName("bob");
 		Participant alice = participantFactory.buildParticipant().setName("bob");
+
 		Conversation conversation = conversationFactory.buildConversation()
 				.addParticipant(maximilien)
 				.addParticipant(bob)
@@ -125,7 +126,7 @@ public class ConversationTest {
 		expectedException.expectMessage("Cannot post message, reason: " + alice.getName() + " is not a participant.");
 
 		// when
-		alice.leaveConversation(conversation);
+		conversation.removeParticipant(alice);
 		Message message = messageFactory.buildMessage().setContent("What are you doing maximilien next weekend ? ;)").setPostedBy(alice);
 		conversation.postMessage(message);
 	}

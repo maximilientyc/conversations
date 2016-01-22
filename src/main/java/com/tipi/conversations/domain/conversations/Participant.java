@@ -16,11 +16,4 @@ public class Participant {
 		return this;
 	}
 
-	public void leaveConversation(Conversation conversation) {
-		if (conversation.countParticipants() == 2) {
-			throw new IllegalArgumentException("Cannot leave conversation, reason: not enough participants.");
-		}
-		conversation.removeParticipant(this);
-	}
-
 }
