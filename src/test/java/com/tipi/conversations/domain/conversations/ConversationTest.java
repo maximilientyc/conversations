@@ -126,20 +126,22 @@ public class ConversationTest {
 	}
 
 	@Test
-	public void should_return_an_error_when_a_participant_post_a_message_in_the_wrong_conversation() {
+	public void should_return_an_error_when_a_participant_post_a_message_in_a_conversation_he_has_left() {
 		// given
 		Participant maximilien = participantFactory.buildParticipant().setName("maximilien");
 		Participant bob = participantFactory.buildParticipant().setName("bob");
 		Participant alice = participantFactory.buildParticipant().setName("bob");
 		Conversation conversation = conversationFactory.buildConversation()
 				.addParticipant(maximilien)
-				.addParticipant(bob);
+				.addParticipant(bob)
+				.addParticipant(alice);
 
 		expectedException.expect(IllegalArgumentException.class);
 		expectedException.expectMessage("Cannot post message, reason: " + alice.getName() + " is not a participant.");
 
 		// when
-		Message message = messageFactory.buildMessage().setContent("Hey eveyone, please go to http://viagra.com/12123.js").setPostedBy(alice);
+		alice.leaveConversation(conversation);
+		Message message = messageFactory.buildMessage().setContent("What are you doing maximilien next weekend ? ;)").setPostedBy(alice);
 		conversation.postMessage(message);
 	}
 
