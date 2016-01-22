@@ -31,7 +31,7 @@ public class ConversationTest {
 	}
 
 	@Test
-	public void should_contain_two_participants() {
+	public void should_contain_at_least_two_participants_when_new() {
 		// given
 		Participant maximilien = participantFactory.buildParticipant().setName("maximilien");
 		Participant bob = participantFactory.buildParticipant().setName("bob");
@@ -40,11 +40,9 @@ public class ConversationTest {
 		Conversation conversation = conversationFactory.buildConversation()
 				.addParticipant(maximilien)
 				.addParticipant(bob);
-		conversationService.add(conversation);
 
 		// then
-		Conversation storedConversation = conversationService.getByConversationId(conversation.getConversationId());
-		Assertions.assertThat(storedConversation.getParticipants()).hasSize(2);
+		assertThat(conversation.countParticipants()).isGreaterThanOrEqualTo(2);
 	}
 
 	@Test
@@ -55,11 +53,9 @@ public class ConversationTest {
 		Conversation conversation = conversationFactory.buildConversation()
 				.addParticipant(maximilien)
 				.addParticipant(bob);
-		conversationService.add(conversation);
 
 		// then
-		Conversation storedConversation = conversationService.getByConversationId(conversation.getConversationId());
-		Assertions.assertThat(storedConversation.getMessages()).hasSize(0);
+		assertThat(conversation.countMessages()).isEqualTo(0);
 	}
 
 	@Test
@@ -70,16 +66,13 @@ public class ConversationTest {
 		Conversation conversation = conversationFactory.buildConversation()
 				.addParticipant(maximilien)
 				.addParticipant(bob);
-		conversationService.add(conversation);
 
 		// when
 		Message message = messageFactory.buildMessage().setContent("This is the message content !");
 		conversation.postMessage(message);
-		conversationService.update(conversation);
 
 		// then
-		Conversation storedConversation = conversationService.getByConversationId(conversation.getConversationId());
-		Assertions.assertThat(storedConversation.getMessages()).hasSize(1);
+		assertThat(conversation.countMessages()).isEqualTo(1);
 	}
 
 	@Test
@@ -95,15 +88,11 @@ public class ConversationTest {
 		// when
 		Message firstMessage = messageFactory.buildMessage().setContent("This is the first message content !");
 		conversation.postMessage(firstMessage);
-		conversationService.update(conversation);
-
 		Message secondMessage = messageFactory.buildMessage().setContent("This is the second message content !");
 		conversation.postMessage(secondMessage);
-		conversationService.update(conversation);
 
 		// then
-		Conversation storedConversation = conversationService.getByConversationId(conversation.getConversationId());
-		Assertions.assertThat(storedConversation.getMessages()).hasSize(2);
+		assertThat(conversation.countMessages()).isEqualTo(2);
 	}
 
 	@Test

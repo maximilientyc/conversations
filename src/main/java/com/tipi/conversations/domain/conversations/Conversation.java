@@ -44,6 +44,10 @@ public class Conversation {
 		return messages;
 	}
 
+	public int countMessages() {
+		return messages.size();
+	}
+
 	public Message getMessage(String messageId) {
 		for (Message message : messages) {
 			if (message.getMessageId().equals(messageId)) {
@@ -56,6 +60,7 @@ public class Conversation {
 	public void removeParticipant(Participant participant) {
 		participants.remove(participant);
 	}
+
 
 
 }
