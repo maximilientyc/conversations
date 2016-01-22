@@ -36,13 +36,13 @@ public class Conversation {
 	}
 
 	public Conversation postMessage(Message message) {
+		if (!participants.contains(message.postedBy())) {
+			throw new IllegalArgumentException("Cannot post message, reason: " + message.postedBy().getName() + " is not a participant.");
+		}
 		messages.add(message);
 		return this;
 	}
 
-	public List<Message> getMessages() {
-		return messages;
-	}
 
 	public int countMessages() {
 		return messages.size();
@@ -60,7 +60,5 @@ public class Conversation {
 	public void removeParticipant(Participant participant) {
 		participants.remove(participant);
 	}
-
-
 
 }
