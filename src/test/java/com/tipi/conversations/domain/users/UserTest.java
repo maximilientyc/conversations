@@ -23,35 +23,33 @@ public class UserTest {
 		User user = userFactory.buildUser();
 
 		// when
-		String userId = user.userId();
 
 		// then
-		assertThat(userId).isNotNull();
+		assertThat(user.userId()).isNotNull();
 	}
 
 	@Test
 	public void should_have_a_capitalized_first_name() {
 		// given
-		User user = userFactory.buildUser().setFirstName("mAximILien   juNior m");
+		User user = userFactory.buildUser();
 
 		// when
-		String firstName = user.firstName();
+		user.setFirstName("mAximILien   juNior m");
 
 		// then
-		assertThat(firstName).isEqualTo("Maximilien Junior M");
+		assertThat(user.firstName()).isEqualTo("Maximilien Junior M");
 	}
 
 	@Test
 	public void should_have_a_capitalized_last_name() {
 		// given
 		User user = userFactory.buildUser()
-				.setFirstName("mAximILien   juNior m")
-				.setLastName("dE LA vEGA");
+				.setFirstName("mAximILien   juNior m");
 
 		// when
-		String lastName = user.lastName();
+		user.setLastName("dE LA vEGA");
 
 		// then
-		assertThat(lastName).isEqualTo("De La Vega");
+		assertThat(user.lastName()).isEqualTo("De La Vega");
 	}
 }
