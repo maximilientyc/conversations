@@ -23,7 +23,7 @@ public class UserTest {
 		User user = userFactory.buildUser();
 
 		// when
-		String userId = user.getUserId();
+		String userId = user.userId();
 
 		// then
 		assertThat(userId).isNotNull();

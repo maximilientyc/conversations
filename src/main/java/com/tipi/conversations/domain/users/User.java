@@ -15,7 +15,7 @@ public class User {
 		this.userId = userId;
 	}
 
-	public String getUserId() {
+	public String userId() {
 		return userId;
 	}
 
