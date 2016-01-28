@@ -33,6 +33,7 @@ public class ConversationTest {
 		Participant maximilien = participantFactory.buildParticipant().setName("maximilien");
 		Participant bob = participantFactory.buildParticipant().setName("bob");
 
+		// when
 		Conversation conversation = conversationFactory.buildConversation()
 				.addParticipant(maximilien)
 				.addParticipant(bob);
