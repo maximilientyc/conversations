@@ -5,9 +5,8 @@ import java.util.UUID;
 /**
  * Created by Maximilien on 28/01/2016.
  */
-public class UserService {
+public abstract class UserService {
 
-	public String getNextUserId() {
-		return UUID.randomUUID().toString();
-	}
+	public abstract String getNextUserId();
+
 }

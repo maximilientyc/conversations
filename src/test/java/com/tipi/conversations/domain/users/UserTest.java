@@ -13,7 +13,7 @@ public class UserTest {
 	private UserFactory userFactory;
 
 	public UserTest() {
-		this.userService = new UserService();
+		this.userService = new UserServiceTest();
 		this.userFactory = new UserFactory(userService);
 	}
 
