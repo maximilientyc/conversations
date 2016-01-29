@@ -1,5 +1,6 @@
 package com.tipi.conversations.domain.conversations;
 
+import com.tipi.conversations.domain.users.UserRepository;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -15,6 +16,7 @@ public class ConversationTest {
 	private ConversationFactory conversationFactory;
 	private MessageFactory messageFactory;
 	private ParticipantFactory participantFactory;
+	private UserRepository userRepository;
 
 	@Rule
 	public ExpectedException expectedException;
@@ -24,14 +26,15 @@ public class ConversationTest {
 		conversationFactory = new ConversationFactory(conversationService);
 		messageFactory = new MessageFactory(conversationService);
 		participantFactory = new ParticipantFactory(conversationService);
+		userRepository = new UserRepositoryTest();
 		expectedException = ExpectedException.none();
 	}
 
 	@Test
 	public void should_not_contain_messages_when_new() {
 		// given
-		Participant maximilien = participantFactory.buildParticipant().setName("maximilien");
-		Participant bob = participantFactory.buildParticipant().setName("bob");
+		Participant maximilien = participantFactory.buildParticipant(userRepository.get("max"));
+		Participant bob = participantFactory.buildParticipant(userRepository.get("bob"));
 
 		// when
 		Conversation conversation = conversationFactory.buildConversation()
@@ -45,8 +48,8 @@ public class ConversationTest {
 	@Test
 	public void should_contain_one_message() {
 		// given
-		Participant maximilien = participantFactory.buildParticipant().setName("maximilien");
-		Participant bob = participantFactory.buildParticipant().setName("bob");
+		Participant maximilien = participantFactory.buildParticipant(userRepository.get("max"));
+		Participant bob = participantFactory.buildParticipant(userRepository.get("bob"));
 
 		Conversation conversation = conversationFactory.buildConversation()
 				.addParticipant(maximilien)
@@ -63,8 +66,8 @@ public class ConversationTest {
 	@Test
 	public void should_contain_two_messages() {
 		// given
-		Participant maximilien = participantFactory.buildParticipant().setName("maximilien");
-		Participant bob = participantFactory.buildParticipant().setName("bob");
+		Participant maximilien = participantFactory.buildParticipant(userRepository.get("max"));
+		Participant bob = participantFactory.buildParticipant(userRepository.get("bob"));
 
 		Conversation conversation = conversationFactory.buildConversation()
 				.addParticipant(maximilien)
@@ -83,8 +86,8 @@ public class ConversationTest {
 	@Test
 	public void should_return_an_error_when_a_participant_leaves_a_two_participants_conversation() {
 		// given
-		Participant maximilien = participantFactory.buildParticipant().setName("maximilien");
-		Participant bob = participantFactory.buildParticipant().setName("bob");
+		Participant maximilien = participantFactory.buildParticipant(userRepository.get("max"));
+		Participant bob = participantFactory.buildParticipant(userRepository.get("bob"));
 
 		Conversation conversation = conversationFactory.buildConversation()
 				.addParticipant(maximilien)
@@ -100,9 +103,9 @@ public class ConversationTest {
 	@Test
 	public void should_contain_two_participants_when_a_participant_leaves_a_three_participant_conversation() {
 		// given
-		Participant maximilien = participantFactory.buildParticipant().setName("maximilien");
-		Participant bob = participantFactory.buildParticipant().setName("bob");
-		Participant alice = participantFactory.buildParticipant().setName("alice");
+		Participant maximilien = participantFactory.buildParticipant(userRepository.get("max"));
+		Participant bob = participantFactory.buildParticipant(userRepository.get("bob"));
+		Participant alice = participantFactory.buildParticipant(userRepository.get("alice"));
 
 		Conversation conversation = conversationFactory.buildConversation()
 				.addParticipant(maximilien)
@@ -119,9 +122,9 @@ public class ConversationTest {
 	@Test
 	public void should_return_an_error_when_a_participant_post_a_message_in_a_conversation_he_has_left() {
 		// given
-		Participant maximilien = participantFactory.buildParticipant().setName("maximilien");
-		Participant bob = participantFactory.buildParticipant().setName("bob");
-		Participant alice = participantFactory.buildParticipant().setName("bob");
+		Participant maximilien = participantFactory.buildParticipant(userRepository.get("max"));
+		Participant bob = participantFactory.buildParticipant(userRepository.get("bob"));
+		Participant alice = participantFactory.buildParticipant(userRepository.get("alice"));
 
 		Conversation conversation = conversationFactory.buildConversation()
 				.addParticipant(maximilien)
@@ -129,7 +132,7 @@ public class ConversationTest {
 				.addParticipant(alice);
 
 		expectedException.expect(IllegalArgumentException.class);
-		expectedException.expectMessage("Cannot post message, reason: " + alice.getName() + " is not a participant.");
+		expectedException.expectMessage("Cannot post message, reason: not a participant.");
 
 		// when
 		conversation.removeParticipant(alice);
@@ -140,8 +143,8 @@ public class ConversationTest {
 	@Test
 	public void should_maintain_chronology_between_messages_inside_a_conversation() {
 		// given
-		Participant maximilien = participantFactory.buildParticipant().setName("maximilien");
-		Participant bob = participantFactory.buildParticipant().setName("bob");
+		Participant maximilien = participantFactory.buildParticipant(userRepository.get("max"));
+		Participant bob = participantFactory.buildParticipant(userRepository.get("bob"));
 
 		Conversation conversation = conversationFactory.buildConversation()
 				.addParticipant(maximilien)

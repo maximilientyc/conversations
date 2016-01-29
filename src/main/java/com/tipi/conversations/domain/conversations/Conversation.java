@@ -29,7 +29,7 @@ public class Conversation {
 
 	public void postMessage(Message message) {
 		if (!participants.contains(message.postedBy())) {
-			throw new IllegalArgumentException("Cannot post message, reason: " + message.postedBy().getName() + " is not a participant.");
+			throw new IllegalArgumentException("Cannot post message, reason: not a participant.");
 		}
 		messages.add(message);
 	}

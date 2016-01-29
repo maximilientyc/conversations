@@ -1,19 +1,16 @@
 package com.tipi.conversations.domain.conversations;
 
+import com.tipi.conversations.domain.users.User;
+
 /**
  * Created by Maximilien on 30/12/2015.
  */
 public class Participant {
 
-	private String name;
+	private final User user;
 
-	public String getName() {
-		return name;
-	}
-
-	public Participant setName(String name) {
-		this.name = name;
-		return this;
+	public Participant(User user) {
+		this.user = user;
 	}
 
 }

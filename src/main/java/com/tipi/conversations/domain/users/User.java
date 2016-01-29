@@ -1,52 +1,30 @@
 package com.tipi.conversations.domain.users;
 
-import java.util.Arrays;
-
 /**
  * Created by Maximilien on 28/01/2016.
  */
 public class User {
 
 	private final String userId;
-	private String firstName;
-	private String lastName;
+	private final String firstName;
+	private final String lastName;
 
-	public User(String userId) {
+	public User(String userId, String firstName, String lastName) {
 		this.userId = userId;
+		this.firstName = firstName;
+		this.lastName = lastName;
 	}
 
 	public String userId() {
 		return userId;
 	}
 
-	public User setFirstName(String firstName) {
-		this.firstName = Arrays.asList(firstName.split("\\s+"))
-				.stream()
-				.map(word -> toFirstLetterUpperCase(word))
-				.reduce((x, y) -> x + " " + y)
-				.orElse("");
-		return this;
-	}
-
 	public String firstName() {
 		return firstName;
 	}
 
-	public User setLastName(String lastName) {
-		this.lastName = Arrays.asList(lastName.split("\\s+"))
-				.stream()
-				.map(word -> toFirstLetterUpperCase(word))
-				.reduce((x, y) -> x + " " + y)
-				.orElse("");
-		return this;
-	}
-
 	public String lastName() {
 		return lastName;
-	}
-
-	private String toFirstLetterUpperCase(String word) {
-		return word.substring(0, 1).toUpperCase() + word.substring(1).toLowerCase();
 	}
 
 }

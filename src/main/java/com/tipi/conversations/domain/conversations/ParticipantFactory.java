@@ -1,5 +1,7 @@
 package com.tipi.conversations.domain.conversations;
 
+import com.tipi.conversations.domain.users.User;
+
 /**
  * Created by Maximilien on 16/01/2016.
  */
@@ -11,7 +13,7 @@ public class ParticipantFactory {
 		this.conversationService = conversationService;
 	}
 
-	public Participant buildParticipant() {
-		return new Participant();
+	public Participant buildParticipant(User user) {
+		return new Participant(user);
 	}
 }
