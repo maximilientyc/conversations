@@ -22,7 +22,7 @@ public class User {
 	public User setFirstName(String firstName) {
 		this.firstName = Arrays.asList(firstName.split("\\s+"))
 				.stream()
-				.map(word -> word.substring(0, 1).toUpperCase() + word.substring(1).toLowerCase())
+				.map(word -> toFirstLetterUpperCase(word))
 				.reduce((x, y) -> x + " " + y)
 				.orElse("");
 		return this;
@@ -35,7 +35,7 @@ public class User {
 	public User setLastName(String lastName) {
 		this.lastName = Arrays.asList(lastName.split("\\s+"))
 				.stream()
-				.map(word -> word.substring(0, 1).toUpperCase() + word.substring(1).toLowerCase())
+				.map(word -> toFirstLetterUpperCase(word))
 				.reduce((x, y) -> x + " " + y)
 				.orElse("");
 		return this;
@@ -44,4 +44,9 @@ public class User {
 	public String lastName() {
 		return lastName;
 	}
+
+	private String toFirstLetterUpperCase(String word) {
+		return word.substring(0, 1).toUpperCase() + word.substring(1).toLowerCase();
+	}
+
 }
