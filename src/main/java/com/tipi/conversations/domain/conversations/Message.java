@@ -12,9 +12,9 @@ public class Message {
 	private Date postedOn;
 	private Participant postedBy;
 
-	public Message(String messageId) {
+	public Message(String messageId, Date postedOn) {
 		this.messageId = messageId;
-		this.postedOn = new Date();
+		this.postedOn = postedOn;
 	}
 
 	public Message setContent(String content) {
