@@ -29,7 +29,7 @@ public class ConversationIntegrationTest {
 		messageFactory = new MessageFactory(conversationService);
 		participantFactory = new ParticipantFactory(conversationService);
 		userRepository = new UserRepositoryTest();
-		conversationRepository = new ConversationRepository();
+		conversationRepository = new ConversationRepositoryTest();
 		expectedException = ExpectedException.none();
 	}
 
