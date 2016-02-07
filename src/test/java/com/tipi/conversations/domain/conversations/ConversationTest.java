@@ -12,7 +12,6 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 public class ConversationTest {
 
-	private ConversationService conversationService;
 	private ConversationFactory conversationFactory;
 	private MessageFactory messageFactory;
 	private ParticipantFactory participantFactory;
@@ -22,7 +21,7 @@ public class ConversationTest {
 	public ExpectedException expectedException;
 
 	public ConversationTest() {
-		conversationService = new ConversationService();
+		ConversationService conversationService = new ConversationService();
 		conversationFactory = new ConversationFactory(conversationService);
 		messageFactory = new MessageFactory(conversationService);
 		participantFactory = new ParticipantFactory(conversationService);

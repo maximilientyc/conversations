@@ -18,6 +18,10 @@ public class Conversation {
 		this.messages = new ArrayList<>();
 	}
 
+	public String getConversationId() {
+		return conversationId;
+	}
+
 	public Conversation addParticipant(Participant participant) {
 		this.participants.add(participant);
 		return this;
@@ -33,8 +37,7 @@ public class Conversation {
 		}
 		messages.add(message);
 	}
-
-
+	
 	public int countMessages() {
 		return messages.size();
 	}
