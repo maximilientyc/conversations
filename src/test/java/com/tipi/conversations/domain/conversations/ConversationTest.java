@@ -1,9 +1,11 @@
 package com.tipi.conversations.domain.conversations;
 
 import com.tipi.conversations.domain.users.UserRepository;
+import com.tipi.conversations.execution.conversations.CreateConversationCommand;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import org.mockito.Mockito;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -12,20 +14,24 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 public class ConversationTest {
 
+
+	private ConversationService conversationService;
 	private ConversationFactory conversationFactory;
 	private MessageFactory messageFactory;
 	private ParticipantFactory participantFactory;
 	private UserRepository userRepository;
+	private ConversationRepository conversationRepository;
 
 	@Rule
 	public ExpectedException expectedException;
 
 	public ConversationTest() {
-		ConversationService conversationService = new ConversationService();
+		conversationService = new ConversationService();
 		conversationFactory = new ConversationFactory(conversationService);
 		messageFactory = new MessageFactory(conversationService);
 		participantFactory = new ParticipantFactory(conversationService);
 		userRepository = new UserRepositoryTest();
+		conversationRepository = new ConversationRepositoryTest();
 		expectedException = ExpectedException.none();
 	}
 
@@ -80,6 +86,24 @@ public class ConversationTest {
 
 		// then
 		assertThat(conversation.countMessages()).isEqualTo(2);
+	}
+
+	@Test
+	public void should_return_an_error_when_creating_a_conversation_with_less_than_2_participants() {
+		// given
+		Participant maximilien = participantFactory.buildParticipant(userRepository.get("max"));
+
+		Conversation conversation = conversationFactory.buildConversation()
+				.addParticipant(maximilien);
+
+		ConversationRepository conversationRepositorySpy = Mockito.spy(conversationRepository);
+		CreateConversationCommand createConversationCommand = new CreateConversationCommand(conversation, conversationRepositorySpy);
+		expectedException.expect(IllegalArgumentException.class);
+		expectedException.expectMessage("Cannot create conversation, reason: not enough participants.");
+
+		// when
+		Mockito.when(conversationRepositorySpy.exists(conversation)).thenReturn(false);
+		createConversationCommand.execute();
 	}
 
 	@Test

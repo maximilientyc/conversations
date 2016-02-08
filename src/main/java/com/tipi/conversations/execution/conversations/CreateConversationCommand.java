@@ -22,6 +22,9 @@ public class CreateConversationCommand {
 		if (conversationExists) {
 			throw new IllegalArgumentException("Cannot create conversation, reason: a conversation with id '"+ conversation.getConversationId() +"' already exists.");
 		}
+		if (conversation.countParticipants() < 2) {
+			throw new IllegalArgumentException("Cannot create conversation, reason: not enough participants.");
+		}
 		conversationRepository.add(conversation);
 	}
 }
