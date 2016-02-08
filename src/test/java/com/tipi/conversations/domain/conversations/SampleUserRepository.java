@@ -9,12 +9,12 @@ import java.util.List;
 /**
  * Created by Maximilien on 29/01/2016.
  */
-public class UserRepositoryTest implements UserRepository {
+public class SampleUserRepository implements UserRepository {
 
 	private List<User> users;
 
 
-	public UserRepositoryTest() {
+	public SampleUserRepository() {
 		users = new ArrayList<>();
 		users.add(new User("max", "Maximilien", "tyc"));
 		users.add(new User("bob", "Bob", "Marley"));

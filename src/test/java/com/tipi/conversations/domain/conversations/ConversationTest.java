@@ -30,8 +30,8 @@ public class ConversationTest {
 		conversationFactory = new ConversationFactory(conversationService);
 		messageFactory = new MessageFactory(conversationService);
 		participantFactory = new ParticipantFactory(conversationService);
-		userRepository = new UserRepositoryTest();
-		conversationRepository = new ConversationRepositoryTest();
+		userRepository = new SampleUserRepository();
+		conversationRepository = new SampleConversationRepository();
 		expectedException = ExpectedException.none();
 	}
 
