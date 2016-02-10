@@ -1,7 +1,7 @@
 package com.tipi.conversations.execution.conversations;
 
 import com.tipi.conversations.domain.conversations.Conversation;
-import com.tipi.conversations.domain.conversations.ConversationRepository;
+import com.tipi.conversations.repository.conversations.ConversationRepository;
 
 /**
  * Created by Maximilien on 07/02/2016.

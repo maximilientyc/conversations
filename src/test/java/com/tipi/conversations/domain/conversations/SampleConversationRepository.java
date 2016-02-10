@@ -1,5 +1,7 @@
 package com.tipi.conversations.domain.conversations;
 
+import com.tipi.conversations.repository.conversations.ConversationRepository;
+
 /**
  * Created by Maximilien on 07/02/2016.
  */

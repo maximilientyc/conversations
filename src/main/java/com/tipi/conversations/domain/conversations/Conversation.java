@@ -37,7 +37,7 @@ public class Conversation {
 		}
 		messages.add(message);
 	}
-	
+
 	public int countMessages() {
 		return messages.size();
 	}
@@ -49,4 +49,7 @@ public class Conversation {
 		participants.remove(participant);
 	}
 
+	public List<Participant> participants() {
+		return participants;
+	}
 }
