@@ -1,14 +1,11 @@
-package com.tipi.conversations.domain.conversations;
+package com.tipi.conversations.infrastructure.conversations;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.DB;
-import com.mongodb.DBCollection;
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoDatabase;
+import com.tipi.conversations.domain.conversations.*;
 import com.tipi.conversations.domain.users.UserRepository;
-import com.tipi.conversations.execution.conversations.CreateConversationCommand;
-import com.tipi.conversations.repository.conversations.ConversationRepository;
-import com.tipi.conversations.repository.conversations.MongoDbConversationRepository;
+import com.tipi.conversations.api.conversations.CreateConversationCommand;
+import com.tipi.conversations.infrastructure.conversations.MongoDbConversationRepository;
 import de.flapdoodle.embed.mongo.distribution.Version;
 import de.flapdoodle.embed.mongo.tests.MongodForTestsFactory;
 import org.junit.Rule;

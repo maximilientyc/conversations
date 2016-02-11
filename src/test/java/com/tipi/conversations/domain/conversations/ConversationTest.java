@@ -1,8 +1,7 @@
 package com.tipi.conversations.domain.conversations;
 
 import com.tipi.conversations.domain.users.UserRepository;
-import com.tipi.conversations.execution.conversations.CreateConversationCommand;
-import com.tipi.conversations.repository.conversations.ConversationRepository;
+import com.tipi.conversations.api.conversations.CreateConversationCommand;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;

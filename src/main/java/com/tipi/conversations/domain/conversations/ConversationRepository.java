@@ -1,4 +1,4 @@
-package com.tipi.conversations.repository.conversations;
+package com.tipi.conversations.domain.conversations;
 
 import com.tipi.conversations.domain.conversations.Conversation;
 

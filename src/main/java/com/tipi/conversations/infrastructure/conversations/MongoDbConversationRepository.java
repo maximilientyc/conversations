@@ -1,8 +1,9 @@
-package com.tipi.conversations.repository.conversations;
+package com.tipi.conversations.infrastructure.conversations;
 
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.tipi.conversations.domain.conversations.Conversation;
+import com.tipi.conversations.domain.conversations.ConversationRepository;
 import org.bson.Document;
 
 import static com.mongodb.client.model.Filters.eq;
