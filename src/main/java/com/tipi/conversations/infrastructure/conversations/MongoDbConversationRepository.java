@@ -1,5 +1,7 @@
 package com.tipi.conversations.infrastructure.conversations;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.tipi.conversations.domain.conversations.Conversation;
@@ -17,17 +19,22 @@ public class MongoDbConversationRepository implements ConversationRepository {
 
 	public MongoDbConversationRepository(MongoDatabase mongoDatabase) {
 		this.collection = mongoDatabase.getCollection("conversations");
-		if (this.collection == null) {
-			mongoDatabase.createCollection("conversations");
-		}
 	}
 
 	@Override
 	public void add(Conversation conversation) {
-		collection.insertOne(
-				new Document()
-						.append("conversationId", conversation.getConversationId())
-		);
+		try {
+			insertOneConversation(conversation);
+		} catch (JsonProcessingException e) {
+			throw new IllegalArgumentException(e);
+		}
+	}
+
+	private void insertOneConversation(Conversation conversation) throws JsonProcessingException {
+		ObjectMapper mapper = new ObjectMapper();
+		String conversationAsJson = mapper.writeValueAsString(conversation);
+		Document document = Document.parse(conversationAsJson);
+		collection.insertOne(document);
 	}
 
 	@Override

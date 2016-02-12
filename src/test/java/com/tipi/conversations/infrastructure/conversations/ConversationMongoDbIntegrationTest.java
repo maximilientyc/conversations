@@ -62,7 +62,6 @@ public class ConversationMongoDbIntegrationTest {
 				.addParticipant(maximilien)
 				.addParticipant(bob);
 
-
 		// when
 		CreateConversationCommand createConversationCommand = new CreateConversationCommand(conversation, conversationRepository);
 		createConversationCommand.execute();
