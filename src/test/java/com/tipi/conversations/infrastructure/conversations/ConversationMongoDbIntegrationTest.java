@@ -2,10 +2,9 @@ package com.tipi.conversations.infrastructure.conversations;
 
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoDatabase;
+import com.tipi.conversations.api.conversations.CreateConversationCommand;
 import com.tipi.conversations.domain.conversations.*;
 import com.tipi.conversations.domain.users.UserRepository;
-import com.tipi.conversations.api.conversations.CreateConversationCommand;
-import com.tipi.conversations.infrastructure.conversations.MongoDbConversationRepository;
 import de.flapdoodle.embed.mongo.distribution.Version;
 import de.flapdoodle.embed.mongo.tests.MongodForTestsFactory;
 import org.junit.Rule;
@@ -69,6 +68,25 @@ public class ConversationMongoDbIntegrationTest {
 		// then
 		boolean conversationExists = conversationRepository.exists(conversation);
 		assertThat(conversationExists).isTrue();
+	}
+
+	@Test
+	public void should_return_exactly_the_same_conversation() {
+		// given
+		Participant maximilien = participantFactory.buildParticipant(userRepository.get("max"));
+		Participant bob = participantFactory.buildParticipant(userRepository.get("bob"));
+
+		Conversation conversation = conversationFactory.buildConversation()
+				.addParticipant(maximilien)
+				.addParticipant(bob);
+
+		// when
+		CreateConversationCommand createConversationCommand = new CreateConversationCommand(conversation, conversationRepository);
+		createConversationCommand.execute();
+
+		// then
+		Conversation conversationFromMongoDb = conversationRepository.get(conversation.getConversationId());
+		assertThat(conversation.getConversationId()).isEqualTo(conversationFromMongoDb.getConversationId());
 	}
 
 }

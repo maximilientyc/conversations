@@ -19,4 +19,9 @@ public class SampleConversationRepository implements ConversationRepository {
 	public boolean exists(Conversation conversation) {
 		return false;
 	}
+
+	@Override
+	public Conversation get(String conversationId) {
+		return null;
+	}
 }

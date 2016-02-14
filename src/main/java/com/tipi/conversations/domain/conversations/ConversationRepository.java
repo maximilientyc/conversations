@@ -12,4 +12,6 @@ public interface ConversationRepository {
 	public void update(Conversation conversation);
 
 	public boolean exists(Conversation conversation);
+
+	public Conversation get(String conversationId);
 }
