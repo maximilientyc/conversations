@@ -89,4 +89,22 @@ public class ConversationMongoDbIntegrationTest {
 		assertThat(conversation.getConversationId()).isEqualTo(conversationFromMongoDb.getConversationId());
 	}
 
+	@Test
+	public void should_return_an_error_when_conversation_is_retreived_using_a_null_conversation_id() {
+		// given
+		Participant maximilien = participantFactory.buildParticipant(userRepository.get("max"));
+		Participant bob = participantFactory.buildParticipant(userRepository.get("bob"));
+
+		Conversation conversation = conversationFactory.buildConversation()
+				.addParticipant(maximilien)
+				.addParticipant(bob);
+
+		expectedException.expect(IllegalArgumentException.class);
+		expectedException.expectMessage("Conversation Id cannot be empty.");
+
+		// when
+		CreateConversationCommand createConversationCommand = new CreateConversationCommand(conversation, conversationRepository);
+		createConversationCommand.execute();
+		Conversation conversationFromMongoDb = conversationRepository.get(null);
+	}
 }

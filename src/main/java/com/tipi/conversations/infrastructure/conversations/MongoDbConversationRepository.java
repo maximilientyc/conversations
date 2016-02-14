@@ -62,10 +62,13 @@ public class MongoDbConversationRepository implements ConversationRepository {
 
 	@Override
 	public Conversation get(String conversationId) {
+		if (conversationId == null) {
+			throw new IllegalArgumentException("Conversation Id cannot be empty.");
+		}
 		try {
 			return findOneConversation(conversationId);
 		} catch (IOException e) {
-			throw new IllegalArgumentException(e);
+			throw new RuntimeException(e);
 		}
 	}
 
