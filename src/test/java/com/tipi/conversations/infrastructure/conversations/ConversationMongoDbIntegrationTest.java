@@ -5,6 +5,7 @@ import com.mongodb.client.MongoDatabase;
 import com.tipi.conversations.api.conversations.CreateConversationCommand;
 import com.tipi.conversations.domain.conversations.*;
 import com.tipi.conversations.domain.users.UserRepository;
+import com.tipi.conversations.infrastructure.conversations.mongodb.MongoDbConversationRepository;
 import de.flapdoodle.embed.mongo.distribution.Version;
 import de.flapdoodle.embed.mongo.tests.MongodForTestsFactory;
 import org.junit.Rule;

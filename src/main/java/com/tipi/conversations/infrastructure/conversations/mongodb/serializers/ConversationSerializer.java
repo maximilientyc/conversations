@@ -1,4 +1,4 @@
-package com.tipi.conversations.infrastructure.conversations.serializers;
+package com.tipi.conversations.infrastructure.conversations.mongodb.serializers;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonProcessingException;

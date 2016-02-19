@@ -1,10 +1,9 @@
-package com.tipi.conversations.infrastructure.conversations.serializers;
+package com.tipi.conversations.infrastructure.conversations.mongodb.serializers;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
-import com.sun.org.apache.xml.internal.serializer.Serializer;
 import com.tipi.conversations.domain.conversations.Message;
 
 import java.io.IOException;
