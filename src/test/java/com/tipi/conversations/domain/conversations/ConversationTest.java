@@ -99,7 +99,7 @@ public class ConversationTest {
 		ConversationRepository conversationRepositorySpy = Mockito.spy(conversationRepository);
 		CreateConversationCommand createConversationCommand = new CreateConversationCommand(conversation, conversationRepositorySpy);
 		expectedException.expect(IllegalArgumentException.class);
-		expectedException.expectMessage("Cannot create conversation, reason: not enough participants.");
+		expectedException.expectMessage("Cannot create conversation, reason: not enough getParticipants.");
 
 		// when
 		Mockito.when(conversationRepositorySpy.exists(conversation)).thenReturn(false);
@@ -117,7 +117,7 @@ public class ConversationTest {
 				.addParticipant(bob);
 
 		expectedException.expect(IllegalArgumentException.class);
-		expectedException.expectMessage("Cannot leave conversation, reason: not enough participants.");
+		expectedException.expectMessage("Cannot leave conversation, reason: not enough getParticipants.");
 
 		// when
 		conversation.removeParticipant(maximilien);
@@ -180,7 +180,7 @@ public class ConversationTest {
 		conversation.postMessage(secondMessage);
 
 		// then
-		assertThat(firstMessage.postedOn()).isBeforeOrEqualsTo(secondMessage.postedOn());
+		assertThat(firstMessage.getPostedOn()).isBeforeOrEqualsTo(secondMessage.getPostedOn());
 	}
 
 }

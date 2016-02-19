@@ -1,4 +1,4 @@
-package com.tipi.conversations.infrastructure.conversations;
+package com.tipi.conversations.infrastructure.conversations.serializers;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -17,6 +17,8 @@ public class ConversationSerializer extends JsonSerializer<Conversation> {
 	public void serialize(Conversation conversation, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException, JsonProcessingException {
 		jsonGenerator.writeStartObject();
 		jsonGenerator.writeStringField("conversationId", conversation.getConversationId());
+		jsonGenerator.writeObjectField("participants", conversation.getParticipants());
+		jsonGenerator.writeObjectField("messages", conversation.getMessages());
 		jsonGenerator.writeEndObject();
 	}
 }

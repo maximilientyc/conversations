@@ -40,7 +40,6 @@ public class ConversationMongoDbIntegrationTest {
 
 		MongoDatabase mongoDatabase = prepareMongoDatabase();
 		conversationRepository = new MongoDbConversationRepository(mongoDatabase);
-
 		expectedException = ExpectedException.none();
 	}
 
@@ -87,6 +86,10 @@ public class ConversationMongoDbIntegrationTest {
 		// then
 		Conversation conversationFromMongoDb = conversationRepository.get(conversation.getConversationId());
 		assertThat(conversation.getConversationId()).isEqualTo(conversationFromMongoDb.getConversationId());
+		assertThat(conversation.countParticipants()).isEqualTo(conversationFromMongoDb.countParticipants());
+		for (Participant participant : conversation.getParticipants()) {
+			assertThat(conversationFromMongoDb.getParticipants().contains(participant));
+		}
 	}
 
 	@Test

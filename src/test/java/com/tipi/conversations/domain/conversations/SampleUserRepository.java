@@ -24,7 +24,7 @@ public class SampleUserRepository implements UserRepository {
 	@Override
 	public User get(String userId) {
 		for (User user : users) {
-			if (user.userId().equals(userId)) {
+			if (user.getUserId().equals(userId)) {
 				return user;
 			}
 		}

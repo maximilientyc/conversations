@@ -32,7 +32,7 @@ public class Conversation {
 	}
 
 	public void postMessage(Message message) {
-		if (!participants.contains(message.postedBy())) {
+		if (!participants.contains(message.getPostedBy())) {
 			throw new IllegalArgumentException("Cannot post message, reason: not a participant.");
 		}
 		messages.add(message);
@@ -44,12 +44,16 @@ public class Conversation {
 
 	public void removeParticipant(Participant participant) {
 		if (countParticipants() == 2) {
-			throw new IllegalArgumentException("Cannot leave conversation, reason: not enough participants.");
+			throw new IllegalArgumentException("Cannot leave conversation, reason: not enough getParticipants.");
 		}
 		participants.remove(participant);
 	}
 
-	public List<Participant> participants() {
+	public List<Participant> getParticipants() {
 		return participants;
+	}
+
+	public List<Message> getMessages() {
+		return messages;
 	}
 }

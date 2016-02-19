@@ -15,15 +15,15 @@ public class User {
 		this.lastName = lastName;
 	}
 
-	public String userId() {
+	public String getUserId() {
 		return userId;
 	}
 
-	public String firstName() {
+	public String getFirstName() {
 		return firstName;
 	}
 
-	public String lastName() {
+	public String getLastName() {
 		return lastName;
 	}
 

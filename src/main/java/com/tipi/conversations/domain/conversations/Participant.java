@@ -13,4 +13,7 @@ public class Participant {
 		this.user = user;
 	}
 
+	public User getUser() {
+		return user;
+	}
 }

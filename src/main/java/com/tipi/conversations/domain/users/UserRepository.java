@@ -10,7 +10,7 @@ public interface UserRepository {
 	 * in order to link conversation @Participant with your user management implementation.
 	 *
 	 * @param userId
-	 * @return user referenced by @userId
+	 * @return user referenced by @getUserId
 	 * @see com.tipi.conversations.domain.conversations.Participant
 	 */
 	User get(String userId);

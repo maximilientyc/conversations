@@ -26,12 +26,20 @@ public class Message {
 		this.postedBy = postedBy;
 		return this;
 	}
-
-	public Participant postedBy() {
-		return postedBy;
+	
+	public String getMessageId() {
+		return messageId;
 	}
 
-	public Date postedOn() {
+	public String getContent() {
+		return content;
+	}
+
+	public Date getPostedOn() {
 		return postedOn;
+	}
+
+	public Participant getPostedBy() {
+		return postedBy;
 	}
 }
