@@ -9,12 +9,12 @@ import com.tipi.conversations.domain.conversations.Message;
 import java.io.IOException;
 
 /**
- * Created by Maximilien on 19/02/2016.
+ * Created by @maximilientyc on 19/02/2016.
  */
 public class MessageSerializer extends JsonSerializer<Message> {
 
 	@Override
-	public void serialize(Message message, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException, JsonProcessingException {
+	public void serialize(Message message, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
 		jsonGenerator.writeStartObject();
 		jsonGenerator.writeStringField("messageId", message.getMessageId());
 		jsonGenerator.writeStringField("content", message.getContent());

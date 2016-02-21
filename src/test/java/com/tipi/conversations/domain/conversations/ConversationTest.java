@@ -1,7 +1,7 @@
 package com.tipi.conversations.domain.conversations;
 
-import com.tipi.conversations.domain.users.UserRepository;
 import com.tipi.conversations.api.conversations.CreateConversationCommand;
+import com.tipi.conversations.domain.users.UserRepository;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -10,20 +10,19 @@ import org.mockito.Mockito;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
- * Created by Maximilien on 03/01/2016.
+ * Created by @maximilientyc on 03/01/2016.
  */
 public class ConversationTest {
 
 
-	private ConversationService conversationService;
-	private ConversationFactory conversationFactory;
-	private MessageFactory messageFactory;
-	private ParticipantFactory participantFactory;
-	private UserRepository userRepository;
-	private ConversationRepository conversationRepository;
-
 	@Rule
-	public ExpectedException expectedException;
+	public final ExpectedException expectedException;
+	private final ConversationService conversationService;
+	private final ConversationFactory conversationFactory;
+	private final MessageFactory messageFactory;
+	private final ParticipantFactory participantFactory;
+	private final UserRepository userRepository;
+	private final ConversationRepository conversationRepository;
 
 	public ConversationTest() {
 		conversationService = new ConversationService();

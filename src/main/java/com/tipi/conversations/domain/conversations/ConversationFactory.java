@@ -1,11 +1,11 @@
 package com.tipi.conversations.domain.conversations;
 
 /**
- * Created by Maximilien on 09/01/2016.
+ * Created by @maximilientyc on 09/01/2016.
  */
 public class ConversationFactory {
 
-	private ConversationService conversationService;
+	private final ConversationService conversationService;
 
 	public ConversationFactory(ConversationService conversationService) {
 		this.conversationService = conversationService;
@@ -13,8 +13,7 @@ public class ConversationFactory {
 
 	public Conversation buildConversation() {
 		String conversationId = conversationService.getNextConversationId();
-		Conversation conversation = new Conversation(conversationId);
-		return conversation;
+		return new Conversation(conversationId);
 	}
-	
+
 }

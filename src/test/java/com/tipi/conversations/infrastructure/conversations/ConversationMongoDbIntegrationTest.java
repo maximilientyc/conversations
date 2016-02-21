@@ -18,24 +18,21 @@ import java.util.UUID;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
- * Created by Maximilien on 08/02/2016.
+ * Created by @maximilientyc on 08/02/2016.
  */
 public class ConversationMongoDbIntegrationTest {
 
-	private ConversationService conversationService;
-	private ConversationFactory conversationFactory;
-	private MessageFactory messageFactory;
-	private ParticipantFactory participantFactory;
-	private UserRepository userRepository;
-	private ConversationRepository conversationRepository;
-
 	@Rule
 	public ExpectedException expectedException;
+	private final ConversationFactory conversationFactory;
+	private final ParticipantFactory participantFactory;
+	private final UserRepository userRepository;
+	private ConversationRepository conversationRepository;
 
 	public ConversationMongoDbIntegrationTest() throws IOException {
-		conversationService = new ConversationService();
+		ConversationService conversationService = new ConversationService();
 		conversationFactory = new ConversationFactory(conversationService);
-		messageFactory = new MessageFactory(conversationService);
+		MessageFactory messageFactory = new MessageFactory(conversationService);
 		participantFactory = new ParticipantFactory(conversationService);
 		userRepository = new SampleUserRepository();
 
@@ -47,8 +44,7 @@ public class ConversationMongoDbIntegrationTest {
 	private MongoDatabase prepareMongoDatabase() throws IOException {
 		MongodForTestsFactory factory = MongodForTestsFactory.with(Version.Main.PRODUCTION);
 		MongoClient mongo = factory.newMongo();
-		MongoDatabase db = mongo.getDatabase("conversations-test-#" + UUID.randomUUID());
-		return db;
+		return mongo.getDatabase("conversations-test-#" + UUID.randomUUID());
 	}
 
 	@Test

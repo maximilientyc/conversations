@@ -1,17 +1,15 @@
 package com.tipi.conversations.domain.conversations;
 
-import com.tipi.conversations.domain.conversations.Conversation;
-
 /**
- * Created by Maximilien on 07/02/2016.
+ * Created by @maximilientyc on 07/02/2016.
  */
 public interface ConversationRepository {
 
-	public void add(Conversation conversation);
+	void add(Conversation conversation);
 
-	public void update(Conversation conversation);
+	void update(Conversation conversation);
 
-	public boolean exists(Conversation conversation);
+	boolean exists(Conversation conversation);
 
-	public Conversation get(String conversationId);
+	Conversation get(String conversationId);
 }

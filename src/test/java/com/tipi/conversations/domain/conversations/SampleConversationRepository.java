@@ -1,7 +1,7 @@
 package com.tipi.conversations.domain.conversations;
 
 /**
- * Created by Maximilien on 07/02/2016.
+ * Created by @maximilientyc on 07/02/2016.
  */
 public class SampleConversationRepository implements ConversationRepository {
 

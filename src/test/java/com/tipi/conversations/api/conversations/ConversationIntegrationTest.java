@@ -2,32 +2,28 @@ package com.tipi.conversations.api.conversations;
 
 import com.tipi.conversations.domain.conversations.*;
 import com.tipi.conversations.domain.users.UserRepository;
-import com.tipi.conversations.api.conversations.CreateConversationCommand;
-import com.tipi.conversations.api.conversations.UpdateConversationCommand;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.mockito.Mockito;
 
 /**
- * Created by Maximilien on 07/02/2016.
+ * Created by @maximilientyc on 07/02/2016.
  */
 public class ConversationIntegrationTest {
 
-	private ConversationService conversationService;
-	private ConversationFactory conversationFactory;
-	private MessageFactory messageFactory;
-	private ParticipantFactory participantFactory;
-	private UserRepository userRepository;
-	private ConversationRepository conversationRepository;
-
 	@Rule
-	public ExpectedException expectedException;
+	public final ExpectedException expectedException;
+	private final ConversationService conversationService;
+	private final ConversationFactory conversationFactory;
+	private final ParticipantFactory participantFactory;
+	private final UserRepository userRepository;
+	private final ConversationRepository conversationRepository;
 
 	public ConversationIntegrationTest() {
 		conversationService = new ConversationService();
 		conversationFactory = new ConversationFactory(conversationService);
-		messageFactory = new MessageFactory(conversationService);
+		MessageFactory messageFactory = new MessageFactory(conversationService);
 		participantFactory = new ParticipantFactory(conversationService);
 		userRepository = new SampleUserRepository();
 		conversationRepository = new SampleConversationRepository();

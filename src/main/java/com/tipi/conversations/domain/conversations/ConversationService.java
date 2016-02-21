@@ -3,7 +3,7 @@ package com.tipi.conversations.domain.conversations;
 import java.util.UUID;
 
 /**
- * Created by Maximilien on 03/01/2016.
+ * Created by @maximilientyc on 03/01/2016.
  */
 public class ConversationService {
 

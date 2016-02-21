@@ -10,12 +10,12 @@ import com.tipi.conversations.domain.users.User;
 import java.io.IOException;
 
 /**
- * Created by Maximilien on 19/02/2016.
+ * Created by @maximilientyc on 19/02/2016.
  */
 public class UserDeserializer extends JsonDeserializer<User> {
 
 	@Override
-	public User deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException, JsonProcessingException {
+	public User deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException {
 		JsonNode node = jsonParser.getCodec().readTree(jsonParser);
 		String userId = node.get("userId").textValue();
 		String firstName = node.get("firstName").textValue();

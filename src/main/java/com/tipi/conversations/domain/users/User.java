@@ -1,7 +1,7 @@
 package com.tipi.conversations.domain.users;
 
 /**
- * Created by Maximilien on 28/01/2016.
+ * Created by @maximilientyc on 28/01/2016.
  */
 public class User {
 

@@ -3,7 +3,7 @@ package com.tipi.conversations.domain.conversations;
 import com.tipi.conversations.domain.users.User;
 
 /**
- * Created by Maximilien on 30/12/2015.
+ * Created by @maximilientyc on 30/12/2015.
  */
 public class Participant {
 

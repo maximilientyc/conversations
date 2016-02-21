@@ -3,11 +3,11 @@ package com.tipi.conversations.domain.conversations;
 import com.tipi.conversations.domain.users.User;
 
 /**
- * Created by Maximilien on 16/01/2016.
+ * Created by @maximilientyc on 16/01/2016.
  */
 public class ParticipantFactory {
 
-	private ConversationService conversationService;
+	private final ConversationService conversationService;
 
 	public ParticipantFactory(ConversationService conversationService) {
 		this.conversationService = conversationService;

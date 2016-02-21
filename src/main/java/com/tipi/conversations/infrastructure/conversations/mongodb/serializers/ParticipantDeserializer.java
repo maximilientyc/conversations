@@ -11,12 +11,12 @@ import com.tipi.conversations.domain.users.User;
 import java.io.IOException;
 
 /**
- * Created by Maximilien on 19/02/2016.
+ * Created by @maximilientyc on 19/02/2016.
  */
 public class ParticipantDeserializer extends JsonDeserializer<Participant> {
 
 	@Override
-	public Participant deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException, JsonProcessingException {
+	public Participant deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException {
 		JsonNode node = jsonParser.getCodec().readTree(jsonParser);
 		JsonNode userNode = node.get("user");
 		User user = userNode.traverse(jsonParser.getCodec()).readValueAs(User.class);

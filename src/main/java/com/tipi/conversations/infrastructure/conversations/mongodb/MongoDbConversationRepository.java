@@ -18,12 +18,12 @@ import java.io.IOException;
 import static com.mongodb.client.model.Filters.eq;
 
 /**
- * Created by Maximilien on 10/02/2016.
+ * Created by @maximilientyc on 10/02/2016.
  */
 public class MongoDbConversationRepository implements ConversationRepository {
 
-	private MongoCollection<Document> collection;
-	private ObjectMapper conversationObjectMapper;
+	private final MongoCollection<Document> collection;
+	private final ObjectMapper conversationObjectMapper;
 
 	public MongoDbConversationRepository(MongoDatabase mongoDatabase) {
 		this.collection = mongoDatabase.getCollection("conversations");
@@ -85,8 +85,7 @@ public class MongoDbConversationRepository implements ConversationRepository {
 
 	private Conversation findOneConversation(String conversationId) throws IOException {
 		Document document = collection.findOneAndDelete(eq("conversationId", conversationId));
-		Conversation conversation = conversationObjectMapper.readValue(document.toJson(), Conversation.class);
-		return conversation;
+		return conversationObjectMapper.readValue(document.toJson(), Conversation.class);
 	}
 
 }

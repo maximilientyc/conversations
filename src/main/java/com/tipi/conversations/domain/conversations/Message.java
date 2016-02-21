@@ -3,13 +3,13 @@ package com.tipi.conversations.domain.conversations;
 import java.util.Date;
 
 /**
- * Created by Maximilien on 10/01/2016.
+ * Created by @maximilientyc on 10/01/2016.
  */
 public class Message {
 
-	private String messageId;
+	private final String messageId;
 	private String content;
-	private Date postedOn;
+	private final Date postedOn;
 	private Participant postedBy;
 
 	public Message(String messageId, Date postedOn) {
@@ -17,16 +17,6 @@ public class Message {
 		this.postedOn = postedOn;
 	}
 
-	public Message setContent(String content) {
-		this.content = content;
-		return this;
-	}
-
-	public Message setPostedBy(Participant postedBy) {
-		this.postedBy = postedBy;
-		return this;
-	}
-	
 	public String getMessageId() {
 		return messageId;
 	}
@@ -35,11 +25,21 @@ public class Message {
 		return content;
 	}
 
+	public Message setContent(String content) {
+		this.content = content;
+		return this;
+	}
+
 	public Date getPostedOn() {
 		return postedOn;
 	}
 
 	public Participant getPostedBy() {
 		return postedBy;
+	}
+
+	public Message setPostedBy(Participant postedBy) {
+		this.postedBy = postedBy;
+		return this;
 	}
 }

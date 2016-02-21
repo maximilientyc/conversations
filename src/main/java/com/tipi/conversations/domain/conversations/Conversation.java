@@ -4,13 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Maximilien on 03/01/2016.
+ * Created by @maximilientyc on 03/01/2016.
  */
 public class Conversation {
 
 	private final String conversationId;
-	private List<Participant> participants;
-	private List<Message> messages;
+	private final List<Participant> participants;
+	private final List<Message> messages;
 
 	public Conversation(String conversationId) {
 		this.conversationId = conversationId;

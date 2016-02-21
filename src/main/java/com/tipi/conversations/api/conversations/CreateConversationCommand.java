@@ -4,7 +4,7 @@ import com.tipi.conversations.domain.conversations.Conversation;
 import com.tipi.conversations.domain.conversations.ConversationRepository;
 
 /**
- * Created by Maximilien on 07/02/2016.
+ * Created by @maximilientyc on 07/02/2016.
  */
 public class CreateConversationCommand {
 
@@ -19,7 +19,7 @@ public class CreateConversationCommand {
 	public void execute() {
 		boolean conversationExists = conversationRepository.exists(conversation);
 		if (conversationExists) {
-			throw new IllegalArgumentException("Cannot create conversation, reason: a conversation with id '"+ conversation.getConversationId() +"' already exists.");
+			throw new IllegalArgumentException("Cannot create conversation, reason: a conversation with id '" + conversation.getConversationId() + "' already exists.");
 		}
 		if (conversation.countParticipants() < 2) {
 			throw new IllegalArgumentException("Cannot create conversation, reason: not enough getParticipants.");

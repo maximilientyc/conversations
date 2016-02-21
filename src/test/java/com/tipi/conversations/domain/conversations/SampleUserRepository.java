@@ -7,11 +7,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Maximilien on 29/01/2016.
+ * Created by @maximilientyc on 29/01/2016.
  */
 public class SampleUserRepository implements UserRepository {
 
-	private List<User> users;
+	private final List<User> users;
 
 
 	public SampleUserRepository() {

@@ -9,23 +9,20 @@ import com.tipi.conversations.domain.conversations.Conversation;
 import com.tipi.conversations.domain.conversations.Participant;
 
 import java.io.IOException;
-import java.util.Iterator;
 
 /**
- * Created by Maximilien on 14/02/2016.
+ * Created by @maximilientyc on 14/02/2016.
  */
 public class ConversationDeserializer extends JsonDeserializer<Conversation> {
 
 	@Override
-	public Conversation deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException, JsonProcessingException {
+	public Conversation deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException {
 		JsonNode node = jsonParser.getCodec().readTree(jsonParser);
 		String conversationId = node.get("conversationId").textValue();
 		Conversation conversation = new Conversation(conversationId);
 
 		JsonNode participantsNode = node.get("participants");
-		Iterator<JsonNode> participantNodeIterator = participantsNode.iterator();
-		while (participantNodeIterator.hasNext()) {
-			JsonNode participantNode = participantNodeIterator.next();
+		for (JsonNode participantNode : participantsNode) {
 			Participant participant = participantNode.traverse(jsonParser.getCodec()).readValueAs(Participant.class);
 			conversation.addParticipant(participant);
 		}

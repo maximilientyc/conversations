@@ -4,7 +4,7 @@ import com.tipi.conversations.domain.conversations.Conversation;
 import com.tipi.conversations.domain.conversations.ConversationRepository;
 
 /**
- * Created by Maximilien on 07/02/2016.
+ * Created by @maximilientyc on 07/02/2016.
  */
 public class UpdateConversationCommand {
 
@@ -19,7 +19,7 @@ public class UpdateConversationCommand {
 	public void execute() {
 		boolean conversationExists = conversationRepository.exists(conversation);
 		if (!conversationExists) {
-			throw new IllegalArgumentException("Cannot update conversation, reason: a conversation with id '"+ conversation.getConversationId() +"' does not exist.");
+			throw new IllegalArgumentException("Cannot update conversation, reason: a conversation with id '" + conversation.getConversationId() + "' does not exist.");
 		}
 		conversationRepository.update(conversation);
 	}
