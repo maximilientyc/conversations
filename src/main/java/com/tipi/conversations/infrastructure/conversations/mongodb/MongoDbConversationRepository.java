@@ -8,6 +8,7 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.tipi.conversations.domain.conversations.Conversation;
 import com.tipi.conversations.domain.conversations.ConversationRepository;
+import com.tipi.conversations.domain.conversations.Message;
 import com.tipi.conversations.domain.conversations.Participant;
 import com.tipi.conversations.domain.users.User;
 import com.tipi.conversations.infrastructure.conversations.mongodb.serializers.*;
@@ -36,10 +37,11 @@ public class MongoDbConversationRepository implements ConversationRepository {
 		customSerializerModule.addSerializer(Conversation.class, new ConversationSerializer());
 		customSerializerModule.addSerializer(Participant.class, new ParticipantSerializer());
 		customSerializerModule.addSerializer(User.class, new UserSerializer());
-		//customSerializerModule.addSerializer(Message.class, new MessageSerializer());
+		customSerializerModule.addSerializer(Message.class, new MessageSerializer());
 		customSerializerModule.addDeserializer(Conversation.class, new ConversationDeserializer());
 		customSerializerModule.addDeserializer(Participant.class, new ParticipantDeserializer());
 		customSerializerModule.addDeserializer(User.class, new UserDeserializer());
+		customSerializerModule.addDeserializer(Message.class, new MessageDeserializer());
 		objectMapper.registerModule(customSerializerModule);
 
 		this.conversationObjectMapper = objectMapper;

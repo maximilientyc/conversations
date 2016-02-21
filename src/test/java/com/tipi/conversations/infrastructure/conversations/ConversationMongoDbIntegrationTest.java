@@ -25,6 +25,7 @@ public class ConversationMongoDbIntegrationTest {
 	@Rule
 	public ExpectedException expectedException;
 	private final ConversationFactory conversationFactory;
+	private final MessageFactory messageFactory;
 	private final ParticipantFactory participantFactory;
 	private final UserRepository userRepository;
 	private ConversationRepository conversationRepository;
@@ -32,13 +33,14 @@ public class ConversationMongoDbIntegrationTest {
 	public ConversationMongoDbIntegrationTest() throws IOException {
 		ConversationService conversationService = new ConversationService();
 		conversationFactory = new ConversationFactory(conversationService);
-		MessageFactory messageFactory = new MessageFactory(conversationService);
+		messageFactory = new MessageFactory(conversationService);
 		participantFactory = new ParticipantFactory(conversationService);
 		userRepository = new SampleUserRepository();
 
 		MongoDatabase mongoDatabase = prepareMongoDatabase();
 		conversationRepository = new MongoDbConversationRepository(mongoDatabase);
 		expectedException = ExpectedException.none();
+
 	}
 
 	private MongoDatabase prepareMongoDatabase() throws IOException {
@@ -76,6 +78,8 @@ public class ConversationMongoDbIntegrationTest {
 				.addParticipant(maximilien)
 				.addParticipant(bob);
 
+		conversation.postMessage(messageFactory.buildMessage().setPostedBy(maximilien).setContent("What is wrong with this piece of code ?"));
+
 		// when
 		CreateConversationCommand createConversationCommand = new CreateConversationCommand(conversation, conversationRepository);
 		createConversationCommand.execute();
@@ -85,7 +89,10 @@ public class ConversationMongoDbIntegrationTest {
 		assertThat(conversation.getConversationId()).isEqualTo(conversationFromMongoDb.getConversationId());
 		assertThat(conversation.countParticipants()).isEqualTo(conversationFromMongoDb.countParticipants());
 		for (Participant participant : conversation.getParticipants()) {
-			assertThat(conversationFromMongoDb.getParticipants().contains(participant));
+			assertThat(conversationFromMongoDb.getParticipants().contains(participant)).isTrue();
+		}
+		for (Message message : conversation.getMessages()) {
+			assertThat(conversationFromMongoDb.getMessages().contains(message)).isTrue();
 		}
 	}
 

@@ -1,11 +1,11 @@
 package com.tipi.conversations.infrastructure.conversations.mongodb.serializers;
 
 import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.tipi.conversations.domain.conversations.Conversation;
+import com.tipi.conversations.domain.conversations.Message;
 import com.tipi.conversations.domain.conversations.Participant;
 
 import java.io.IOException;
@@ -25,6 +25,12 @@ public class ConversationDeserializer extends JsonDeserializer<Conversation> {
 		for (JsonNode participantNode : participantsNode) {
 			Participant participant = participantNode.traverse(jsonParser.getCodec()).readValueAs(Participant.class);
 			conversation.addParticipant(participant);
+		}
+
+		JsonNode messagesNode = node.get("messages");
+		for (JsonNode messageNode : messagesNode) {
+			Message message = messageNode.traverse(jsonParser.getCodec()).readValueAs(Message.class);
+			conversation.postMessage(message);
 		}
 
 		return conversation;
