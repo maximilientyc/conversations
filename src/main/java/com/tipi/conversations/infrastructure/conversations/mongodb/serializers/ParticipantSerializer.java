@@ -6,6 +6,10 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 import com.tipi.conversations.domain.conversations.Participant;
 
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 /**
  * Created by @maximilientyc on 19/02/2016.
@@ -16,6 +20,13 @@ public class ParticipantSerializer extends JsonSerializer<Participant> {
 	public void serialize(Participant participant, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
 		jsonGenerator.writeStartObject();
 		jsonGenerator.writeObjectField("user", participant.getUser());
+
+		ResourceBundle formatsProperties = ResourceBundle.getBundle("formats", Locale.ENGLISH);
+		DateFormat dateFormat = new SimpleDateFormat(
+				formatsProperties.getString("dateFormat.postedOn.javaToJson")
+		);
+		jsonGenerator.writeStringField("createdOn", dateFormat.format(participant.getCreatedOn()));
+
 		jsonGenerator.writeEndObject();
 	}
 }

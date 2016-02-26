@@ -8,6 +8,11 @@ import com.tipi.conversations.domain.conversations.Participant;
 import com.tipi.conversations.domain.users.User;
 
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.ResourceBundle;
 
 /**
  * Created by @maximilientyc on 19/02/2016.
@@ -19,6 +24,19 @@ public class ParticipantDeserializer extends JsonDeserializer<Participant> {
 		JsonNode node = jsonParser.getCodec().readTree(jsonParser);
 		JsonNode userNode = node.get("user");
 		User user = userNode.traverse(jsonParser.getCodec()).readValueAs(User.class);
-		return new Participant(user);
+
+		ResourceBundle formatsProperties = ResourceBundle.getBundle("formats");
+		DateFormat dateFormat = new SimpleDateFormat(
+				formatsProperties.getString("dateFormat.postedOn.javaToJson")
+		);
+		String createdOnAsString = node.get("createdOn").textValue();
+		Date createdOn = null;
+		try {
+			createdOn = dateFormat.parse(createdOnAsString);
+		} catch (ParseException e) {
+			throw new IllegalStateException(e);
+		}
+
+		return new Participant(user, createdOn);
 	}
 }

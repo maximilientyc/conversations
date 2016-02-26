@@ -182,4 +182,28 @@ public class ConversationTest {
 		assertThat(firstMessage.getPostedOn()).isBeforeOrEqualsTo(secondMessage.getPostedOn());
 	}
 
+	@Test
+	private void should_maintain_chronology_between_participant_arrival_inside_a_conversation() {
+		// given
+		Participant maximilien = participantFactory.buildParticipant(userRepository.get("max"));
+		Participant bob = participantFactory.buildParticipant(userRepository.get("bob"));
+
+		Conversation conversation = conversationFactory.buildConversation()
+				.addParticipant(maximilien)
+				.addParticipant(bob);
+
+		Message firstMessage = messageFactory.buildMessage().setContent("Hello ! How are you all ?)").setPostedBy(maximilien);
+		conversation.postMessage(firstMessage);
+		Message secondMessage = messageFactory.buildMessage().setContent("I'm fine, thank you max.").setPostedBy(bob);
+		conversation.postMessage(secondMessage);
+
+		// when
+		Participant alice = participantFactory.buildParticipant(userRepository.get("alice"));
+		conversation.addParticipant(alice);
+
+		// then
+		assertThat(alice.getCreatedOn()).isAfter(bob.getCreatedOn());
+		assertThat(alice.getCreatedOn()).isAfter(maximilien.getCreatedOn());
+	}
+
 }
