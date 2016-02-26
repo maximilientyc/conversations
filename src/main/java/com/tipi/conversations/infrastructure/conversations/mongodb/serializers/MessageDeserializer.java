@@ -13,6 +13,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.ResourceBundle;
 
 /**
  * Created by @maximilientyc on 21/02/2016.
@@ -26,7 +27,10 @@ public class MessageDeserializer extends JsonDeserializer<Message> {
 		String messageId = node.get("messageId").textValue();
 		String content = node.get("content").textValue();
 
-		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss:SS");
+		ResourceBundle formatsProperties = ResourceBundle.getBundle("formats");
+		DateFormat dateFormat = new SimpleDateFormat(
+				formatsProperties.getString("dateFormat.postedOn.javaToJson")
+		);
 		String postedAsString = node.get("postedOn").textValue();
 		Date postedOn = null;
 		try {
