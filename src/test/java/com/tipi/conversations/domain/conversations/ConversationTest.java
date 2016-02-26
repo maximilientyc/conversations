@@ -183,7 +183,7 @@ public class ConversationTest {
 	}
 
 	@Test
-	private void should_maintain_chronology_between_participant_arrival_inside_a_conversation() {
+	public void should_maintain_chronology_between_participant_arrival_inside_a_conversation() throws InterruptedException {
 		// given
 		Participant maximilien = participantFactory.buildParticipant(userRepository.get("max"));
 		Participant bob = participantFactory.buildParticipant(userRepository.get("bob"));
@@ -198,6 +198,7 @@ public class ConversationTest {
 		conversation.postMessage(secondMessage);
 
 		// when
+		Thread.sleep(1000);
 		Participant alice = participantFactory.buildParticipant(userRepository.get("alice"));
 		conversation.addParticipant(alice);
 
