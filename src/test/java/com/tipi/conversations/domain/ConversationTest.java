@@ -13,7 +13,6 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 public class ConversationTest {
 
-
 	@Rule
 	public final ExpectedException expectedException;
 	private final ConversationService conversationService;
@@ -24,12 +23,12 @@ public class ConversationTest {
 	private final ConversationRepository conversationRepository;
 
 	public ConversationTest() {
-		conversationService = new ConversationService();
+		conversationRepository =  Mockito.mock(SampleConversationRepository.class);
+		conversationService = new ConversationService(conversationRepository);
 		conversationFactory = new ConversationFactory(conversationService);
 		messageFactory = new MessageFactory(conversationService);
 		participantFactory = new ParticipantFactory(conversationService);
 		userRepository = new SampleUserRepository();
-		conversationRepository = new SampleConversationRepository();
 		expectedException = ExpectedException.none();
 	}
 
@@ -49,58 +48,19 @@ public class ConversationTest {
 	}
 
 	@Test
-	public void should_contain_one_message() {
-		// given
-		Participant maximilien = participantFactory.buildParticipant(userRepository.get("max"));
-		Participant bob = participantFactory.buildParticipant(userRepository.get("bob"));
-
-		Conversation conversation = conversationFactory.buildConversation()
-				.addParticipant(maximilien)
-				.addParticipant(bob);
-
-		// when
-		Message message = messageFactory.buildMessage().setContent("This is the message content !").setPostedBy(maximilien);
-		conversation.postMessage(message);
-
-		// then
-		assertThat(conversation.countMessages()).isEqualTo(1);
-	}
-
-	@Test
-	public void should_contain_two_messages() {
-		// given
-		Participant maximilien = participantFactory.buildParticipant(userRepository.get("max"));
-		Participant bob = participantFactory.buildParticipant(userRepository.get("bob"));
-
-		Conversation conversation = conversationFactory.buildConversation()
-				.addParticipant(maximilien)
-				.addParticipant(bob);
-
-		// when
-		Message firstMessage = messageFactory.buildMessage().setContent("This is the first message content !").setPostedBy(maximilien);
-		conversation.postMessage(firstMessage);
-		Message secondMessage = messageFactory.buildMessage().setContent("This is the second message content !").setPostedBy(bob);
-		conversation.postMessage(secondMessage);
-
-		// then
-		assertThat(conversation.countMessages()).isEqualTo(2);
-	}
-
-	@Test
 	public void should_return_an_error_when_creating_a_conversation_with_less_than_2_participants() {
 		// given
 		Participant maximilien = participantFactory.buildParticipant(userRepository.get("max"));
-
 		Conversation conversation = conversationFactory.buildConversation()
 				.addParticipant(maximilien);
 
-		ConversationRepository conversationRepositorySpy = Mockito.spy(conversationRepository);
-		CreateConversationCommand createConversationCommand = new CreateConversationCommand(conversation, conversationRepositorySpy);
+		CreateConversationCommand createConversationCommand = new CreateConversationCommand(conversation, conversationRepository);
 		expectedException.expect(IllegalArgumentException.class);
 		expectedException.expectMessage("Cannot create conversation, reason: not enough getParticipants.");
 
+		Mockito.when(conversationRepository.exists(conversation)).thenReturn(false);
+
 		// when
-		Mockito.when(conversationRepositorySpy.exists(conversation)).thenReturn(false);
 		createConversationCommand.execute();
 	}
 
@@ -155,10 +115,12 @@ public class ConversationTest {
 		expectedException.expect(IllegalArgumentException.class);
 		expectedException.expectMessage("Cannot post message, reason: not a participant.");
 
+		Mockito.when(conversationRepository.get(conversation.getConversationId())).thenReturn(conversation);
+
 		// when
 		conversation.removeParticipant(alice);
-		Message message = messageFactory.buildMessage().setContent("What are you doing maximilien next weekend ? ;)").setPostedBy(alice);
-		conversation.postMessage(message);
+		Message message = messageFactory.buildMessage().setConversationId(conversation.getConversationId()).setContent("What are you doing maximilien next weekend ? ;)").setPostedBy(alice);
+		conversationService.postMessage(message);
 	}
 
 	@Test
@@ -171,11 +133,13 @@ public class ConversationTest {
 				.addParticipant(maximilien)
 				.addParticipant(bob);
 
+		Mockito.when(conversationRepository.get(conversation.getConversationId())).thenReturn(conversation);
+
 		// when
-		Message firstMessage = messageFactory.buildMessage().setContent("Hello ! How are you all ?)").setPostedBy(maximilien);
-		conversation.postMessage(firstMessage);
-		Message secondMessage = messageFactory.buildMessage().setContent("I'm fine, thank you max.").setPostedBy(bob);
-		conversation.postMessage(secondMessage);
+		Message firstMessage = messageFactory.buildMessage().setConversationId(conversation.getConversationId()).setContent("Hello ! How are you all ?)").setPostedBy(maximilien);
+		conversationService.postMessage(firstMessage);
+		Message secondMessage = messageFactory.buildMessage().setConversationId(conversation.getConversationId()).setContent("I'm fine, thank you max.").setPostedBy(bob);
+		conversationService.postMessage(secondMessage);
 
 		// then
 		assertThat(firstMessage.getPostedOn()).isBeforeOrEqualsTo(secondMessage.getPostedOn());
@@ -190,11 +154,6 @@ public class ConversationTest {
 		Conversation conversation = conversationFactory.buildConversation()
 				.addParticipant(maximilien)
 				.addParticipant(bob);
-
-		Message firstMessage = messageFactory.buildMessage().setContent("Hello ! How are you all ?)").setPostedBy(maximilien);
-		conversation.postMessage(firstMessage);
-		Message secondMessage = messageFactory.buildMessage().setContent("I'm fine, thank you max.").setPostedBy(bob);
-		conversation.postMessage(secondMessage);
 
 		// when
 		Thread.sleep(1000);

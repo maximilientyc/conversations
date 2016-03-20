@@ -21,12 +21,12 @@ public class ConversationIntegrationTest {
 	private final ConversationRepository conversationRepository;
 
 	public ConversationIntegrationTest() {
-		conversationService = new ConversationService();
+		conversationRepository = new SampleConversationRepository();
+		conversationService = new ConversationService(conversationRepository);
 		conversationFactory = new ConversationFactory(conversationService);
 		MessageFactory messageFactory = new MessageFactory(conversationService);
 		participantFactory = new ParticipantFactory(conversationService);
 		userRepository = new SampleUserRepository();
-		conversationRepository = new SampleConversationRepository();
 		expectedException = ExpectedException.none();
 	}
 

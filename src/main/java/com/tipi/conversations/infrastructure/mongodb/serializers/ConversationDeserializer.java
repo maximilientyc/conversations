@@ -27,12 +27,6 @@ public class ConversationDeserializer extends JsonDeserializer<Conversation> {
 			conversation.addParticipant(participant);
 		}
 
-		JsonNode messagesNode = node.get("messages");
-		for (JsonNode messageNode : messagesNode) {
-			Message message = messageNode.traverse(jsonParser.getCodec()).readValueAs(Message.class);
-			conversation.postMessage(message);
-		}
-
 		return conversation;
 	}
 }

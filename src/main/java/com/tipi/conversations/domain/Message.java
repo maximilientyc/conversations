@@ -10,8 +10,9 @@ public class Message {
 
 	private final String messageId;
 	private final Date postedOn;
-	private String content;
 	private Participant postedBy;
+	private String conversationId;
+	private String content;
 
 	public Message(String messageId, Date postedOn) {
 		this.messageId = messageId;
@@ -20,6 +21,15 @@ public class Message {
 
 	public String getMessageId() {
 		return messageId;
+	}
+
+	public String getConversationId() {
+		return conversationId;
+	}
+
+	public Message setConversationId(String conversationId) {
+		this.conversationId = conversationId;
+		return this;
 	}
 
 	public String getContent() {
@@ -31,10 +41,6 @@ public class Message {
 		return this;
 	}
 
-	public Date getPostedOn() {
-		return postedOn;
-	}
-
 	public Participant getPostedBy() {
 		return postedBy;
 	}
@@ -42,6 +48,10 @@ public class Message {
 	public Message setPostedBy(Participant postedBy) {
 		this.postedBy = postedBy;
 		return this;
+	}
+
+	public Date getPostedOn() {
+		return postedOn;
 	}
 
 	@Override
@@ -59,4 +69,6 @@ public class Message {
 	public int hashCode() {
 		return Objects.hash(messageId, postedOn, content, postedBy);
 	}
+
+
 }

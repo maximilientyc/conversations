@@ -7,6 +7,12 @@ import java.util.UUID;
  */
 public class ConversationService {
 
+	private final ConversationRepository conversationRepository;
+
+	public ConversationService(ConversationRepository conversationRepository) {
+		this.conversationRepository = conversationRepository;
+	}
+
 	public String getNextConversationId() {
 		return UUID.randomUUID().toString();
 	}
@@ -15,4 +21,11 @@ public class ConversationService {
 		return UUID.randomUUID().toString();
 	}
 
+	public void postMessage(Message message) {
+		Conversation conversation = conversationRepository.get(message.getConversationId());
+		boolean conversationContainsMessageParticipant = conversation.getParticipants().contains(message.getPostedBy());
+		if (!conversationContainsMessageParticipant) {
+			throw new IllegalArgumentException("Cannot post message, reason: not a participant.");
+		}
+	}
 }
