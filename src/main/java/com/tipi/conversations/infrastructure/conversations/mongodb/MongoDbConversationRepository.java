@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.tipi.conversations.domain.conversations.Conversation;
@@ -86,7 +87,8 @@ public class MongoDbConversationRepository implements ConversationRepository {
 	}
 
 	private Conversation findOneConversation(String conversationId) throws IOException {
-		Document document = collection.findOneAndDelete(eq("conversationId", conversationId));
+		FindIterable<Document> documents = collection.find(eq("conversationId", conversationId));
+		Document document = documents.first();
 		return conversationObjectMapper.readValue(document.toJson(), Conversation.class);
 	}
 
