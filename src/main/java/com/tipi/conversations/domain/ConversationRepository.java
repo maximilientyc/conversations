@@ -1,4 +1,4 @@
-package com.tipi.conversations.domain.conversations;
+package com.tipi.conversations.domain;
 
 /**
  * Created by @maximilientyc on 07/02/2016.

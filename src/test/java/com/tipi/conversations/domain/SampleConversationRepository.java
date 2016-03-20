@@ -1,4 +1,7 @@
-package com.tipi.conversations.domain.conversations;
+package com.tipi.conversations.domain;
+
+import com.tipi.conversations.domain.Conversation;
+import com.tipi.conversations.domain.ConversationRepository;
 
 /**
  * Created by @maximilientyc on 07/02/2016.

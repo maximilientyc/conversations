@@ -1,9 +1,9 @@
-package com.tipi.conversations.infrastructure.conversations.mongodb.serializers;
+package com.tipi.conversations.infrastructure.mongodb.serializers;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
-import com.tipi.conversations.domain.conversations.Participant;
+import com.tipi.conversations.domain.Message;
 
 import java.io.IOException;
 import java.text.DateFormat;
@@ -14,19 +14,21 @@ import java.util.ResourceBundle;
 /**
  * Created by @maximilientyc on 19/02/2016.
  */
-public class ParticipantSerializer extends JsonSerializer<Participant> {
+public class MessageSerializer extends JsonSerializer<Message> {
 
 	@Override
-	public void serialize(Participant participant, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
+	public void serialize(Message message, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
 		jsonGenerator.writeStartObject();
-		jsonGenerator.writeObjectField("user", participant.getUser());
+		jsonGenerator.writeStringField("messageId", message.getMessageId());
+		jsonGenerator.writeStringField("content", message.getContent());
 
 		ResourceBundle formatsProperties = ResourceBundle.getBundle("formats", Locale.ENGLISH);
 		DateFormat dateFormat = new SimpleDateFormat(
 				formatsProperties.getString("dateFormat.postedOn.javaToJson")
 		);
-		jsonGenerator.writeStringField("createdOn", dateFormat.format(participant.getCreatedOn()));
 
+		jsonGenerator.writeStringField("postedOn", dateFormat.format(message.getPostedOn()));
+		jsonGenerator.writeObjectField("postedBy", message.getPostedBy());
 		jsonGenerator.writeEndObject();
 	}
 }

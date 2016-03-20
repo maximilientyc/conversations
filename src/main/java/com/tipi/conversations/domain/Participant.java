@@ -1,6 +1,4 @@
-package com.tipi.conversations.domain.conversations;
-
-import com.tipi.conversations.domain.users.User;
+package com.tipi.conversations.domain;
 
 import java.util.Date;
 import java.util.Objects;

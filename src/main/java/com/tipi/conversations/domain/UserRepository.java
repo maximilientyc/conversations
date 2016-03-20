@@ -1,4 +1,4 @@
-package com.tipi.conversations.domain.users;
+package com.tipi.conversations.domain;
 
 /**
  * Created by @maximilientyc on 29/01/2016.
@@ -11,7 +11,7 @@ public interface UserRepository {
 	 *
 	 * @param userId is the unique user identifier in client application
 	 * @return user referenced by @userId
-	 * @see com.tipi.conversations.domain.conversations.Participant
+	 * @see Participant
 	 */
 	User get(String userId);
 

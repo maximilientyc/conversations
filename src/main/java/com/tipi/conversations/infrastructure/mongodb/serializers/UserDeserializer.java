@@ -1,10 +1,10 @@
-package com.tipi.conversations.infrastructure.conversations.mongodb.serializers;
+package com.tipi.conversations.infrastructure.mongodb.serializers;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.tipi.conversations.domain.users.User;
+import com.tipi.conversations.domain.User;
 
 import java.io.IOException;
 

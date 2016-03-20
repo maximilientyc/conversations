@@ -1,9 +1,9 @@
-package com.tipi.conversations.infrastructure.conversations.mongodb.serializers;
+package com.tipi.conversations.infrastructure.mongodb.serializers;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
-import com.tipi.conversations.domain.conversations.Conversation;
+import com.tipi.conversations.domain.Conversation;
 
 import java.io.IOException;
 

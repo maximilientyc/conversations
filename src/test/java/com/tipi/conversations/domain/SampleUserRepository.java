@@ -1,7 +1,7 @@
-package com.tipi.conversations.domain.conversations;
+package com.tipi.conversations.domain;
 
-import com.tipi.conversations.domain.users.User;
-import com.tipi.conversations.domain.users.UserRepository;
+import com.tipi.conversations.domain.User;
+import com.tipi.conversations.domain.UserRepository;
 
 import java.util.ArrayList;
 import java.util.List;
