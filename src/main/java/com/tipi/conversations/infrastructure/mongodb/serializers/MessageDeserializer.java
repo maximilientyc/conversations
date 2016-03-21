@@ -26,6 +26,7 @@ public class MessageDeserializer extends JsonDeserializer<Message> {
 
 		String messageId = node.get("messageId").textValue();
 		String content = node.get("content").textValue();
+		String conversationId = node.get("conversationId").textValue();
 
 		ResourceBundle formatsProperties = ResourceBundle.getBundle("formats");
 		DateFormat dateFormat = new SimpleDateFormat(

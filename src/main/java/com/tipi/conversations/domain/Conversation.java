@@ -40,7 +40,4 @@ public class Conversation {
 		return participants;
 	}
 
-	public int countMessages() {
-		return 0;
-	}
 }

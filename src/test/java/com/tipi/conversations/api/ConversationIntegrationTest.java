@@ -19,10 +19,12 @@ public class ConversationIntegrationTest {
 	private final ParticipantFactory participantFactory;
 	private final UserRepository userRepository;
 	private final ConversationRepository conversationRepository;
+	private final MessageRepository messageRepository;
 
 	public ConversationIntegrationTest() {
 		conversationRepository = new SampleConversationRepository();
-		conversationService = new ConversationService(conversationRepository);
+		messageRepository = new SampleMessageRepository();
+		conversationService = new ConversationService(conversationRepository, messageRepository);
 		conversationFactory = new ConversationFactory(conversationService);
 		MessageFactory messageFactory = new MessageFactory(conversationService);
 		participantFactory = new ParticipantFactory(conversationService);

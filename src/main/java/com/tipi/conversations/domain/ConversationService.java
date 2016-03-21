@@ -8,9 +8,11 @@ import java.util.UUID;
 public class ConversationService {
 
 	private final ConversationRepository conversationRepository;
+	private final MessageRepository messageRepository;
 
-	public ConversationService(ConversationRepository conversationRepository) {
+	public ConversationService(ConversationRepository conversationRepository, MessageRepository messageRepository) {
 		this.conversationRepository = conversationRepository;
+		this.messageRepository = messageRepository;
 	}
 
 	public String getNextConversationId() {
@@ -27,5 +29,11 @@ public class ConversationService {
 		if (!conversationContainsMessageParticipant) {
 			throw new IllegalArgumentException("Cannot post message, reason: not a participant.");
 		}
+
+		messageRepository.add(message);
+	}
+
+	public long countMessages(String conversationId) {
+		return messageRepository.count(new MessageSearchCriteria(conversationId));
 	}
 }

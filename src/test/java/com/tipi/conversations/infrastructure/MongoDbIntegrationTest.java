@@ -4,8 +4,8 @@ import com.mongodb.MongoClient;
 import com.mongodb.client.MongoDatabase;
 import com.tipi.conversations.api.CreateConversationCommand;
 import com.tipi.conversations.domain.*;
-import com.tipi.conversations.domain.UserRepository;
 import com.tipi.conversations.infrastructure.mongodb.MongoDbConversationRepository;
+import com.tipi.conversations.infrastructure.mongodb.MongoDbMessageRepository;
 import de.flapdoodle.embed.mongo.distribution.Version;
 import de.flapdoodle.embed.mongo.tests.MongodForTestsFactory;
 import org.junit.Rule;
@@ -20,27 +20,29 @@ import static org.assertj.core.api.Assertions.assertThat;
 /**
  * Created by @maximilientyc on 08/02/2016.
  */
-public class ConversationMongoDbIntegrationTest {
+public class MongoDbIntegrationTest {
 
-	@Rule
-	public ExpectedException expectedException;
+	private final ConversationService conversationService;
 	private final ConversationFactory conversationFactory;
 	private final MessageFactory messageFactory;
 	private final ParticipantFactory participantFactory;
 	private final UserRepository userRepository;
-	private ConversationRepository conversationRepository;
+	private final ConversationRepository conversationRepository;
+	private final MessageRepository messageRepository;
+	@Rule
+	public ExpectedException expectedException;
 
-	public ConversationMongoDbIntegrationTest() throws IOException {
-		ConversationService conversationService = new ConversationService(conversationRepository);
+	public MongoDbIntegrationTest() throws IOException {
+		MongoDatabase mongoDatabase = prepareMongoDatabase();
+		conversationRepository = new MongoDbConversationRepository(mongoDatabase);
+		messageRepository = new MongoDbMessageRepository(mongoDatabase);
+		expectedException = ExpectedException.none();
+
+		conversationService = new ConversationService(conversationRepository, messageRepository);
 		conversationFactory = new ConversationFactory(conversationService);
 		messageFactory = new MessageFactory(conversationService);
 		participantFactory = new ParticipantFactory(conversationService);
 		userRepository = new SampleUserRepository();
-
-		MongoDatabase mongoDatabase = prepareMongoDatabase();
-		conversationRepository = new MongoDbConversationRepository(mongoDatabase);
-		expectedException = ExpectedException.none();
-
 	}
 
 	private MongoDatabase prepareMongoDatabase() throws IOException {
@@ -68,7 +70,30 @@ public class ConversationMongoDbIntegrationTest {
 		assertThat(conversationExists).isTrue();
 	}
 
-	/*@Test
+	@Test
+	public void should_contain_one_message() {
+		// given
+		Participant maximilien = participantFactory.buildParticipant(userRepository.get("max"));
+		Participant bob = participantFactory.buildParticipant(userRepository.get("bob"));
+
+		Conversation conversation = conversationFactory.buildConversation()
+				.addParticipant(maximilien)
+				.addParticipant(bob);
+
+		CreateConversationCommand createConversationCommand = new CreateConversationCommand(conversation, conversationRepository);
+		createConversationCommand.execute();
+
+		// when
+		Message firstMessage = messageFactory.buildMessage().setConversationId(conversation.getConversationId()).setContent("First message to be stored in mongoDb database :)").setPostedBy(maximilien);
+		conversationService.postMessage(firstMessage);
+
+		// then
+		Conversation conversationFromMongoDb = conversationRepository.get(conversation.getConversationId());
+		long messageCount = conversationService.countMessages(conversation.getConversationId());
+		assertThat(messageCount).isEqualTo(new Long(1));
+	}
+
+	@Test
 	public void should_return_exactly_the_same_conversation() {
 		// given
 		Participant maximilien = participantFactory.buildParticipant(userRepository.get("max"));
@@ -78,7 +103,6 @@ public class ConversationMongoDbIntegrationTest {
 				.addParticipant(maximilien)
 				.addParticipant(bob);
 
-		conversation.postMessage(messageFactory.buildMessage().setConversationId(conversation.getConversationId()).setPostedBy(maximilien).setContent("What is wrong with this piece of code ?"));
 
 		// when
 		CreateConversationCommand createConversationCommand = new CreateConversationCommand(conversation, conversationRepository);
@@ -91,13 +115,10 @@ public class ConversationMongoDbIntegrationTest {
 		for (Participant participant : conversation.getParticipants()) {
 			assertThat(conversationFromMongoDb.getParticipants().contains(participant)).isTrue();
 		}
-		for (Message message : conversation.getMessages()) {
-			assertThat(conversationFromMongoDb.getMessages().contains(message)).isTrue();
-		}
-	}*/
+	}
 
 	@Test
-	public void should_return_an_error_when_conversation_is_retreived_using_a_null_conversation_id() {
+	public void should_return_an_error_when_conversation_is_retrieved_using_a_null_conversation_id() {
 		// given
 		Participant maximilien = participantFactory.buildParticipant(userRepository.get("max"));
 		Participant bob = participantFactory.buildParticipant(userRepository.get("bob"));

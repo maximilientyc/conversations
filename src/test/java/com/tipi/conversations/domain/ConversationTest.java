@@ -21,10 +21,12 @@ public class ConversationTest {
 	private final ParticipantFactory participantFactory;
 	private final UserRepository userRepository;
 	private final ConversationRepository conversationRepository;
+	private final MessageRepository messageRepository;
 
 	public ConversationTest() {
-		conversationRepository =  Mockito.mock(SampleConversationRepository.class);
-		conversationService = new ConversationService(conversationRepository);
+		conversationRepository = Mockito.mock(SampleConversationRepository.class);
+		messageRepository = Mockito.mock(SampleMessageRepository.class);
+		conversationService = new ConversationService(conversationRepository, messageRepository);
 		conversationFactory = new ConversationFactory(conversationService);
 		messageFactory = new MessageFactory(conversationService);
 		participantFactory = new ParticipantFactory(conversationService);
@@ -44,7 +46,8 @@ public class ConversationTest {
 				.addParticipant(bob);
 
 		// then
-		assertThat(conversation.countMessages()).isEqualTo(0);
+		long messageCount = conversationService.countMessages(conversation.getConversationId());
+		assertThat(messageCount).isEqualTo(0);
 	}
 
 	@Test

@@ -21,6 +21,7 @@ public class MessageSerializer extends JsonSerializer<Message> {
 		jsonGenerator.writeStartObject();
 		jsonGenerator.writeStringField("messageId", message.getMessageId());
 		jsonGenerator.writeStringField("content", message.getContent());
+		jsonGenerator.writeStringField("conversationId", message.getConversationId());
 
 		ResourceBundle formatsProperties = ResourceBundle.getBundle("formats", Locale.ENGLISH);
 		DateFormat dateFormat = new SimpleDateFormat(

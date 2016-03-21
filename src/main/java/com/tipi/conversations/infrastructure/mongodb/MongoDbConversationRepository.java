@@ -7,11 +7,7 @@ import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
-import com.tipi.conversations.domain.Conversation;
-import com.tipi.conversations.domain.ConversationRepository;
-import com.tipi.conversations.domain.Message;
-import com.tipi.conversations.domain.Participant;
-import com.tipi.conversations.domain.User;
+import com.tipi.conversations.domain.*;
 import com.tipi.conversations.infrastructure.mongodb.serializers.*;
 import org.bson.Document;
 
@@ -24,25 +20,23 @@ import static com.mongodb.client.model.Filters.eq;
  */
 public class MongoDbConversationRepository implements ConversationRepository {
 
-	private final MongoCollection<Document> collection;
+	private final MongoCollection<Document> conversationCollection;
+
 	private final ObjectMapper conversationObjectMapper;
 
 	public MongoDbConversationRepository(MongoDatabase mongoDatabase) {
-		this.collection = mongoDatabase.getCollection("conversations");
+		this.conversationCollection = mongoDatabase.getCollection("conversations");
 
 		ObjectMapper objectMapper = new ObjectMapper();
-
 		objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
 
 		SimpleModule customSerializerModule = new SimpleModule();
 		customSerializerModule.addSerializer(Conversation.class, new ConversationSerializer());
 		customSerializerModule.addSerializer(Participant.class, new ParticipantSerializer());
 		customSerializerModule.addSerializer(User.class, new UserSerializer());
-		customSerializerModule.addSerializer(Message.class, new MessageSerializer());
 		customSerializerModule.addDeserializer(Conversation.class, new ConversationDeserializer());
 		customSerializerModule.addDeserializer(Participant.class, new ParticipantDeserializer());
 		customSerializerModule.addDeserializer(User.class, new UserDeserializer());
-		customSerializerModule.addDeserializer(Message.class, new MessageDeserializer());
 		objectMapper.registerModule(customSerializerModule);
 
 		this.conversationObjectMapper = objectMapper;
@@ -60,7 +54,7 @@ public class MongoDbConversationRepository implements ConversationRepository {
 	private void insertOneConversation(Conversation conversation) throws JsonProcessingException {
 		String conversationAsJson = conversationObjectMapper.writeValueAsString(conversation);
 		Document document = Document.parse(conversationAsJson);
-		collection.insertOne(document);
+		conversationCollection.insertOne(document);
 	}
 
 	@Override
@@ -70,7 +64,7 @@ public class MongoDbConversationRepository implements ConversationRepository {
 
 	@Override
 	public boolean exists(Conversation conversation) {
-		long conversationCount = collection.count(eq("conversationId", conversation.getConversationId()));
+		long conversationCount = conversationCollection.count(eq("conversationId", conversation.getConversationId()));
 		return conversationCount > 0;
 	}
 
@@ -87,7 +81,7 @@ public class MongoDbConversationRepository implements ConversationRepository {
 	}
 
 	private Conversation findOneConversation(String conversationId) throws IOException {
-		FindIterable<Document> documents = collection.find(eq("conversationId", conversationId));
+		FindIterable<Document> documents = conversationCollection.find(eq("conversationId", conversationId));
 		Document document = documents.first();
 		return conversationObjectMapper.readValue(document.toJson(), Conversation.class);
 	}
