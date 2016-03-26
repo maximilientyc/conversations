@@ -23,16 +23,6 @@ public class ConversationService {
 		return UUID.randomUUID().toString();
 	}
 
-	public void postMessage(Message message) {
-		Conversation conversation = conversationRepository.get(message.getConversationId());
-		boolean conversationContainsMessageParticipant = conversation.getParticipants().contains(message.getPostedBy());
-		if (!conversationContainsMessageParticipant) {
-			throw new IllegalArgumentException("Cannot post message, reason: not a participant.");
-		}
-
-		messageRepository.add(message);
-	}
-
 	public long countMessages(String conversationId) {
 		return messageRepository.count(new MessageSearchCriteria(conversationId));
 	}

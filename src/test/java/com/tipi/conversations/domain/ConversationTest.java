@@ -1,6 +1,7 @@
 package com.tipi.conversations.domain;
 
 import com.tipi.conversations.api.CreateConversationCommand;
+import com.tipi.conversations.api.PostMessageCommand;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -123,7 +124,8 @@ public class ConversationTest {
 		// when
 		conversation.removeParticipant(alice);
 		Message message = messageFactory.buildMessage().setConversationId(conversation.getConversationId()).setContent("What are you doing maximilien next weekend ? ;)").setPostedBy(alice);
-		conversationService.postMessage(message);
+		PostMessageCommand postMessageCommand = new PostMessageCommand(message, messageRepository, conversationRepository);
+		postMessageCommand.execute();
 	}
 
 	@Test
@@ -140,9 +142,12 @@ public class ConversationTest {
 
 		// when
 		Message firstMessage = messageFactory.buildMessage().setConversationId(conversation.getConversationId()).setContent("Hello ! How are you all ?)").setPostedBy(maximilien);
-		conversationService.postMessage(firstMessage);
+		PostMessageCommand postFirstMessageCommand = new PostMessageCommand(firstMessage, messageRepository, conversationRepository);
+		postFirstMessageCommand.execute();
+		
 		Message secondMessage = messageFactory.buildMessage().setConversationId(conversation.getConversationId()).setContent("I'm fine, thank you max.").setPostedBy(bob);
-		conversationService.postMessage(secondMessage);
+		PostMessageCommand postSecondMessageCommand = new PostMessageCommand(secondMessage, messageRepository, conversationRepository);
+		postSecondMessageCommand.execute();
 
 		// then
 		assertThat(firstMessage.getPostedOn()).isBeforeOrEqualsTo(secondMessage.getPostedOn());

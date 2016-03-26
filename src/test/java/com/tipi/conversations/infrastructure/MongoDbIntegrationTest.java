@@ -3,6 +3,7 @@ package com.tipi.conversations.infrastructure;
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoDatabase;
 import com.tipi.conversations.api.CreateConversationCommand;
+import com.tipi.conversations.api.PostMessageCommand;
 import com.tipi.conversations.domain.*;
 import com.tipi.conversations.infrastructure.mongodb.MongoDbConversationRepository;
 import com.tipi.conversations.infrastructure.mongodb.MongoDbMessageRepository;
@@ -85,7 +86,8 @@ public class MongoDbIntegrationTest {
 
 		// when
 		Message firstMessage = messageFactory.buildMessage().setConversationId(conversation.getConversationId()).setContent("First message to be stored in mongoDb database :)").setPostedBy(maximilien);
-		conversationService.postMessage(firstMessage);
+		PostMessageCommand postMessageCommand = new PostMessageCommand(firstMessage, messageRepository, conversationRepository);
+		postMessageCommand.execute();
 
 		// then
 		Conversation conversationFromMongoDb = conversationRepository.get(conversation.getConversationId());
