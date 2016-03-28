@@ -34,8 +34,8 @@ public class ConversationIntegrationTest {
 	@Test
 	public void should_properly_call_conversation_repository_when_creating_a_new_conversation() {
 		// given
-		Participant maximilien = participantFactory.buildParticipant(userRepository.get("max"));
-		Participant bob = participantFactory.buildParticipant(userRepository.get("bob"));
+		Participant maximilien = participantFactory.buildParticipant("max");
+		Participant bob = participantFactory.buildParticipant("bob");
 
 		Conversation conversation = conversationFactory.buildConversation()
 				.addParticipant(maximilien)
@@ -55,8 +55,8 @@ public class ConversationIntegrationTest {
 	@Test
 	public void should_properly_call_conversation_repository_when_updating_a_new_conversation() {
 		// given
-		Participant maximilien = participantFactory.buildParticipant(userRepository.get("max"));
-		Participant bob = participantFactory.buildParticipant(userRepository.get("bob"));
+		Participant maximilien = participantFactory.buildParticipant("max");
+		Participant bob = participantFactory.buildParticipant("bob");
 
 		Conversation conversation = conversationFactory.buildConversation()
 				.addParticipant(maximilien)
@@ -68,7 +68,7 @@ public class ConversationIntegrationTest {
 		createConversationCommand.execute();
 
 		// when
-		conversation.addParticipant(participantFactory.buildParticipant(userRepository.get("alice")));
+		conversation.addParticipant(participantFactory.buildParticipant("alice"));
 		UpdateConversationCommand updateConversationCommand = new UpdateConversationCommand(conversation, conversationRepositorySpy);
 		Mockito.when(conversationRepositorySpy.exists(conversation)).thenReturn(true);
 		updateConversationCommand.execute();
@@ -80,8 +80,8 @@ public class ConversationIntegrationTest {
 	@Test
 	public void should_return_an_error_when_updating_a_non_existing_conversation() {
 		// given
-		Participant maximilien = participantFactory.buildParticipant(userRepository.get("max"));
-		Participant bob = participantFactory.buildParticipant(userRepository.get("bob"));
+		Participant maximilien = participantFactory.buildParticipant("max");
+		Participant bob = participantFactory.buildParticipant("bob");
 
 		Conversation conversation = conversationFactory.buildConversation()
 				.addParticipant(maximilien)
@@ -100,8 +100,8 @@ public class ConversationIntegrationTest {
 	@Test
 	public void should_return_an_error_when_creating_an_already_existing_conversation() {
 		// given
-		Participant maximilien = participantFactory.buildParticipant(userRepository.get("max"));
-		Participant bob = participantFactory.buildParticipant(userRepository.get("bob"));
+		Participant maximilien = participantFactory.buildParticipant("max");
+		Participant bob = participantFactory.buildParticipant("bob");
 
 		Conversation conversation = conversationFactory.buildConversation()
 				.addParticipant(maximilien)

@@ -11,11 +11,11 @@ public class ParticipantFactory {
 		this.userRepository = userRepository;
 	}
 
-	public Participant buildParticipant(User user) {
-		return new Participant(user);
-	}
-
 	public Participant buildParticipant(String userId) {
+		boolean userExists = userRepository.exists(userId);
+		if (!userExists) {
+			throw new IllegalArgumentException("Cannot create participant, reason: userId does not exist.");
+		}
 		User user = userRepository.get(userId);
 		return new Participant(user);
 	}

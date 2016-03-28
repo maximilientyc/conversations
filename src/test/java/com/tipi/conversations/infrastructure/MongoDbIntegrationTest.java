@@ -55,8 +55,8 @@ public class MongoDbIntegrationTest {
 	@Test
 	public void should_contain_newly_created_conversation() {
 		// given
-		Participant maximilien = participantFactory.buildParticipant(userRepository.get("max"));
-		Participant bob = participantFactory.buildParticipant(userRepository.get("bob"));
+		Participant maximilien = participantFactory.buildParticipant("max");
+		Participant bob = participantFactory.buildParticipant("bob");
 
 		Conversation conversation = conversationFactory.buildConversation()
 				.addParticipant(maximilien)
@@ -74,8 +74,8 @@ public class MongoDbIntegrationTest {
 	@Test
 	public void should_contain_one_message() {
 		// given
-		Participant maximilien = participantFactory.buildParticipant(userRepository.get("max"));
-		Participant bob = participantFactory.buildParticipant(userRepository.get("bob"));
+		Participant maximilien = participantFactory.buildParticipant("max");
+		Participant bob = participantFactory.buildParticipant("bob");
 
 		Conversation conversation = conversationFactory.buildConversation()
 				.addParticipant(maximilien)
@@ -98,8 +98,8 @@ public class MongoDbIntegrationTest {
 	@Test
 	public void should_return_exactly_the_same_conversation() {
 		// given
-		Participant maximilien = participantFactory.buildParticipant(userRepository.get("max"));
-		Participant bob = participantFactory.buildParticipant(userRepository.get("bob"));
+		Participant maximilien = participantFactory.buildParticipant("max");
+		Participant bob = participantFactory.buildParticipant("bob");
 
 		Conversation conversation = conversationFactory.buildConversation()
 				.addParticipant(maximilien)
@@ -122,8 +122,8 @@ public class MongoDbIntegrationTest {
 	@Test
 	public void should_return_an_error_when_conversation_is_retrieved_using_a_null_conversation_id() {
 		// given
-		Participant maximilien = participantFactory.buildParticipant(userRepository.get("max"));
-		Participant bob = participantFactory.buildParticipant(userRepository.get("bob"));
+		Participant maximilien = participantFactory.buildParticipant("max");
+		Participant bob = participantFactory.buildParticipant("bob");
 
 		Conversation conversation = conversationFactory.buildConversation()
 				.addParticipant(maximilien)

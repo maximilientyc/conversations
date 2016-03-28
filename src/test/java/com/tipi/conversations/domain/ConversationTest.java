@@ -38,8 +38,8 @@ public class ConversationTest {
 	@Test
 	public void should_not_contain_messages_when_new() {
 		// given
-		Participant maximilien = participantFactory.buildParticipant(userRepository.get("max"));
-		Participant bob = participantFactory.buildParticipant(userRepository.get("bob"));
+		Participant maximilien = participantFactory.buildParticipant("max");
+		Participant bob = participantFactory.buildParticipant("bob");
 
 		// when
 		Conversation conversation = conversationFactory.buildConversation()
@@ -54,7 +54,7 @@ public class ConversationTest {
 	@Test
 	public void should_return_an_error_when_creating_a_conversation_with_less_than_2_participants() {
 		// given
-		Participant maximilien = participantFactory.buildParticipant(userRepository.get("max"));
+		Participant maximilien = participantFactory.buildParticipant("max");
 		Conversation conversation = conversationFactory.buildConversation()
 				.addParticipant(maximilien);
 
@@ -71,8 +71,8 @@ public class ConversationTest {
 	@Test
 	public void should_return_an_error_when_a_participant_leaves_a_two_participants_conversation() {
 		// given
-		Participant maximilien = participantFactory.buildParticipant(userRepository.get("max"));
-		Participant bob = participantFactory.buildParticipant(userRepository.get("bob"));
+		Participant maximilien = participantFactory.buildParticipant("max");
+		Participant bob = participantFactory.buildParticipant("bob");
 
 		Conversation conversation = conversationFactory.buildConversation()
 				.addParticipant(maximilien)
@@ -88,9 +88,9 @@ public class ConversationTest {
 	@Test
 	public void should_contain_two_participants_when_a_participant_leaves_a_three_participant_conversation() {
 		// given
-		Participant maximilien = participantFactory.buildParticipant(userRepository.get("max"));
-		Participant bob = participantFactory.buildParticipant(userRepository.get("bob"));
-		Participant alice = participantFactory.buildParticipant(userRepository.get("alice"));
+		Participant maximilien = participantFactory.buildParticipant("max");
+		Participant bob = participantFactory.buildParticipant("bob");
+		Participant alice = participantFactory.buildParticipant("alice");
 
 		Conversation conversation = conversationFactory.buildConversation()
 				.addParticipant(maximilien)
@@ -107,9 +107,9 @@ public class ConversationTest {
 	@Test
 	public void should_return_an_error_when_a_participant_post_a_message_in_a_conversation_he_has_left() {
 		// given
-		Participant maximilien = participantFactory.buildParticipant(userRepository.get("max"));
-		Participant bob = participantFactory.buildParticipant(userRepository.get("bob"));
-		Participant alice = participantFactory.buildParticipant(userRepository.get("alice"));
+		Participant maximilien = participantFactory.buildParticipant("max");
+		Participant bob = participantFactory.buildParticipant("bob");
+		Participant alice = participantFactory.buildParticipant("alice");
 
 		Conversation conversation = conversationFactory.buildConversation()
 				.addParticipant(maximilien)
@@ -131,8 +131,8 @@ public class ConversationTest {
 	@Test
 	public void should_maintain_chronology_between_messages_inside_a_conversation() {
 		// given
-		Participant maximilien = participantFactory.buildParticipant(userRepository.get("max"));
-		Participant bob = participantFactory.buildParticipant(userRepository.get("bob"));
+		Participant maximilien = participantFactory.buildParticipant("max");
+		Participant bob = participantFactory.buildParticipant("bob");
 
 		Conversation conversation = conversationFactory.buildConversation()
 				.addParticipant(maximilien)
@@ -156,8 +156,8 @@ public class ConversationTest {
 	@Test
 	public void should_maintain_chronology_between_participant_arrival_inside_a_conversation() throws InterruptedException {
 		// given
-		Participant maximilien = participantFactory.buildParticipant(userRepository.get("max"));
-		Participant bob = participantFactory.buildParticipant(userRepository.get("bob"));
+		Participant maximilien = participantFactory.buildParticipant("max");
+		Participant bob = participantFactory.buildParticipant("bob");
 
 		Conversation conversation = conversationFactory.buildConversation()
 				.addParticipant(maximilien)
@@ -165,7 +165,7 @@ public class ConversationTest {
 
 		// when
 		Thread.sleep(1000);
-		Participant alice = participantFactory.buildParticipant(userRepository.get("alice"));
+		Participant alice = participantFactory.buildParticipant("alice");
 		conversation.addParticipant(alice);
 
 		// then
