@@ -42,8 +42,8 @@ public class MongoDbIntegrationTest {
 		conversationService = new ConversationService(conversationRepository, messageRepository);
 		conversationFactory = new ConversationFactory(conversationService);
 		messageFactory = new MessageFactory(conversationService);
-		participantFactory = new ParticipantFactory(conversationService);
 		userRepository = new SampleUserRepository();
+		participantFactory = new ParticipantFactory(userRepository);
 	}
 
 	private MongoDatabase prepareMongoDatabase() throws IOException {

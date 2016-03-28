@@ -5,13 +5,18 @@ package com.tipi.conversations.domain;
  */
 public class ParticipantFactory {
 
-	private final ConversationService conversationService;
+	private final UserRepository userRepository;
 
-	public ParticipantFactory(ConversationService conversationService) {
-		this.conversationService = conversationService;
+	public ParticipantFactory(UserRepository userRepository) {
+		this.userRepository = userRepository;
 	}
 
 	public Participant buildParticipant(User user) {
+		return new Participant(user);
+	}
+
+	public Participant buildParticipant(String userId) {
+		User user = userRepository.get(userId);
 		return new Participant(user);
 	}
 }

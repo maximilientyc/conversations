@@ -30,8 +30,8 @@ public class ConversationTest {
 		conversationService = new ConversationService(conversationRepository, messageRepository);
 		conversationFactory = new ConversationFactory(conversationService);
 		messageFactory = new MessageFactory(conversationService);
-		participantFactory = new ParticipantFactory(conversationService);
 		userRepository = new SampleUserRepository();
+		participantFactory = new ParticipantFactory(userRepository);
 		expectedException = ExpectedException.none();
 	}
 
@@ -144,7 +144,7 @@ public class ConversationTest {
 		Message firstMessage = messageFactory.buildMessage().setConversationId(conversation.getConversationId()).setContent("Hello ! How are you all ?)").setPostedBy(maximilien);
 		PostMessageCommand postFirstMessageCommand = new PostMessageCommand(firstMessage, messageRepository, conversationRepository);
 		postFirstMessageCommand.execute();
-		
+
 		Message secondMessage = messageFactory.buildMessage().setConversationId(conversation.getConversationId()).setContent("I'm fine, thank you max.").setPostedBy(bob);
 		PostMessageCommand postSecondMessageCommand = new PostMessageCommand(secondMessage, messageRepository, conversationRepository);
 		postSecondMessageCommand.execute();

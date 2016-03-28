@@ -1,7 +1,6 @@
 package com.tipi.conversations.api;
 
 import com.tipi.conversations.domain.*;
-import com.tipi.conversations.domain.UserRepository;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -27,8 +26,8 @@ public class ConversationIntegrationTest {
 		conversationService = new ConversationService(conversationRepository, messageRepository);
 		conversationFactory = new ConversationFactory(conversationService);
 		MessageFactory messageFactory = new MessageFactory(conversationService);
-		participantFactory = new ParticipantFactory(conversationService);
 		userRepository = new SampleUserRepository();
+		participantFactory = new ParticipantFactory(userRepository);
 		expectedException = ExpectedException.none();
 	}
 
