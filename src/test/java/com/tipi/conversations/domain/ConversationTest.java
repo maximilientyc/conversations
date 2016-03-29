@@ -62,7 +62,7 @@ public class ConversationTest {
 		expectedException.expect(IllegalArgumentException.class);
 		expectedException.expectMessage("Cannot create conversation, reason: not enough getParticipants.");
 
-		Mockito.when(conversationRepository.exists(conversation)).thenReturn(false);
+		Mockito.when(conversationRepository.exists(conversation.getConversationId())).thenReturn(false);
 
 		// when
 		createConversationCommand.execute();

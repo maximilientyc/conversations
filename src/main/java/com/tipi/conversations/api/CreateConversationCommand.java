@@ -17,7 +17,7 @@ public class CreateConversationCommand {
 	}
 
 	public void execute() {
-		boolean conversationExists = conversationRepository.exists(conversation);
+		boolean conversationExists = conversationRepository.exists(conversation.getConversationId());
 		if (conversationExists) {
 			throw new IllegalArgumentException("Cannot create conversation, reason: a conversation with id '" + conversation.getConversationId() + "' already exists.");
 		}

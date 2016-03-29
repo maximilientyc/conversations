@@ -42,7 +42,7 @@ public class ConversationIntegrationTest {
 				.addParticipant(bob);
 
 		ConversationRepository conversationRepositorySpy = Mockito.spy(conversationRepository);
-		Mockito.when(conversationRepositorySpy.exists(conversation)).thenReturn(false);
+		Mockito.when(conversationRepositorySpy.exists(conversation.getConversationId())).thenReturn(false);
 		CreateConversationCommand command = new CreateConversationCommand(conversation, conversationRepositorySpy);
 
 		// when
@@ -64,13 +64,13 @@ public class ConversationIntegrationTest {
 
 		ConversationRepository conversationRepositorySpy = Mockito.spy(conversationRepository);
 		CreateConversationCommand createConversationCommand = new CreateConversationCommand(conversation, conversationRepositorySpy);
-		Mockito.when(conversationRepositorySpy.exists(conversation)).thenReturn(false);
+		Mockito.when(conversationRepositorySpy.exists(conversation.getConversationId())).thenReturn(false);
 		createConversationCommand.execute();
 
 		// when
 		conversation.addParticipant(participantFactory.buildParticipant("alice"));
 		UpdateConversationCommand updateConversationCommand = new UpdateConversationCommand(conversation, conversationRepositorySpy);
-		Mockito.when(conversationRepositorySpy.exists(conversation)).thenReturn(true);
+		Mockito.when(conversationRepositorySpy.exists(conversation.getConversationId())).thenReturn(true);
 		updateConversationCommand.execute();
 
 		// then
@@ -93,7 +93,7 @@ public class ConversationIntegrationTest {
 		// when
 		ConversationRepository conversationRepositorySpy = Mockito.spy(conversationRepository);
 		UpdateConversationCommand updateConversationCommand = new UpdateConversationCommand(conversation, conversationRepositorySpy);
-		Mockito.when(conversationRepositorySpy.exists(conversation)).thenReturn(false);
+		Mockito.when(conversationRepositorySpy.exists(conversation.getConversationId())).thenReturn(false);
 		updateConversationCommand.execute();
 	}
 
@@ -110,14 +110,14 @@ public class ConversationIntegrationTest {
 		ConversationRepository conversationRepositorySpy = Mockito.spy(conversationRepository);
 
 		CreateConversationCommand createConversationCommand = new CreateConversationCommand(conversation, conversationRepositorySpy);
-		Mockito.when(conversationRepositorySpy.exists(conversation)).thenReturn(false);
+		Mockito.when(conversationRepositorySpy.exists(conversation.getConversationId())).thenReturn(false);
 		createConversationCommand.execute();
 
 		expectedException.expect(IllegalArgumentException.class);
 		expectedException.expectMessage("Cannot create conversation, reason: a conversation with id '" + conversation.getConversationId() + "' already exists.");
 
 		// when
-		Mockito.when(conversationRepositorySpy.exists(conversation)).thenReturn(true);
+		Mockito.when(conversationRepositorySpy.exists(conversation.getConversationId())).thenReturn(true);
 		createConversationCommand.execute();
 	}
 

@@ -67,7 +67,7 @@ public class MongoDbIntegrationTest {
 		createConversationCommand.execute();
 
 		// then
-		boolean conversationExists = conversationRepository.exists(conversation);
+		boolean conversationExists = conversationRepository.exists(conversation.getConversationId());
 		assertThat(conversationExists).isTrue();
 	}
 

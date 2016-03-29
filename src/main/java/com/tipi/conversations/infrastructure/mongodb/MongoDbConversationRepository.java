@@ -7,7 +7,10 @@ import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
-import com.tipi.conversations.domain.*;
+import com.tipi.conversations.domain.Conversation;
+import com.tipi.conversations.domain.ConversationRepository;
+import com.tipi.conversations.domain.Participant;
+import com.tipi.conversations.domain.User;
 import com.tipi.conversations.infrastructure.mongodb.serializers.*;
 import org.bson.Document;
 
@@ -63,8 +66,8 @@ public class MongoDbConversationRepository implements ConversationRepository {
 	}
 
 	@Override
-	public boolean exists(Conversation conversation) {
-		long conversationCount = conversationCollection.count(eq("conversationId", conversation.getConversationId()));
+	public boolean exists(String conversationId) {
+		long conversationCount = conversationCollection.count(eq("conversationId", conversationId));
 		return conversationCount > 0;
 	}
 

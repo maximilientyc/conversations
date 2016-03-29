@@ -9,7 +9,7 @@ public interface ConversationRepository {
 
 	void update(Conversation conversation);
 
-	boolean exists(Conversation conversation);
+	boolean exists(String conversationId);
 
 	Conversation get(String conversationId);
 }

@@ -19,7 +19,7 @@ public class SampleConversationRepository implements ConversationRepository {
 	}
 
 	@Override
-	public boolean exists(Conversation conversation) {
+	public boolean exists(String conversationId) {
 		return false;
 	}
 
