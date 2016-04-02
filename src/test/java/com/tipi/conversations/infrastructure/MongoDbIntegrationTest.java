@@ -2,8 +2,8 @@ package com.tipi.conversations.infrastructure;
 
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoDatabase;
-import com.tipi.conversations.api.CreateConversationCommand;
-import com.tipi.conversations.api.PostMessageCommand;
+import com.tipi.conversations.commands.CreateConversationCommand;
+import com.tipi.conversations.commands.PostMessageCommand;
 import com.tipi.conversations.domain.*;
 import com.tipi.conversations.infrastructure.mongodb.MongoDbConversationRepository;
 import com.tipi.conversations.infrastructure.mongodb.MongoDbMessageRepository;

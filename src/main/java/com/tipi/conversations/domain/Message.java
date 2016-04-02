@@ -1,7 +1,6 @@
 package com.tipi.conversations.domain;
 
 import java.util.Date;
-import java.util.Objects;
 
 /**
  * Created by @maximilientyc on 10/01/2016.
@@ -53,22 +52,5 @@ public class Message {
 	public Date getPostedOn() {
 		return postedOn;
 	}
-
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		Message message = (Message) o;
-		return Objects.equals(messageId, message.messageId) &&
-				Objects.equals(postedOn, message.postedOn) &&
-				Objects.equals(content, message.content) &&
-				Objects.equals(postedBy, message.postedBy);
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(messageId, postedOn, content, postedBy);
-	}
-
 
 }

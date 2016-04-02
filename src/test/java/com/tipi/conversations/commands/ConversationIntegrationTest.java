@@ -1,4 +1,4 @@
-package com.tipi.conversations.api;
+package com.tipi.conversations.commands;
 
 import com.tipi.conversations.domain.*;
 import org.junit.Rule;
