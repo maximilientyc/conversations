@@ -22,9 +22,9 @@ public class ConversationIntegrationTest {
 	private final ConversationFactory conversationFactory;
 	private final ParticipantFactory participantFactory;
 	private final UserRepository userRepository;
-	private final ConversationRepository conversationRepository;
 	private final MessageRepository messageRepository;
 	private final MessageFactory messageFactory;
+	public ConversationRepository conversationRepository;
 
 	public ConversationIntegrationTest() {
 		conversationRepository = new SampleConversationRepository();
@@ -36,8 +36,6 @@ public class ConversationIntegrationTest {
 		participantFactory = new ParticipantFactory(userRepository);
 		expectedException = ExpectedException.none();
 	}
-
-	// TODO: ecrire des tests should_contain_conversation etc. A peu près les mêmes tests que le mongDbIntegrationTest
 
 	@Test
 	public void should_contain_one_conversation() {
@@ -59,6 +57,7 @@ public class ConversationIntegrationTest {
 		assertThat(conversationExists).isTrue();
 	}
 
+	@Test
 	public void should_contain_newly_created_conversation() {
 		// given
 		Set<String> userIdSet = new HashSet<String>();
@@ -73,6 +72,36 @@ public class ConversationIntegrationTest {
 		// then
 		boolean conversationExists = conversationRepository.exists(conversationId);
 		assertThat(conversationExists).isTrue();
+	}
+
+	@Test
+	public void should_return_exactly_the_same_conversation() {
+		// given
+		Set<String> userIdSet = new HashSet<String>();
+		userIdSet.add("max");
+		userIdSet.add("bob");
+		CreateConversationCommand createConversationCommand = new CreateConversationCommand(userIdSet, conversationFactory, participantFactory, conversationRepository);
+
+		// when
+		Conversation conversation = createConversationCommand.execute();
+		String conversationId = conversation.getConversationId();
+
+		// then
+		Conversation conversationFromMongoDb = conversationRepository.get(conversationId);
+		assertThat(conversationId).isEqualTo(conversationFromMongoDb.getConversationId());
+		assertThat(2).isEqualTo(conversationFromMongoDb.countParticipants());
+
+		boolean maxIsFound = false;
+		boolean bobIsFound = false;
+		for (Participant participant : conversationFromMongoDb.getParticipants()) {
+			String userId = participant.getUser().getUserId();
+			if (userId.equals("max")) {
+				maxIsFound = true;
+			} else if (userId.equals("bob")) {
+				bobIsFound = true;
+			}
+		}
+		assertThat(maxIsFound && bobIsFound).isTrue();
 	}
 
 	@Test
@@ -120,15 +149,32 @@ public class ConversationIntegrationTest {
 		// given
 		Set<String> userIdSet = new HashSet<String>();
 		userIdSet.add("max");
+		CreateConversationCommand createConversationCommand = new CreateConversationCommand(userIdSet, conversationFactory, participantFactory, conversationRepository);
+
+		// then
+		expectedException.expect(IllegalArgumentException.class);
+		expectedException.expectMessage("Cannot create conversation, reason: not enough participants.");
+
+		// when
+		createConversationCommand.execute();
+	}
+
+	@Test
+	public void should_return_an_error_when_conversation_is_retrieved_using_a_null_conversation_id() {
+		// given
+		Set<String> userIdSet = new HashSet<String>();
+		userIdSet.add("max");
 		userIdSet.add("bob");
 		CreateConversationCommand createConversationCommand = new CreateConversationCommand(userIdSet, conversationFactory, participantFactory, conversationRepository);
 
 		// then
 		expectedException.expect(IllegalArgumentException.class);
-		expectedException.expectMessage("Cannot create conversation, reason: not enough getParticipants.");
+		expectedException.expectMessage("Conversation Id cannot be empty.");
 
 		// when
-		createConversationCommand.execute();
+		Conversation conversation = createConversationCommand.execute();
+		String conversationId = conversation.getConversationId();
+		Conversation conversationFromMongoDb = conversationRepository.get(null);
 	}
 
 }

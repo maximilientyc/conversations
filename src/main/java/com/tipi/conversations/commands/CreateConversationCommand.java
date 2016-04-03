@@ -32,7 +32,7 @@ public class CreateConversationCommand {
 		}
 
 		if (conversation.countParticipants() < 2) {
-			throw new IllegalArgumentException("Cannot create conversation, reason: not enough getParticipants.");
+			throw new IllegalArgumentException("Cannot create conversation, reason: not enough participants.");
 		}
 		conversationRepository.add(conversation);
 
