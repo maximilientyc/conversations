@@ -22,19 +22,28 @@ public class ConversationIntegrationTest {
 	private final ConversationFactory conversationFactory;
 	private final ParticipantFactory participantFactory;
 	private final UserRepository userRepository;
-	private final MessageRepository messageRepository;
 	private final MessageFactory messageFactory;
+	public MessageRepository messageRepository;
 	public ConversationRepository conversationRepository;
 
 	public ConversationIntegrationTest() {
-		conversationRepository = new SampleConversationRepository();
-		messageRepository = new SampleMessageRepository();
+		try {
+			prepareRepositories();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
 		conversationService = new ConversationService(conversationRepository, messageRepository);
-		conversationFactory = new ConversationFactory(conversationService);
-		messageFactory = new MessageFactory(conversationService);
 		userRepository = new SampleUserRepository();
 		participantFactory = new ParticipantFactory(userRepository);
+		conversationFactory = new ConversationFactory(conversationService);
+		messageFactory = new MessageFactory(conversationService);
 		expectedException = ExpectedException.none();
+	}
+
+	public void prepareRepositories() throws Exception {
+		conversationRepository = new SampleConversationRepository();
+		messageRepository = new SampleMessageRepository();
 	}
 
 	@Test
@@ -52,9 +61,6 @@ public class ConversationIntegrationTest {
 		// then
 		long conversationCount = conversationService.countConversations();
 		assertThat(conversationCount).isEqualTo(1);
-
-		boolean conversationExists = conversationRepository.exists(conversationId);
-		assertThat(conversationExists).isTrue();
 	}
 
 	@Test

@@ -4,6 +4,7 @@ import com.mongodb.MongoClient;
 import com.mongodb.client.MongoDatabase;
 import com.tipi.conversations.commands.ConversationIntegrationTest;
 import com.tipi.conversations.infrastructure.mongodb.MongoDbConversationRepository;
+import com.tipi.conversations.infrastructure.mongodb.MongoDbMessageRepository;
 import de.flapdoodle.embed.mongo.distribution.Version;
 import de.flapdoodle.embed.mongo.tests.MongodForTestsFactory;
 
@@ -17,9 +18,14 @@ public class MongoDbIntegrationTest extends ConversationIntegrationTest {
 
 	public MongoDbIntegrationTest() throws IOException {
 		super();
+	}
 
+	@Override
+	public void prepareRepositories() throws Exception {
+		super.prepareRepositories();
 		MongoDatabase mongoDatabase = prepareMongoDatabase();
 		super.conversationRepository = new MongoDbConversationRepository(mongoDatabase);
+		super.messageRepository = new MongoDbMessageRepository(mongoDatabase);
 	}
 
 	public MongoDatabase prepareMongoDatabase() throws IOException {

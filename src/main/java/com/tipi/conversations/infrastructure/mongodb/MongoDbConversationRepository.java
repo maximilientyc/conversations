@@ -82,7 +82,8 @@ public class MongoDbConversationRepository implements ConversationRepository {
 
 	@Override
 	public long count(ConversationSearchCriteria criteria) {
-		return 0;
+		long conversationCount = conversationCollection.count();
+		return conversationCount;
 	}
 
 	private Conversation findOneConversation(String conversationId) throws IOException {
