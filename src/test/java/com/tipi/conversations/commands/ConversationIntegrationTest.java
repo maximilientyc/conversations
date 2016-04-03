@@ -6,6 +6,11 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.mockito.Mockito;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
 /**
  * Created by @maximilientyc on 07/02/2016.
  */
@@ -19,62 +24,75 @@ public class ConversationIntegrationTest {
 	private final UserRepository userRepository;
 	private final ConversationRepository conversationRepository;
 	private final MessageRepository messageRepository;
+	private final MessageFactory messageFactory;
 
 	public ConversationIntegrationTest() {
 		conversationRepository = new SampleConversationRepository();
 		messageRepository = new SampleMessageRepository();
 		conversationService = new ConversationService(conversationRepository, messageRepository);
 		conversationFactory = new ConversationFactory(conversationService);
-		MessageFactory messageFactory = new MessageFactory(conversationService);
+		messageFactory = new MessageFactory(conversationService);
 		userRepository = new SampleUserRepository();
 		participantFactory = new ParticipantFactory(userRepository);
 		expectedException = ExpectedException.none();
 	}
 
+	// TODO: ecrire des tests should_contain_conversation etc. A peu près les mêmes tests que le mongDbIntegrationTest
+
 	@Test
-	public void should_properly_call_conversation_repository_when_creating_a_new_conversation() {
+	public void should_contain_one_conversation() {
 		// given
-		Participant maximilien = participantFactory.buildParticipant("max");
-		Participant bob = participantFactory.buildParticipant("bob");
-
-		Conversation conversation = conversationFactory.buildConversation()
-				.addParticipant(maximilien)
-				.addParticipant(bob);
-
-		ConversationRepository conversationRepositorySpy = Mockito.spy(conversationRepository);
-		Mockito.when(conversationRepositorySpy.exists(conversation.getConversationId())).thenReturn(false);
-		CreateConversationCommand command = new CreateConversationCommand(conversation, conversationRepositorySpy);
+		Set<String> userIdSet = new HashSet<String>();
+		userIdSet.add("max");
+		userIdSet.add("bob");
+		CreateConversationCommand createConversationCommand = new CreateConversationCommand(userIdSet, conversationFactory, participantFactory, conversationRepository);
 
 		// when
-		command.execute();
+		Conversation conversation = createConversationCommand.execute();
+		String conversationId = conversation.getConversationId();
 
 		// then
-		Mockito.verify(conversationRepositorySpy).add(conversation);
+		long conversationCount = conversationService.countConversations();
+		assertThat(conversationCount).isEqualTo(1);
+
+		boolean conversationExists = conversationRepository.exists(conversationId);
+		assertThat(conversationExists).isTrue();
+	}
+
+	public void should_contain_newly_created_conversation() {
+		// given
+		Set<String> userIdSet = new HashSet<String>();
+		userIdSet.add("max");
+		userIdSet.add("bob");
+		CreateConversationCommand createConversationCommand = new CreateConversationCommand(userIdSet, conversationFactory, participantFactory, conversationRepository);
+
+		// when
+		Conversation conversation = createConversationCommand.execute();
+		String conversationId = conversation.getConversationId();
+
+		// then
+		boolean conversationExists = conversationRepository.exists(conversationId);
+		assertThat(conversationExists).isTrue();
 	}
 
 	@Test
-	public void should_properly_call_conversation_repository_when_updating_a_new_conversation() {
+	public void should_contain_one_message() {
 		// given
-		Participant maximilien = participantFactory.buildParticipant("max");
-		Participant bob = participantFactory.buildParticipant("bob");
-
-		Conversation conversation = conversationFactory.buildConversation()
-				.addParticipant(maximilien)
-				.addParticipant(bob);
-
-		ConversationRepository conversationRepositorySpy = Mockito.spy(conversationRepository);
-		CreateConversationCommand createConversationCommand = new CreateConversationCommand(conversation, conversationRepositorySpy);
-		Mockito.when(conversationRepositorySpy.exists(conversation.getConversationId())).thenReturn(false);
-		createConversationCommand.execute();
+		Set<String> userIdSet = new HashSet<String>();
+		userIdSet.add("max");
+		userIdSet.add("bob");
+		CreateConversationCommand createConversationCommand = new CreateConversationCommand(userIdSet, conversationFactory, participantFactory, conversationRepository);
+		Conversation conversation = createConversationCommand.execute();
+		String conversationId = conversation.getConversationId();
 
 		// when
-		conversation.addParticipant(participantFactory.buildParticipant("alice"));
-		UpdateConversationCommand updateConversationCommand = new UpdateConversationCommand(conversation, conversationRepositorySpy);
-		Mockito.when(conversationRepositorySpy.exists(conversation.getConversationId())).thenReturn(true);
-		updateConversationCommand.execute();
+		Message firstMessage = messageFactory.buildMessage().setConversationId(conversationId).setContent("First message to be stored in mongoDb database :)").setPostedBy(conversation.getParticipants().get(0));
+		PostMessageCommand postMessageCommand = new PostMessageCommand(firstMessage, messageRepository, conversationRepository);
+		postMessageCommand.execute();
 
 		// then
-		Mockito.verify(conversationRepositorySpy).update(conversation);
+		long messageCount = conversationService.countMessages(conversationId);
+		assertThat(messageCount).isEqualTo(new Long(1));
 	}
 
 	@Test
@@ -98,28 +116,19 @@ public class ConversationIntegrationTest {
 	}
 
 	@Test
-	public void should_return_an_error_when_creating_an_already_existing_conversation() {
+	public void should_return_an_error_when_creating_a_conversation_with_less_than_2_participants() {
 		// given
-		Participant maximilien = participantFactory.buildParticipant("max");
-		Participant bob = participantFactory.buildParticipant("bob");
+		Set<String> userIdSet = new HashSet<String>();
+		userIdSet.add("max");
+		userIdSet.add("bob");
+		CreateConversationCommand createConversationCommand = new CreateConversationCommand(userIdSet, conversationFactory, participantFactory, conversationRepository);
 
-		Conversation conversation = conversationFactory.buildConversation()
-				.addParticipant(maximilien)
-				.addParticipant(bob);
-
-		ConversationRepository conversationRepositorySpy = Mockito.spy(conversationRepository);
-
-		CreateConversationCommand createConversationCommand = new CreateConversationCommand(conversation, conversationRepositorySpy);
-		Mockito.when(conversationRepositorySpy.exists(conversation.getConversationId())).thenReturn(false);
-		createConversationCommand.execute();
-
+		// then
 		expectedException.expect(IllegalArgumentException.class);
-		expectedException.expectMessage("Cannot create conversation, reason: a conversation with id '" + conversation.getConversationId() + "' already exists.");
+		expectedException.expectMessage("Cannot create conversation, reason: not enough getParticipants.");
 
 		// when
-		Mockito.when(conversationRepositorySpy.exists(conversation.getConversationId())).thenReturn(true);
 		createConversationCommand.execute();
 	}
-
 
 }

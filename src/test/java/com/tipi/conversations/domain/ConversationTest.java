@@ -1,6 +1,5 @@
 package com.tipi.conversations.domain;
 
-import com.tipi.conversations.commands.CreateConversationCommand;
 import com.tipi.conversations.commands.PostMessageCommand;
 import org.junit.Rule;
 import org.junit.Test;
@@ -51,22 +50,6 @@ public class ConversationTest {
 		assertThat(messageCount).isEqualTo(0);
 	}
 
-	@Test
-	public void should_return_an_error_when_creating_a_conversation_with_less_than_2_participants() {
-		// given
-		Participant maximilien = participantFactory.buildParticipant("max");
-		Conversation conversation = conversationFactory.buildConversation()
-				.addParticipant(maximilien);
-
-		CreateConversationCommand createConversationCommand = new CreateConversationCommand(conversation, conversationRepository);
-		expectedException.expect(IllegalArgumentException.class);
-		expectedException.expectMessage("Cannot create conversation, reason: not enough getParticipants.");
-
-		Mockito.when(conversationRepository.exists(conversation.getConversationId())).thenReturn(false);
-
-		// when
-		createConversationCommand.execute();
-	}
 
 	@Test
 	public void should_return_an_error_when_a_participant_leaves_a_two_participants_conversation() {

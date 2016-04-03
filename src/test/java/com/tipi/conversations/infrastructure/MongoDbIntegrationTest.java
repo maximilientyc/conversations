@@ -3,7 +3,6 @@ package com.tipi.conversations.infrastructure;
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoDatabase;
 import com.tipi.conversations.commands.CreateConversationCommand;
-import com.tipi.conversations.commands.PostMessageCommand;
 import com.tipi.conversations.domain.*;
 import com.tipi.conversations.infrastructure.mongodb.MongoDbConversationRepository;
 import com.tipi.conversations.infrastructure.mongodb.MongoDbMessageRepository;
@@ -14,6 +13,8 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -53,88 +54,50 @@ public class MongoDbIntegrationTest {
 	}
 
 	@Test
-	public void should_contain_newly_created_conversation() {
-		// given
-		Participant maximilien = participantFactory.buildParticipant("max");
-		Participant bob = participantFactory.buildParticipant("bob");
-
-		Conversation conversation = conversationFactory.buildConversation()
-				.addParticipant(maximilien)
-				.addParticipant(bob);
-
-		// when
-		CreateConversationCommand createConversationCommand = new CreateConversationCommand(conversation, conversationRepository);
-		createConversationCommand.execute();
-
-		// then
-		boolean conversationExists = conversationRepository.exists(conversation.getConversationId());
-		assertThat(conversationExists).isTrue();
-	}
-
-	@Test
-	public void should_contain_one_message() {
-		// given
-		Participant maximilien = participantFactory.buildParticipant("max");
-		Participant bob = participantFactory.buildParticipant("bob");
-
-		Conversation conversation = conversationFactory.buildConversation()
-				.addParticipant(maximilien)
-				.addParticipant(bob);
-
-		CreateConversationCommand createConversationCommand = new CreateConversationCommand(conversation, conversationRepository);
-		createConversationCommand.execute();
-
-		// when
-		Message firstMessage = messageFactory.buildMessage().setConversationId(conversation.getConversationId()).setContent("First message to be stored in mongoDb database :)").setPostedBy(maximilien);
-		PostMessageCommand postMessageCommand = new PostMessageCommand(firstMessage, messageRepository, conversationRepository);
-		postMessageCommand.execute();
-
-		// then
-		Conversation conversationFromMongoDb = conversationRepository.get(conversation.getConversationId());
-		long messageCount = conversationService.countMessages(conversation.getConversationId());
-		assertThat(messageCount).isEqualTo(new Long(1));
-	}
-
-	@Test
 	public void should_return_exactly_the_same_conversation() {
 		// given
-		Participant maximilien = participantFactory.buildParticipant("max");
-		Participant bob = participantFactory.buildParticipant("bob");
-
-		Conversation conversation = conversationFactory.buildConversation()
-				.addParticipant(maximilien)
-				.addParticipant(bob);
-
+		Set<String> userIdSet = new HashSet<String>();
+		userIdSet.add("max");
+		userIdSet.add("bob");
+		CreateConversationCommand createConversationCommand = new CreateConversationCommand(userIdSet, conversationFactory, participantFactory, conversationRepository);
 
 		// when
-		CreateConversationCommand createConversationCommand = new CreateConversationCommand(conversation, conversationRepository);
-		createConversationCommand.execute();
+		Conversation conversation = createConversationCommand.execute();
+		String conversationId = conversation.getConversationId();
 
 		// then
-		Conversation conversationFromMongoDb = conversationRepository.get(conversation.getConversationId());
-		assertThat(conversation.getConversationId()).isEqualTo(conversationFromMongoDb.getConversationId());
-		assertThat(conversation.countParticipants()).isEqualTo(conversationFromMongoDb.countParticipants());
-		for (Participant participant : conversation.getParticipants()) {
-			assertThat(conversationFromMongoDb.getParticipants().contains(participant)).isTrue();
+		Conversation conversationFromMongoDb = conversationRepository.get(conversationId);
+		assertThat(conversationId).isEqualTo(conversationFromMongoDb.getConversationId());
+		assertThat(2).isEqualTo(conversationFromMongoDb.countParticipants());
+
+		boolean maxIsFound = false;
+		boolean bobIsFound = false;
+		for (Participant participant : conversationFromMongoDb.getParticipants()) {
+			String userId = participant.getUser().getUserId();
+			if (userId.equals("max")) {
+				maxIsFound = true;
+			} else if (userId.equals("bob")) {
+				bobIsFound = true;
+			}
 		}
+		assertThat(maxIsFound && bobIsFound).isTrue();
 	}
 
 	@Test
 	public void should_return_an_error_when_conversation_is_retrieved_using_a_null_conversation_id() {
 		// given
-		Participant maximilien = participantFactory.buildParticipant("max");
-		Participant bob = participantFactory.buildParticipant("bob");
+		Set<String> userIdSet = new HashSet<String>();
+		userIdSet.add("max");
+		userIdSet.add("bob");
+		CreateConversationCommand createConversationCommand = new CreateConversationCommand(userIdSet, conversationFactory, participantFactory, conversationRepository);
 
-		Conversation conversation = conversationFactory.buildConversation()
-				.addParticipant(maximilien)
-				.addParticipant(bob);
-
+		// then
 		expectedException.expect(IllegalArgumentException.class);
 		expectedException.expectMessage("Conversation Id cannot be empty.");
 
 		// when
-		CreateConversationCommand createConversationCommand = new CreateConversationCommand(conversation, conversationRepository);
-		createConversationCommand.execute();
+		Conversation conversation = createConversationCommand.execute();
+		String conversationId = conversation.getConversationId();
 		Conversation conversationFromMongoDb = conversationRepository.get(null);
 	}
 }

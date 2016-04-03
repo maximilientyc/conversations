@@ -23,7 +23,12 @@ public class ConversationService {
 		return UUID.randomUUID().toString();
 	}
 
+	public long countConversations() {
+		return conversationRepository.count(new ConversationSearchCriteria());
+	}
+
 	public long countMessages(String conversationId) {
 		return messageRepository.count(new MessageSearchCriteria(conversationId));
 	}
+
 }

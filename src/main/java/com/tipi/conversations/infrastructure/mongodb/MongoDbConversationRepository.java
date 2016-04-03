@@ -7,10 +7,7 @@ import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
-import com.tipi.conversations.domain.Conversation;
-import com.tipi.conversations.domain.ConversationRepository;
-import com.tipi.conversations.domain.Participant;
-import com.tipi.conversations.domain.User;
+import com.tipi.conversations.domain.*;
 import com.tipi.conversations.infrastructure.mongodb.serializers.*;
 import org.bson.Document;
 
@@ -81,6 +78,11 @@ public class MongoDbConversationRepository implements ConversationRepository {
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	@Override
+	public long count(ConversationSearchCriteria criteria) {
+		return 0;
 	}
 
 	private Conversation findOneConversation(String conversationId) throws IOException {

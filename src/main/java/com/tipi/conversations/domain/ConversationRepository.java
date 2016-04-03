@@ -12,4 +12,6 @@ public interface ConversationRepository {
 	boolean exists(String conversationId);
 
 	Conversation get(String conversationId);
+
+	long count(ConversationSearchCriteria criteria);
 }
