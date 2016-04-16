@@ -1,4 +1,4 @@
-package com.tipi.conversations.infrastructure.mongodb.serializers;
+package com.tipi.conversations.repositories.mongodb.serializers;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;

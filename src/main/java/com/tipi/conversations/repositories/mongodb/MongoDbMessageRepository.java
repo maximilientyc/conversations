@@ -1,4 +1,4 @@
-package com.tipi.conversations.infrastructure.mongodb;
+package com.tipi.conversations.repositories.mongodb;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -9,8 +9,8 @@ import com.mongodb.client.MongoDatabase;
 import com.tipi.conversations.domain.Message;
 import com.tipi.conversations.domain.MessageRepository;
 import com.tipi.conversations.domain.MessageSearchCriteria;
-import com.tipi.conversations.infrastructure.mongodb.serializers.MessageDeserializer;
-import com.tipi.conversations.infrastructure.mongodb.serializers.MessageSerializer;
+import com.tipi.conversations.repositories.mongodb.serializers.MessageDeserializer;
+import com.tipi.conversations.repositories.mongodb.serializers.MessageSerializer;
 import org.bson.Document;
 
 import static com.mongodb.client.model.Filters.eq;

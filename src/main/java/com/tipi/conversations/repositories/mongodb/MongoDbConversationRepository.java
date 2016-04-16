@@ -1,4 +1,4 @@
-package com.tipi.conversations.infrastructure.mongodb;
+package com.tipi.conversations.repositories.mongodb;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -8,7 +8,7 @@ import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.tipi.conversations.domain.*;
-import com.tipi.conversations.infrastructure.mongodb.serializers.*;
+import com.tipi.conversations.repositories.mongodb.serializers.*;
 import org.bson.Document;
 
 import java.io.IOException;

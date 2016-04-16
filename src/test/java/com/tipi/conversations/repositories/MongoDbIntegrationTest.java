@@ -1,10 +1,10 @@
-package com.tipi.conversations.infrastructure;
+package com.tipi.conversations.repositories;
 
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoDatabase;
 import com.tipi.conversations.commands.ConversationIntegrationTest;
-import com.tipi.conversations.infrastructure.mongodb.MongoDbConversationRepository;
-import com.tipi.conversations.infrastructure.mongodb.MongoDbMessageRepository;
+import com.tipi.conversations.repositories.mongodb.MongoDbConversationRepository;
+import com.tipi.conversations.repositories.mongodb.MongoDbMessageRepository;
 import de.flapdoodle.embed.mongo.distribution.Version;
 import de.flapdoodle.embed.mongo.tests.MongodForTestsFactory;
 
