@@ -93,13 +93,13 @@ public class ConversationIntegrationTest {
 		String conversationId = conversation.getConversationId();
 
 		// then
-		Conversation conversationFromMongoDb = conversationRepository.get(conversationId);
-		assertThat(conversationId).isEqualTo(conversationFromMongoDb.getConversationId());
-		assertThat(2).isEqualTo(conversationFromMongoDb.countParticipants());
+		Conversation conversationFromRepository = conversationRepository.get(conversationId);
+		assertThat(conversationId).isEqualTo(conversationFromRepository.getConversationId());
+		assertThat(2).isEqualTo(conversationFromRepository.countParticipants());
 
 		boolean maxIsFound = false;
 		boolean bobIsFound = false;
-		for (Participant participant : conversationFromMongoDb.getParticipants()) {
+		for (Participant participant : conversationFromRepository.getParticipants()) {
 			String userId = participant.getUser().getUserId();
 			if (userId.equals("max")) {
 				maxIsFound = true;
@@ -140,6 +140,7 @@ public class ConversationIntegrationTest {
 				.addParticipant(maximilien)
 				.addParticipant(bob);
 
+		// then
 		expectedException.expect(IllegalArgumentException.class);
 		expectedException.expectMessage("Cannot update conversation, reason: a conversation with id '" + conversation.getConversationId() + "' does not exist.");
 
@@ -180,7 +181,7 @@ public class ConversationIntegrationTest {
 		// when
 		Conversation conversation = createConversationCommand.execute();
 		String conversationId = conversation.getConversationId();
-		Conversation conversationFromMongoDb = conversationRepository.get(null);
+		conversationRepository.get(null);
 	}
 
 }

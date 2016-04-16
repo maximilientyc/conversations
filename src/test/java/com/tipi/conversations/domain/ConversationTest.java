@@ -61,6 +61,7 @@ public class ConversationTest {
 				.addParticipant(maximilien)
 				.addParticipant(bob);
 
+		// then
 		expectedException.expect(IllegalArgumentException.class);
 		expectedException.expectMessage("Cannot leave conversation, reason: not enough getParticipants.");
 
@@ -99,10 +100,12 @@ public class ConversationTest {
 				.addParticipant(bob)
 				.addParticipant(alice);
 
+		Mockito.when(conversationRepository.get(conversation.getConversationId())).thenReturn(conversation);
+
+		// then
 		expectedException.expect(IllegalArgumentException.class);
 		expectedException.expectMessage("Cannot post message, reason: not a participant.");
 
-		Mockito.when(conversationRepository.get(conversation.getConversationId())).thenReturn(conversation);
 
 		// when
 		conversation.removeParticipant(alice);
