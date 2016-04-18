@@ -21,6 +21,11 @@ public class Conversation {
 	}
 
 	public Conversation addParticipant(Participant participant) {
+		for (Participant participant1 : participants) {
+			if (participant.equals(participant1)) {
+				throw new IllegalArgumentException("Cannot add participant, reason: already exists.");
+			}
+		}
 		this.participants.add(participant);
 		return this;
 	}

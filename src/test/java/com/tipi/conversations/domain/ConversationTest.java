@@ -106,12 +106,30 @@ public class ConversationTest {
 		expectedException.expect(IllegalArgumentException.class);
 		expectedException.expectMessage("Cannot post message, reason: not a participant.");
 
-
 		// when
 		conversation.removeParticipant(alice);
 		Message message = messageFactory.buildMessage().setConversationId(conversation.getConversationId()).setContent("What are you doing maximilien next weekend ? ;)").setPostedBy(alice);
 		PostMessageCommand postMessageCommand = new PostMessageCommand(message, messageRepository, conversationRepository);
 		postMessageCommand.execute();
+	}
+
+	@Test
+	public void should_return_an_error_when_adding_an_already_existing_participant() {
+		// given
+		Participant maximilien = participantFactory.buildParticipant("max");
+		Participant bob = participantFactory.buildParticipant("bob");
+
+		Conversation conversation = conversationFactory.buildConversation()
+				.addParticipant(maximilien)
+				.addParticipant(bob);
+
+		// then
+		expectedException.expect(IllegalArgumentException.class);
+		expectedException.expectMessage("Cannot add participant, reason: already exists.");
+
+		// when
+		Participant maxDuplicate = participantFactory.buildParticipant("max");
+		conversation.addParticipant(maxDuplicate);
 	}
 
 	@Test
