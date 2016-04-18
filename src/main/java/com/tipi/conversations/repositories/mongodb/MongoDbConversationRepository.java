@@ -59,7 +59,9 @@ public class MongoDbConversationRepository implements ConversationRepository {
 
 	@Override
 	public void update(Conversation conversation) {
-
+		String conversationId = conversation.getConversationId();
+		conversationCollection.deleteOne(eq("conversationId", conversationId));
+		add(conversation);
 	}
 
 	@Override

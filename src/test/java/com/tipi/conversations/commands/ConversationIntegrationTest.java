@@ -133,22 +133,49 @@ public class ConversationIntegrationTest {
 	@Test
 	public void should_return_an_error_when_updating_a_non_existing_conversation() {
 		// given
-		Participant maximilien = participantFactory.buildParticipant("max");
-		Participant bob = participantFactory.buildParticipant("bob");
-
-		Conversation conversation = conversationFactory.buildConversation()
-				.addParticipant(maximilien)
-				.addParticipant(bob);
+		Set<String> userIdSet = new HashSet<String>();
+		userIdSet.add("max");
+		userIdSet.add("bob");
+		String conversationId = "abcdef";
 
 		// then
 		expectedException.expect(IllegalArgumentException.class);
-		expectedException.expectMessage("Cannot update conversation, reason: a conversation with id '" + conversation.getConversationId() + "' does not exist.");
+		expectedException.expectMessage("Cannot update conversation, reason: a conversation with id '" + conversationId + "' does not exist.");
 
 		// when
 		ConversationRepository conversationRepositorySpy = Mockito.spy(conversationRepository);
-		UpdateConversationCommand updateConversationCommand = new UpdateConversationCommand(conversation, conversationRepositorySpy);
-		Mockito.when(conversationRepositorySpy.exists(conversation.getConversationId())).thenReturn(false);
+		UpdateConversationCommand updateConversationCommand = new UpdateConversationCommand(conversationId, userIdSet, conversationFactory, participantFactory, conversationRepositorySpy);
+		Mockito.when(conversationRepositorySpy.exists(conversationId)).thenReturn(false);
 		updateConversationCommand.execute();
+	}
+
+	@Test
+	public void should_contain_newly_added_participant_after_update() {
+		// given
+		Set<String> userIdSet = new HashSet<String>();
+		userIdSet.add("max");
+		userIdSet.add("bob");
+		CreateConversationCommand createConversationCommand = new CreateConversationCommand(userIdSet, conversationFactory, participantFactory, conversationRepository);
+		Conversation conversation = createConversationCommand.execute();
+		String conversationId = conversation.getConversationId();
+
+		// when
+		userIdSet.remove("max");
+		userIdSet.remove("bob");
+		userIdSet.add("alice");
+		UpdateConversationCommand updateConversationCommand = new UpdateConversationCommand(conversationId, userIdSet, conversationFactory, participantFactory, conversationRepository);
+		updateConversationCommand.execute();
+
+		// then
+		Conversation conversationFromRepository = conversationRepository.get(conversationId);
+		boolean aliceIsFound = false;
+		for (Participant participant : conversationFromRepository.getParticipants()) {
+			String userId = participant.getUser().getUserId();
+			if (userId.equals("alice")) {
+				aliceIsFound = true;
+			}
+		}
+		assertThat(aliceIsFound).isTrue();
 	}
 
 	@Test

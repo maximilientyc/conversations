@@ -1,26 +1,44 @@
 package com.tipi.conversations.commands;
 
-import com.tipi.conversations.domain.Conversation;
-import com.tipi.conversations.domain.ConversationRepository;
+import com.tipi.conversations.domain.*;
+
+import java.util.Iterator;
 
 /**
  * Created by @maximilientyc on 07/02/2016.
  */
 public class UpdateConversationCommand {
 
-	private final Conversation conversation;
+	private final String conversationId;
+	private final Iterable<String> userIds;
+	private final ConversationFactory conversationFactory;
+	private final ParticipantFactory participantFactory;
 	private final ConversationRepository conversationRepository;
 
-	public UpdateConversationCommand(Conversation conversation, ConversationRepository conversationRepository) {
-		this.conversation = conversation;
+	public UpdateConversationCommand(String conversationId, Iterable<String> userIds, ConversationFactory conversationFactory, ParticipantFactory participantFactory, ConversationRepository conversationRepository) {
+		this.conversationId = conversationId;
+		this.userIds = userIds;
+		this.conversationFactory = conversationFactory;
+		this.participantFactory = participantFactory;
 		this.conversationRepository = conversationRepository;
 	}
 
 	public void execute() {
-		boolean conversationExists = conversationRepository.exists(conversation.getConversationId());
+		boolean conversationExists = conversationRepository.exists(conversationId);
 		if (!conversationExists) {
-			throw new IllegalArgumentException("Cannot update conversation, reason: a conversation with id '" + conversation.getConversationId() + "' does not exist.");
+			throw new IllegalArgumentException("Cannot update conversation, reason: a conversation with id '" + conversationId + "' does not exist.");
 		}
+		Conversation conversation = conversationRepository.get(conversationId);
+
+		// add new participants
+		Iterator<String> userIdIterator = userIds.iterator();
+		while (userIdIterator.hasNext()) {
+			Participant newParticipant = participantFactory.buildParticipant(userIdIterator.next());
+			conversation.addParticipant(newParticipant);
+		}
+
 		conversationRepository.update(conversation);
 	}
+
+
 }
