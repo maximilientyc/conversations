@@ -1,2 +1,11 @@
 language: java
 jdk: oraclejdk8
+deploy:
+  provider: appfog
+  email: maximilien.tyc@gmail.com
+  password:
+    secure: fwdd03nFSaABLm03779G1kKSaLI8MO+QABdCiY0iIZRyMzLsbpdvESfQSmB/FYBb4nfZ9dQWTMxVPZ6H5YZJGLTqmSd0/GS5nuFPZ/mRnJIKHKzrMzywe+HElrbII2sK4qu947cekn4LYIB4+PQ+Q4T1oyhLa3zp0CelY+OLwQIwXexSNDDW6o97MBJFROKoyy28kSbyuLBEmvyRshG2u7CmINDLeP9VvlEmI7muvOk8eGEApnsiEJcI76F9EMTy8LN3nGyx9kgZRpSpcSAeB6w42wa1X+J0PzYLeMFN4cNOJEkSc99NqHh7ne6nCt8RjhUYAu4jxz+TIC9RN0pws5E4TBERlfLiVSCFEMCePn+Ugz8wSGXyWdNObGTodqZfkvz/uo/EI9qzi2MfyuFUk+BV/z0dodoqWWvl+s03LptQhyhqUulbXDhsO3SY4VMH5JmbZ+oiFh1w0uCcAqz2h7M6yOqF1+4XWpBQ5V/tN7EJOJaPvr4r2jVBcuFhgWq+hVjG+mupTL/TlO//50Gy79fhRUM4Oh+G5fxfaX3/VAMhZc0S3rZe3nXlzHk9VA6umu+tH+HniesfNuiNgUqS1kcL8Co/OUszT9JtWbIJJ64f1zaFqIHwlo/WY8svMqmaojZoJFjyhwVq4QsdR1DRmntTHYwg0Ufd5ENjlgBqdKc=
+  app: conversations
+  on:
+    repo: maximilientyc/conversations
+    branch: develop
