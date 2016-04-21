@@ -1,2 +1,9 @@
 language: java
 jdk: oraclejdk8
+deploy:
+  provider: releases
+  api_key: 47cf6174b3a070fdcefe3a7de922912dafc63c92
+  file: "${RELEASE_PKG_FILE}"
+  skip_cleanup: true
+  on:
+    tags: true
