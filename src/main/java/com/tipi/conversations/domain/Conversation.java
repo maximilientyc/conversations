@@ -21,6 +21,10 @@ public class Conversation {
 	}
 
 	public Conversation addParticipant(Participant participant) {
+		if (containsParticipant(participant)) {
+			throw new IllegalArgumentException("Cannot add participant, reason: already exists.");
+		}
+
 		this.participants.add(participant);
 		return this;
 	}
@@ -40,4 +44,17 @@ public class Conversation {
 		return participants;
 	}
 
+	private boolean containsParticipant(Participant participant) {
+		String userId = participant.getUser().getUserId();
+		return containsParticipant(userId);
+	}
+
+	public boolean containsParticipant(String userId) {
+		for (Participant participant : participants) {
+			if (participant.getUser().getUserId().equals(userId)) {
+				return true;
+			}
+		}
+		return false;
+	}
 }

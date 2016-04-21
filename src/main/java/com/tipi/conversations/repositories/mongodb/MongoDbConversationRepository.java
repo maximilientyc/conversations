@@ -1,4 +1,4 @@
-package com.tipi.conversations.infrastructure.mongodb;
+package com.tipi.conversations.repositories.mongodb;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -8,7 +8,7 @@ import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.tipi.conversations.domain.*;
-import com.tipi.conversations.infrastructure.mongodb.serializers.*;
+import com.tipi.conversations.repositories.mongodb.serializers.*;
 import org.bson.Document;
 
 import java.io.IOException;
@@ -59,12 +59,14 @@ public class MongoDbConversationRepository implements ConversationRepository {
 
 	@Override
 	public void update(Conversation conversation) {
-
+		String conversationId = conversation.getConversationId();
+		conversationCollection.deleteOne(eq("conversationId", conversationId));
+		add(conversation);
 	}
 
 	@Override
-	public boolean exists(Conversation conversation) {
-		long conversationCount = conversationCollection.count(eq("conversationId", conversation.getConversationId()));
+	public boolean exists(String conversationId) {
+		long conversationCount = conversationCollection.count(eq("conversationId", conversationId));
 		return conversationCount > 0;
 	}
 
@@ -78,6 +80,12 @@ public class MongoDbConversationRepository implements ConversationRepository {
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	@Override
+	public long count(ConversationSearchCriteria criteria) {
+		long conversationCount = conversationCollection.count();
+		return conversationCount;
 	}
 
 	private Conversation findOneConversation(String conversationId) throws IOException {

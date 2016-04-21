@@ -1,8 +1,5 @@
 package com.tipi.conversations.domain;
 
-import com.tipi.conversations.domain.User;
-import com.tipi.conversations.domain.UserRepository;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,5 +26,15 @@ public class SampleUserRepository implements UserRepository {
 			}
 		}
 		return null;
+	}
+
+	@Override
+	public boolean exists(String userId) {
+		for (User user : users) {
+			if (user.getUserId().equals(userId)) {
+				return true;
+			}
+		}
+		return false;
 	}
 }

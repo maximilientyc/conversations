@@ -1,6 +1,6 @@
 package com.tipi.conversations.domain;
 
-import com.tipi.conversations.api.CreateConversationCommand;
+import com.tipi.conversations.commands.PostMessageCommand;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -29,16 +29,16 @@ public class ConversationTest {
 		conversationService = new ConversationService(conversationRepository, messageRepository);
 		conversationFactory = new ConversationFactory(conversationService);
 		messageFactory = new MessageFactory(conversationService);
-		participantFactory = new ParticipantFactory(conversationService);
 		userRepository = new SampleUserRepository();
+		participantFactory = new ParticipantFactory(userRepository);
 		expectedException = ExpectedException.none();
 	}
 
 	@Test
 	public void should_not_contain_messages_when_new() {
 		// given
-		Participant maximilien = participantFactory.buildParticipant(userRepository.get("max"));
-		Participant bob = participantFactory.buildParticipant(userRepository.get("bob"));
+		Participant maximilien = participantFactory.buildParticipant("max");
+		Participant bob = participantFactory.buildParticipant("bob");
 
 		// when
 		Conversation conversation = conversationFactory.buildConversation()
@@ -50,33 +50,18 @@ public class ConversationTest {
 		assertThat(messageCount).isEqualTo(0);
 	}
 
-	@Test
-	public void should_return_an_error_when_creating_a_conversation_with_less_than_2_participants() {
-		// given
-		Participant maximilien = participantFactory.buildParticipant(userRepository.get("max"));
-		Conversation conversation = conversationFactory.buildConversation()
-				.addParticipant(maximilien);
-
-		CreateConversationCommand createConversationCommand = new CreateConversationCommand(conversation, conversationRepository);
-		expectedException.expect(IllegalArgumentException.class);
-		expectedException.expectMessage("Cannot create conversation, reason: not enough getParticipants.");
-
-		Mockito.when(conversationRepository.exists(conversation)).thenReturn(false);
-
-		// when
-		createConversationCommand.execute();
-	}
 
 	@Test
 	public void should_return_an_error_when_a_participant_leaves_a_two_participants_conversation() {
 		// given
-		Participant maximilien = participantFactory.buildParticipant(userRepository.get("max"));
-		Participant bob = participantFactory.buildParticipant(userRepository.get("bob"));
+		Participant maximilien = participantFactory.buildParticipant("max");
+		Participant bob = participantFactory.buildParticipant("bob");
 
 		Conversation conversation = conversationFactory.buildConversation()
 				.addParticipant(maximilien)
 				.addParticipant(bob);
 
+		// then
 		expectedException.expect(IllegalArgumentException.class);
 		expectedException.expectMessage("Cannot leave conversation, reason: not enough getParticipants.");
 
@@ -87,9 +72,9 @@ public class ConversationTest {
 	@Test
 	public void should_contain_two_participants_when_a_participant_leaves_a_three_participant_conversation() {
 		// given
-		Participant maximilien = participantFactory.buildParticipant(userRepository.get("max"));
-		Participant bob = participantFactory.buildParticipant(userRepository.get("bob"));
-		Participant alice = participantFactory.buildParticipant(userRepository.get("alice"));
+		Participant maximilien = participantFactory.buildParticipant("max");
+		Participant bob = participantFactory.buildParticipant("bob");
+		Participant alice = participantFactory.buildParticipant("alice");
 
 		Conversation conversation = conversationFactory.buildConversation()
 				.addParticipant(maximilien)
@@ -106,31 +91,52 @@ public class ConversationTest {
 	@Test
 	public void should_return_an_error_when_a_participant_post_a_message_in_a_conversation_he_has_left() {
 		// given
-		Participant maximilien = participantFactory.buildParticipant(userRepository.get("max"));
-		Participant bob = participantFactory.buildParticipant(userRepository.get("bob"));
-		Participant alice = participantFactory.buildParticipant(userRepository.get("alice"));
+		Participant maximilien = participantFactory.buildParticipant("max");
+		Participant bob = participantFactory.buildParticipant("bob");
+		Participant alice = participantFactory.buildParticipant("alice");
 
 		Conversation conversation = conversationFactory.buildConversation()
 				.addParticipant(maximilien)
 				.addParticipant(bob)
 				.addParticipant(alice);
 
+		Mockito.when(conversationRepository.get(conversation.getConversationId())).thenReturn(conversation);
+
+		// then
 		expectedException.expect(IllegalArgumentException.class);
 		expectedException.expectMessage("Cannot post message, reason: not a participant.");
-
-		Mockito.when(conversationRepository.get(conversation.getConversationId())).thenReturn(conversation);
 
 		// when
 		conversation.removeParticipant(alice);
 		Message message = messageFactory.buildMessage().setConversationId(conversation.getConversationId()).setContent("What are you doing maximilien next weekend ? ;)").setPostedBy(alice);
-		conversationService.postMessage(message);
+		PostMessageCommand postMessageCommand = new PostMessageCommand(message, messageRepository, conversationRepository);
+		postMessageCommand.execute();
+	}
+
+	@Test
+	public void should_return_an_error_when_adding_an_already_existing_participant() {
+		// given
+		Participant maximilien = participantFactory.buildParticipant("max");
+		Participant bob = participantFactory.buildParticipant("bob");
+
+		Conversation conversation = conversationFactory.buildConversation()
+				.addParticipant(maximilien)
+				.addParticipant(bob);
+
+		// then
+		expectedException.expect(IllegalArgumentException.class);
+		expectedException.expectMessage("Cannot add participant, reason: already exists.");
+
+		// when
+		Participant maxDuplicate = participantFactory.buildParticipant("max");
+		conversation.addParticipant(maxDuplicate);
 	}
 
 	@Test
 	public void should_maintain_chronology_between_messages_inside_a_conversation() {
 		// given
-		Participant maximilien = participantFactory.buildParticipant(userRepository.get("max"));
-		Participant bob = participantFactory.buildParticipant(userRepository.get("bob"));
+		Participant maximilien = participantFactory.buildParticipant("max");
+		Participant bob = participantFactory.buildParticipant("bob");
 
 		Conversation conversation = conversationFactory.buildConversation()
 				.addParticipant(maximilien)
@@ -140,9 +146,12 @@ public class ConversationTest {
 
 		// when
 		Message firstMessage = messageFactory.buildMessage().setConversationId(conversation.getConversationId()).setContent("Hello ! How are you all ?)").setPostedBy(maximilien);
-		conversationService.postMessage(firstMessage);
+		PostMessageCommand postFirstMessageCommand = new PostMessageCommand(firstMessage, messageRepository, conversationRepository);
+		postFirstMessageCommand.execute();
+
 		Message secondMessage = messageFactory.buildMessage().setConversationId(conversation.getConversationId()).setContent("I'm fine, thank you max.").setPostedBy(bob);
-		conversationService.postMessage(secondMessage);
+		PostMessageCommand postSecondMessageCommand = new PostMessageCommand(secondMessage, messageRepository, conversationRepository);
+		postSecondMessageCommand.execute();
 
 		// then
 		assertThat(firstMessage.getPostedOn()).isBeforeOrEqualsTo(secondMessage.getPostedOn());
@@ -151,8 +160,8 @@ public class ConversationTest {
 	@Test
 	public void should_maintain_chronology_between_participant_arrival_inside_a_conversation() throws InterruptedException {
 		// given
-		Participant maximilien = participantFactory.buildParticipant(userRepository.get("max"));
-		Participant bob = participantFactory.buildParticipant(userRepository.get("bob"));
+		Participant maximilien = participantFactory.buildParticipant("max");
+		Participant bob = participantFactory.buildParticipant("bob");
 
 		Conversation conversation = conversationFactory.buildConversation()
 				.addParticipant(maximilien)
@@ -160,7 +169,7 @@ public class ConversationTest {
 
 		// when
 		Thread.sleep(1000);
-		Participant alice = participantFactory.buildParticipant(userRepository.get("alice"));
+		Participant alice = participantFactory.buildParticipant("alice");
 		conversation.addParticipant(alice);
 
 		// then

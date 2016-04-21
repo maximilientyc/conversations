@@ -15,4 +15,5 @@ public interface UserRepository {
 	 */
 	User get(String userId);
 
+	boolean exists(String userId);
 }

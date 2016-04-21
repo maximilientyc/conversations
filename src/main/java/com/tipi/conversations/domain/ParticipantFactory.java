@@ -5,13 +5,18 @@ package com.tipi.conversations.domain;
  */
 public class ParticipantFactory {
 
-	private final ConversationService conversationService;
+	private final UserRepository userRepository;
 
-	public ParticipantFactory(ConversationService conversationService) {
-		this.conversationService = conversationService;
+	public ParticipantFactory(UserRepository userRepository) {
+		this.userRepository = userRepository;
 	}
 
-	public Participant buildParticipant(User user) {
+	public Participant buildParticipant(String userId) {
+		boolean userExists = userRepository.exists(userId);
+		if (!userExists) {
+			throw new IllegalArgumentException("Cannot create participant, reason: userId does not exist.");
+		}
+		User user = userRepository.get(userId);
 		return new Participant(user);
 	}
 }
