@@ -33,8 +33,11 @@ public class UpdateConversationCommand {
 		// add new participants
 		Iterator<String> userIdIterator = userIds.iterator();
 		while (userIdIterator.hasNext()) {
-			Participant newParticipant = participantFactory.buildParticipant(userIdIterator.next());
-			conversation.addParticipant(newParticipant);
+			String userId = userIdIterator.next();
+			if (!conversation.containsParticipant(userId)) {
+				Participant newParticipant = participantFactory.buildParticipant(userId);
+				conversation.addParticipant(newParticipant);
+			}
 		}
 
 		conversationRepository.update(conversation);
