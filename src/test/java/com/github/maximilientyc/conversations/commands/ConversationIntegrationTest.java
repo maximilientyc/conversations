@@ -160,8 +160,6 @@ public class ConversationIntegrationTest {
 		String conversationId = conversation.getConversationId();
 
 		// when
-		userIdSet.remove("max");
-		userIdSet.remove("bob");
 		userIdSet.add("alice");
 		UpdateConversationCommand updateConversationCommand = new UpdateConversationCommand(conversationId, userIdSet, conversationFactory, participantFactory, conversationRepository);
 		updateConversationCommand.execute();
