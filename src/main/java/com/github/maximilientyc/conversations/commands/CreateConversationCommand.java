@@ -1,9 +1,6 @@
 package com.github.maximilientyc.conversations.commands;
 
-import com.github.maximilientyc.conversations.domain.Conversation;
-import com.github.maximilientyc.conversations.domain.ConversationFactory;
-import com.github.maximilientyc.conversations.domain.ConversationRepository;
-import com.github.maximilientyc.conversations.domain.ParticipantFactory;
+import com.github.maximilientyc.conversations.domain.*;
 
 import java.util.Iterator;
 
@@ -16,15 +13,19 @@ public class CreateConversationCommand {
 	private final ConversationFactory conversationFactory;
 	private final ParticipantFactory participantFactory;
 	private final ConversationRepository conversationRepository;
+	private final UserService userService;
 
-	public CreateConversationCommand(Iterable<String> userIds, ConversationFactory conversationFactory, ParticipantFactory participantFactory, ConversationRepository conversationRepository) {
+	public CreateConversationCommand(Iterable<String> userIds, ConversationFactory conversationFactory, ParticipantFactory participantFactory, ConversationRepository conversationRepository, UserService userService) {
 		this.userIds = userIds;
 		this.conversationFactory = conversationFactory;
 		this.participantFactory = participantFactory;
 		this.conversationRepository = conversationRepository;
+		this.userService = userService;
 	}
 
 	public Conversation execute() {
+		validate();
+
 		Conversation conversation = conversationFactory.buildConversation();
 		Iterator<String> userIdIterator = userIds.iterator();
 		while (userIdIterator.hasNext()) {
@@ -38,4 +39,21 @@ public class CreateConversationCommand {
 
 		return conversation;
 	}
+
+	private void validate() {
+		String loggedInUserId = userService.getLoggedInUserId();
+
+		boolean loggedInUserIsAConversationMember = false;
+		Iterator<String> iterator = userIds.iterator();
+		while (iterator.hasNext()) {
+			if (iterator.next().equals(loggedInUserId)) {
+				loggedInUserIsAConversationMember = true;
+				break;
+			}
+		}
+		if (!loggedInUserIsAConversationMember) {
+			throw new IllegalArgumentException("Current logged in user '" + loggedInUserId + "' is not a conversation member.");
+		}
+	}
+
 }

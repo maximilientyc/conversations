@@ -1,6 +1,7 @@
 package com.github.maximilientyc.conversations.commands;
 
 import com.github.maximilientyc.conversations.domain.*;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -22,6 +23,7 @@ public class ConversationIntegrationTest {
 	private final ConversationFactory conversationFactory;
 	private final ParticipantFactory participantFactory;
 	private final UserRepository userRepository;
+	private final UserService userService;
 	private final MessageFactory messageFactory;
 	public MessageRepository messageRepository;
 	public ConversationRepository conversationRepository;
@@ -35,6 +37,7 @@ public class ConversationIntegrationTest {
 
 		conversationService = new ConversationService(conversationRepository, messageRepository);
 		userRepository = new SampleUserRepository();
+		userService = Mockito.mock(SampleUserService.class);
 		participantFactory = new ParticipantFactory(userRepository);
 		conversationFactory = new ConversationFactory(conversationService);
 		messageFactory = new MessageFactory(conversationService);
@@ -46,13 +49,18 @@ public class ConversationIntegrationTest {
 		messageRepository = new SampleMessageRepository();
 	}
 
+	@Before
+	public void prepareLoggedInUser() {
+		Mockito.when(userService.getLoggedInUserId()).thenReturn("max");
+	}
+
 	@Test
 	public void should_contain_one_conversation() {
 		// given
 		Set<String> userIdSet = new HashSet<String>();
 		userIdSet.add("max");
 		userIdSet.add("bob");
-		CreateConversationCommand createConversationCommand = new CreateConversationCommand(userIdSet, conversationFactory, participantFactory, conversationRepository);
+		CreateConversationCommand createConversationCommand = new CreateConversationCommand(userIdSet, conversationFactory, participantFactory, conversationRepository, userService);
 
 		// when
 		Conversation conversation = createConversationCommand.execute();
@@ -69,7 +77,7 @@ public class ConversationIntegrationTest {
 		Set<String> userIdSet = new HashSet<String>();
 		userIdSet.add("max");
 		userIdSet.add("bob");
-		CreateConversationCommand createConversationCommand = new CreateConversationCommand(userIdSet, conversationFactory, participantFactory, conversationRepository);
+		CreateConversationCommand createConversationCommand = new CreateConversationCommand(userIdSet, conversationFactory, participantFactory, conversationRepository, userService);
 
 		// when
 		Conversation conversation = createConversationCommand.execute();
@@ -86,7 +94,7 @@ public class ConversationIntegrationTest {
 		Set<String> userIdSet = new HashSet<String>();
 		userIdSet.add("max");
 		userIdSet.add("bob");
-		CreateConversationCommand createConversationCommand = new CreateConversationCommand(userIdSet, conversationFactory, participantFactory, conversationRepository);
+		CreateConversationCommand createConversationCommand = new CreateConversationCommand(userIdSet, conversationFactory, participantFactory, conversationRepository, userService);
 
 		// when
 		Conversation conversation = createConversationCommand.execute();
@@ -116,7 +124,7 @@ public class ConversationIntegrationTest {
 		Set<String> userIdSet = new HashSet<String>();
 		userIdSet.add("max");
 		userIdSet.add("bob");
-		CreateConversationCommand createConversationCommand = new CreateConversationCommand(userIdSet, conversationFactory, participantFactory, conversationRepository);
+		CreateConversationCommand createConversationCommand = new CreateConversationCommand(userIdSet, conversationFactory, participantFactory, conversationRepository, userService);
 		Conversation conversation = createConversationCommand.execute();
 		String conversationId = conversation.getConversationId();
 
@@ -155,7 +163,7 @@ public class ConversationIntegrationTest {
 		Set<String> userIdSet = new HashSet<String>();
 		userIdSet.add("max");
 		userIdSet.add("bob");
-		CreateConversationCommand createConversationCommand = new CreateConversationCommand(userIdSet, conversationFactory, participantFactory, conversationRepository);
+		CreateConversationCommand createConversationCommand = new CreateConversationCommand(userIdSet, conversationFactory, participantFactory, conversationRepository, userService);
 		Conversation conversation = createConversationCommand.execute();
 		String conversationId = conversation.getConversationId();
 
@@ -181,7 +189,7 @@ public class ConversationIntegrationTest {
 		// given
 		Set<String> userIdSet = new HashSet<String>();
 		userIdSet.add("max");
-		CreateConversationCommand createConversationCommand = new CreateConversationCommand(userIdSet, conversationFactory, participantFactory, conversationRepository);
+		CreateConversationCommand createConversationCommand = new CreateConversationCommand(userIdSet, conversationFactory, participantFactory, conversationRepository, userService);
 
 		// then
 		expectedException.expect(IllegalArgumentException.class);
@@ -197,7 +205,7 @@ public class ConversationIntegrationTest {
 		Set<String> userIdSet = new HashSet<String>();
 		userIdSet.add("max");
 		userIdSet.add("bob");
-		CreateConversationCommand createConversationCommand = new CreateConversationCommand(userIdSet, conversationFactory, participantFactory, conversationRepository);
+		CreateConversationCommand createConversationCommand = new CreateConversationCommand(userIdSet, conversationFactory, participantFactory, conversationRepository, userService);
 
 		// then
 		expectedException.expect(IllegalArgumentException.class);
@@ -207,6 +215,26 @@ public class ConversationIntegrationTest {
 		Conversation conversation = createConversationCommand.execute();
 		String conversationId = conversation.getConversationId();
 		conversationRepository.get(null);
+	}
+
+	@Test
+	public void should_return_an_error_when_creating_a_conversation_without_logged_in_user() {
+		// given
+		Set<String> userIdSet = new HashSet<String>();
+		userIdSet.add("max");
+		userIdSet.add("bob");
+
+		String loggedInUserId = "alice";
+		Mockito.when(userService.getLoggedInUserId()).thenReturn(loggedInUserId);
+
+		CreateConversationCommand createConversationCommand = new CreateConversationCommand(userIdSet, conversationFactory, participantFactory, conversationRepository, userService);
+
+		// then
+		expectedException.expect(IllegalArgumentException.class);
+		expectedException.expectMessage("Current logged in user '" + loggedInUserId + "' is not a conversation member.");
+
+		// when
+		Conversation conversation = createConversationCommand.execute();
 	}
 
 }
