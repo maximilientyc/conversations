@@ -24,10 +24,10 @@ public class UserTest {
 	public void should_return_an_error_building_a_participant_with_a_non_existing_user() {
 		// given
 		expectedException.expect(IllegalArgumentException.class);
-		expectedException.expectMessage("Cannot create participant, reason: userId does not exist.");
+		expectedException.expectMessage("Cannot create participant, reason: userId 'john_doe' does not exist.");
 
 		// when
-		Participant maximilien = participantFactory.buildParticipant("john doe");
+		Participant maximilien = participantFactory.buildParticipant("john_doe");
 
 	}
 }

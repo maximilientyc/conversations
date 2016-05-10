@@ -14,7 +14,7 @@ public class ParticipantFactory {
 	public Participant buildParticipant(String userId) {
 		boolean userExists = userRepository.exists(userId);
 		if (!userExists) {
-			throw new IllegalArgumentException("Cannot create participant, reason: userId does not exist.");
+			throw new IllegalArgumentException("Cannot create participant, reason: userId '" + userId + "' does not exist.");
 		}
 		User user = userRepository.get(userId);
 		return new Participant(user);

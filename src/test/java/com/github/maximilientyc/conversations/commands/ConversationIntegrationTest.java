@@ -185,6 +185,34 @@ public class ConversationIntegrationTest {
 	}
 
 	@Test
+	public void should_not_contain_removed_participant_after_update() {
+		// given
+		Set<String> userIdSet = new HashSet<String>();
+		userIdSet.add("max");
+		userIdSet.add("bob");
+		userIdSet.add("alice");
+		CreateConversationCommand createConversationCommand = new CreateConversationCommand(userIdSet, conversationFactory, participantFactory, conversationRepository, userService);
+		Conversation conversation = createConversationCommand.execute();
+		String conversationId = conversation.getConversationId();
+
+		// when
+		userIdSet.remove("alice");
+		UpdateConversationCommand updateConversationCommand = new UpdateConversationCommand(conversationId, userIdSet, conversationFactory, participantFactory, conversationRepository);
+		updateConversationCommand.execute();
+
+		// then
+		Conversation conversationFromRepository = conversationRepository.get(conversationId);
+		boolean aliceIsFound = false;
+		for (Participant participant : conversationFromRepository.getParticipants()) {
+			String userId = participant.getUser().getUserId();
+			if (userId.equals("alice")) {
+				aliceIsFound = true;
+			}
+		}
+		assertThat(aliceIsFound).isFalse();
+	}
+
+	@Test
 	public void should_return_an_error_when_creating_a_conversation_with_less_than_2_participants() {
 		// given
 		Set<String> userIdSet = new HashSet<String>();
