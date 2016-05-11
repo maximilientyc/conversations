@@ -2,9 +2,7 @@ package com.github.maximilientyc.conversations.commands;
 
 import com.github.maximilientyc.conversations.domain.*;
 
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 
 /**
  * Created by @maximilientyc on 07/02/2016.
@@ -23,11 +21,10 @@ public class CreateConversationCommand {
 		this.participantFactory = participantFactory;
 		this.conversationRepository = conversationRepository;
 		this.userService = userService;
+		new ConversationCommandValidator().validate(this);
 	}
 
 	public Conversation execute() {
-		validate();
-
 		Conversation conversation = conversationFactory.buildConversation();
 		Iterator<String> userIdIterator = userIds.iterator();
 		while (userIdIterator.hasNext()) {
@@ -38,32 +35,12 @@ public class CreateConversationCommand {
 		return conversation;
 	}
 
-	private void validate() {
-		validateLoggedInUserIsAParticipant();
-		validateCorrectNumberOfParticipants();
+	public UserService getUserService() {
+		return userService;
 	}
 
-	private void validateLoggedInUserIsAParticipant() {
-		String loggedInUserId = userService.getLoggedInUserId();
-		boolean loggedInUserIsAConversationMember = false;
-		Iterator<String> iterator = userIds.iterator();
-		while (iterator.hasNext()) {
-			if (iterator.next().equals(loggedInUserId)) {
-				loggedInUserIsAConversationMember = true;
-				break;
-			}
-		}
-		if (!loggedInUserIsAConversationMember) {
-			throw new IllegalArgumentException("Current logged in user '" + loggedInUserId + "' is not a conversation member.");
-		}
+	public Iterable<String> getUserIds() {
+		return userIds;
 	}
 
-	private void validateCorrectNumberOfParticipants() {
-		List<String> userIdList = new ArrayList<String>();
-		Iterator<String> iterator = userIds.iterator();
-		iterator.forEachRemaining(userIdList::add);
-		if (userIdList.size() < 2) {
-			throw new IllegalArgumentException("Cannot create conversation, reason: not enough participants.");
-		}
-	}
 }

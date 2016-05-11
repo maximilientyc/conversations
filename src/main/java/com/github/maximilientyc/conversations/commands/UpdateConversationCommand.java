@@ -14,20 +14,19 @@ public class UpdateConversationCommand {
 	private final ConversationFactory conversationFactory;
 	private final ParticipantFactory participantFactory;
 	private final ConversationRepository conversationRepository;
+	private UserService userService;
 
-	public UpdateConversationCommand(String conversationId, Iterable<String> userIds, ConversationFactory conversationFactory, ParticipantFactory participantFactory, ConversationRepository conversationRepository) {
+	public UpdateConversationCommand(String conversationId, Iterable<String> userIds, ConversationFactory conversationFactory, ParticipantFactory participantFactory, ConversationRepository conversationRepository, UserService userService) {
 		this.conversationId = conversationId;
 		this.userIds = userIds;
 		this.conversationFactory = conversationFactory;
 		this.participantFactory = participantFactory;
 		this.conversationRepository = conversationRepository;
+		this.userService = userService;
+		new ConversationCommandValidator().validate(this);
 	}
 
 	public void execute() {
-		boolean conversationExists = conversationRepository.exists(conversationId);
-		if (!conversationExists) {
-			throw new IllegalArgumentException("Cannot update conversation, reason: a conversation with id '" + conversationId + "' does not exist.");
-		}
 		Conversation conversation = conversationRepository.get(conversationId);
 
 		// add new participants
@@ -57,5 +56,19 @@ public class UpdateConversationCommand {
 		conversationRepository.update(conversation);
 	}
 
+	public UserService getUserService() {
+		return userService;
+	}
 
+	public String getConversationId() {
+		return conversationId;
+	}
+
+	public Iterable<String> getUserIds() {
+		return userIds;
+	}
+
+	public ConversationRepository getConversationRepository() {
+		return conversationRepository;
+	}
 }

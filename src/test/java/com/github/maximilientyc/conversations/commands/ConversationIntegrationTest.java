@@ -152,7 +152,7 @@ public class ConversationIntegrationTest {
 
 		// when
 		ConversationRepository conversationRepositorySpy = Mockito.spy(conversationRepository);
-		UpdateConversationCommand updateConversationCommand = new UpdateConversationCommand(conversationId, userIdSet, conversationFactory, participantFactory, conversationRepositorySpy);
+		UpdateConversationCommand updateConversationCommand = new UpdateConversationCommand(conversationId, userIdSet, conversationFactory, participantFactory, conversationRepositorySpy, userService);
 		Mockito.when(conversationRepositorySpy.exists(conversationId)).thenReturn(false);
 		updateConversationCommand.execute();
 	}
@@ -169,7 +169,7 @@ public class ConversationIntegrationTest {
 
 		// when
 		userIdSet.add("alice");
-		UpdateConversationCommand updateConversationCommand = new UpdateConversationCommand(conversationId, userIdSet, conversationFactory, participantFactory, conversationRepository);
+		UpdateConversationCommand updateConversationCommand = new UpdateConversationCommand(conversationId, userIdSet, conversationFactory, participantFactory, conversationRepository, userService);
 		updateConversationCommand.execute();
 
 		// then
@@ -197,7 +197,7 @@ public class ConversationIntegrationTest {
 
 		// when
 		userIdSet.remove("alice");
-		UpdateConversationCommand updateConversationCommand = new UpdateConversationCommand(conversationId, userIdSet, conversationFactory, participantFactory, conversationRepository);
+		UpdateConversationCommand updateConversationCommand = new UpdateConversationCommand(conversationId, userIdSet, conversationFactory, participantFactory, conversationRepository, userService);
 		updateConversationCommand.execute();
 
 		// then
@@ -217,14 +217,13 @@ public class ConversationIntegrationTest {
 		// given
 		Set<String> userIdSet = new HashSet<String>();
 		userIdSet.add("max");
-		CreateConversationCommand createConversationCommand = new CreateConversationCommand(userIdSet, conversationFactory, participantFactory, conversationRepository, userService);
 
 		// then
 		expectedException.expect(IllegalArgumentException.class);
 		expectedException.expectMessage("Cannot create conversation, reason: not enough participants.");
 
 		// when
-		createConversationCommand.execute();
+		CreateConversationCommand createConversationCommand = new CreateConversationCommand(userIdSet, conversationFactory, participantFactory, conversationRepository, userService);
 	}
 
 	@Test
@@ -255,14 +254,13 @@ public class ConversationIntegrationTest {
 		String loggedInUserId = "alice";
 		Mockito.when(userService.getLoggedInUserId()).thenReturn(loggedInUserId);
 
-		CreateConversationCommand createConversationCommand = new CreateConversationCommand(userIdSet, conversationFactory, participantFactory, conversationRepository, userService);
 
 		// then
 		expectedException.expect(IllegalArgumentException.class);
 		expectedException.expectMessage("Current logged in user '" + loggedInUserId + "' is not a conversation member.");
 
 		// when
-		Conversation conversation = createConversationCommand.execute();
+		CreateConversationCommand createConversationCommand = new CreateConversationCommand(userIdSet, conversationFactory, participantFactory, conversationRepository, userService);
 	}
 
 }
