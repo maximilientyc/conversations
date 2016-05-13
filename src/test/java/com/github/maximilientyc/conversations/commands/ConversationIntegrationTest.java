@@ -8,6 +8,7 @@ import org.junit.rules.ExpectedException;
 import org.mockito.Mockito;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -18,17 +19,21 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class ConversationIntegrationTest {
 
 	@Rule
-	public final ExpectedException expectedException;
-	private final ConversationService conversationService;
-	private final ConversationFactory conversationFactory;
-	private final ParticipantFactory participantFactory;
-	private final UserRepository userRepository;
-	private final UserService userService;
-	private final MessageFactory messageFactory;
+	public ExpectedException expectedException;
 	public MessageRepository messageRepository;
 	public ConversationRepository conversationRepository;
+	private ConversationService conversationService;
+	private ConversationFactory conversationFactory;
+	private ParticipantFactory participantFactory;
+	private UserRepository userRepository;
+	private UserService userService;
+	private MessageFactory messageFactory;
 
 	public ConversationIntegrationTest() {
+		expectedException = ExpectedException.none();
+	}
+
+	private void initComponents() {
 		try {
 			prepareRepositories();
 		} catch (Exception e) {
@@ -41,7 +46,6 @@ public class ConversationIntegrationTest {
 		participantFactory = new ParticipantFactory(userRepository);
 		conversationFactory = new ConversationFactory(conversationService);
 		messageFactory = new MessageFactory(conversationService);
-		expectedException = ExpectedException.none();
 	}
 
 	public void prepareRepositories() throws Exception {
@@ -51,6 +55,7 @@ public class ConversationIntegrationTest {
 
 	@Before
 	public void prepareLoggedInUser() {
+		initComponents();
 		Mockito.when(userService.getLoggedInUserId()).thenReturn("max");
 	}
 
@@ -263,4 +268,24 @@ public class ConversationIntegrationTest {
 		CreateConversationCommand createConversationCommand = new CreateConversationCommand(userIdSet, conversationFactory, participantFactory, conversationRepository, userService);
 	}
 
+
+	@Test
+	public void should_return_the_two_conversations_where_max_is_a_participant() {
+		// given
+		Set<String> userIdSet = new HashSet<String>();
+		userIdSet.add("max");
+		userIdSet.add("bob");
+
+		// when
+		CreateConversationCommand createConversationCommand = new CreateConversationCommand(userIdSet, conversationFactory, participantFactory, conversationRepository, userService);
+		createConversationCommand.execute();
+		createConversationCommand = new CreateConversationCommand(userIdSet, conversationFactory, participantFactory, conversationRepository, userService);
+		createConversationCommand.execute();
+
+		// then
+		ConversationSearchCriteria conversationSearchCriteria = new ConversationSearchCriteria();
+		conversationSearchCriteria.setUserId("max");
+		List<Conversation> conversationList = conversationRepository.find(conversationSearchCriteria);
+		assertThat(conversationList.size()).isEqualTo(2);
+	}
 }

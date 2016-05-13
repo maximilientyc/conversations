@@ -1,5 +1,7 @@
 package com.github.maximilientyc.conversations.domain;
 
+import java.util.List;
+
 /**
  * Created by @maximilientyc on 07/02/2016.
  */
@@ -12,6 +14,8 @@ public interface ConversationRepository {
 	boolean exists(String conversationId);
 
 	Conversation get(String conversationId);
+
+	List<Conversation> find(ConversationSearchCriteria conversationSearchCriteria);
 
 	long count(ConversationSearchCriteria criteria);
 }

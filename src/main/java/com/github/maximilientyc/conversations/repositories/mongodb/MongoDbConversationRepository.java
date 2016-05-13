@@ -12,6 +12,8 @@ import com.mongodb.client.MongoDatabase;
 import org.bson.Document;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.mongodb.client.model.Filters.eq;
 
@@ -82,16 +84,35 @@ public class MongoDbConversationRepository implements ConversationRepository {
 		}
 	}
 
-	@Override
-	public long count(ConversationSearchCriteria criteria) {
-		long conversationCount = conversationCollection.count();
-		return conversationCount;
-	}
-
 	private Conversation findOneConversation(String conversationId) throws IOException {
 		FindIterable<Document> documents = conversationCollection.find(eq("conversationId", conversationId));
 		Document document = documents.first();
 		return conversationObjectMapper.readValue(document.toJson(), Conversation.class);
 	}
 
+	private List<Conversation> findConversations(ConversationSearchCriteria conversationSearchCriteria) throws IOException {
+		List<Conversation> foundConversationList = new ArrayList<Conversation>();
+		FindIterable<Document> documents = conversationCollection.find(eq("participants.user.userId", conversationSearchCriteria.getUserId()));
+
+		for (Document document : documents) {
+			Conversation conversation = conversation = conversationObjectMapper.readValue(document.toJson(), Conversation.class);
+			foundConversationList.add(conversation);
+		}
+		return foundConversationList;
+	}
+
+	@Override
+	public List<Conversation> find(ConversationSearchCriteria conversationSearchCriteria) {
+		try {
+			return findConversations(conversationSearchCriteria);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	@Override
+	public long count(ConversationSearchCriteria criteria) {
+		long conversationCount = conversationCollection.count();
+		return conversationCount;
+	}
 }

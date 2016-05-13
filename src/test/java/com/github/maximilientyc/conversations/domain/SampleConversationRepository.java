@@ -50,6 +50,17 @@ public class SampleConversationRepository implements ConversationRepository {
 	}
 
 	@Override
+	public List<Conversation> find(ConversationSearchCriteria conversationSearchCriteria) {
+		List<Conversation> foundConversationList = new ArrayList<Conversation>();
+		for (Conversation conversation : conversationList) {
+			if (conversation.containsParticipant(conversationSearchCriteria.getUserId())) {
+				foundConversationList.add(conversation);
+			}
+		}
+		return foundConversationList;
+	}
+
+	@Override
 	public long count(ConversationSearchCriteria criteria) {
 		return conversationList.size();
 	}
