@@ -33,7 +33,8 @@ public class ConversationIntegrationTest {
 		expectedException = ExpectedException.none();
 	}
 
-	private void initComponents() {
+	@Before
+	public void initComponents() {
 		try {
 			prepareRepositories();
 		} catch (Exception e) {
@@ -46,17 +47,13 @@ public class ConversationIntegrationTest {
 		participantFactory = new ParticipantFactory(userRepository);
 		conversationFactory = new ConversationFactory(conversationService);
 		messageFactory = new MessageFactory(conversationService);
+
+		Mockito.when(userService.getLoggedInUserId()).thenReturn("max");
 	}
 
 	public void prepareRepositories() throws Exception {
 		conversationRepository = new SampleConversationRepository();
 		messageRepository = new SampleMessageRepository();
-	}
-
-	@Before
-	public void prepareLoggedInUser() {
-		initComponents();
-		Mockito.when(userService.getLoggedInUserId()).thenReturn("max");
 	}
 
 	@Test
