@@ -261,7 +261,6 @@ public class ConversationIntegrationTest {
 		String loggedInUserId = "alice";
 		Mockito.when(userService.getLoggedInUserId()).thenReturn(loggedInUserId);
 
-
 		// then
 		expectedException.expect(IllegalArgumentException.class);
 		expectedException.expectMessage("Current logged in user '" + loggedInUserId + "' is not a conversation member.");
@@ -298,18 +297,45 @@ public class ConversationIntegrationTest {
 		userIdSet.add("max");
 		userIdSet.add("bob");
 
-		// when
 		CreateConversationCommand createConversationCommand = new CreateConversationCommand(userIdSet, conversationFactory, participantFactory, conversationRepository, userService);
 		Conversation conversation = createConversationCommand.execute();
 
 		// when
 		Message message = messageFactory.buildMessage().setConversationId(conversation.getConversationId()).setContent("Hello ! How are you all ?)").setPostedBy(conversation.getParticipants().get(0));
-		PostMessageCommand postMessageCommand = new PostMessageCommand(message, messageRepository, conversationRepository);
-		postMessageCommand.execute();
+		PostMessageCommand postFirstMessageCommand = new PostMessageCommand(message, messageRepository, conversationRepository);
+		postFirstMessageCommand.execute();
 
 		// then
 		Conversation conversationFromRepository = conversationRepository.get(conversation.getConversationId());
 		assertThat(conversationFromRepository.getLastActiveOn().equals(message.getPostedOn()));
 	}
 
+	@Test
+	public void should_return_an_error_when_a_participant_post_a_message_in_a_conversation_he_has_left() {
+		// given
+		Set<String> userIdSet = new HashSet<String>();
+		userIdSet.add("max");
+		userIdSet.add("bob");
+		userIdSet.add("alice");
+
+		CreateConversationCommand createConversationCommand = new CreateConversationCommand(userIdSet, conversationFactory, participantFactory, conversationRepository, userService);
+		Conversation conversation = createConversationCommand.execute();
+		Participant alice = conversation.getParticipant("alice");
+
+		userIdSet.remove("alice");
+		UpdateConversationParticipantsCommand updateConversationParticipantsCommand = new UpdateConversationParticipantsCommand(conversation.getConversationId(), userIdSet, conversationFactory, participantFactory, conversationRepository, userService);
+		updateConversationParticipantsCommand.execute();
+
+		// then
+		expectedException.expect(IllegalArgumentException.class);
+		expectedException.expectMessage("Cannot post message, reason: not a participant.");
+
+		// when
+		Message message = messageFactory.buildMessage()
+				.setConversationId(conversation.getConversationId())
+				.setContent("What are you doing maximilien next weekend ? ;)")
+				.setPostedBy(alice);
+		PostMessageCommand postMessageCommand = new PostMessageCommand(message, messageRepository, conversationRepository);
+		postMessageCommand.execute();
+	}
 }

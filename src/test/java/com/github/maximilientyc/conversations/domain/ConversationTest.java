@@ -1,6 +1,5 @@
 package com.github.maximilientyc.conversations.domain;
 
-import com.github.maximilientyc.conversations.commands.PostMessageCommand;
 import com.github.maximilientyc.conversations.domain.repositories.ConversationRepository;
 import com.github.maximilientyc.conversations.domain.repositories.MessageRepository;
 import com.github.maximilientyc.conversations.domain.repositories.UserRepository;
@@ -107,31 +106,6 @@ public class ConversationTest {
 	}
 
 	@Test
-	public void should_return_an_error_when_a_participant_post_a_message_in_a_conversation_he_has_left() {
-		// given
-		Participant maximilien = participantFactory.buildParticipant("max");
-		Participant bob = participantFactory.buildParticipant("bob");
-		Participant alice = participantFactory.buildParticipant("alice");
-
-		Conversation conversation = conversationFactory.buildConversation()
-				.addParticipant(maximilien)
-				.addParticipant(bob)
-				.addParticipant(alice);
-
-		Mockito.when(conversationRepository.get(conversation.getConversationId())).thenReturn(conversation);
-
-		// then
-		expectedException.expect(IllegalArgumentException.class);
-		expectedException.expectMessage("Cannot post message, reason: not a participant.");
-
-		// when
-		conversation.removeParticipant(alice);
-		Message message = messageFactory.buildMessage().setConversationId(conversation.getConversationId()).setContent("What are you doing maximilien next weekend ? ;)").setPostedBy(alice);
-		PostMessageCommand postMessageCommand = new PostMessageCommand(message, messageRepository, conversationRepository);
-		postMessageCommand.execute();
-	}
-
-	@Test
 	public void should_return_an_error_when_adding_an_already_existing_participant() {
 		// given
 		Participant maximilien = participantFactory.buildParticipant("max");
@@ -148,31 +122,6 @@ public class ConversationTest {
 		// when
 		Participant maxDuplicate = participantFactory.buildParticipant("max");
 		conversation.addParticipant(maxDuplicate);
-	}
-
-	@Test
-	public void should_maintain_chronology_between_messages_inside_a_conversation() {
-		// given
-		Participant maximilien = participantFactory.buildParticipant("max");
-		Participant bob = participantFactory.buildParticipant("bob");
-
-		Conversation conversation = conversationFactory.buildConversation()
-				.addParticipant(maximilien)
-				.addParticipant(bob);
-
-		Mockito.when(conversationRepository.get(conversation.getConversationId())).thenReturn(conversation);
-
-		// when
-		Message firstMessage = messageFactory.buildMessage().setConversationId(conversation.getConversationId()).setContent("Hello ! How are you all ?)").setPostedBy(maximilien);
-		PostMessageCommand postFirstMessageCommand = new PostMessageCommand(firstMessage, messageRepository, conversationRepository);
-		postFirstMessageCommand.execute();
-
-		Message secondMessage = messageFactory.buildMessage().setConversationId(conversation.getConversationId()).setContent("I'm fine, thank you max.").setPostedBy(bob);
-		PostMessageCommand postSecondMessageCommand = new PostMessageCommand(secondMessage, messageRepository, conversationRepository);
-		postSecondMessageCommand.execute();
-
-		// then
-		assertThat(firstMessage.getPostedOn()).isBeforeOrEqualsTo(secondMessage.getPostedOn());
 	}
 
 	@Test
@@ -194,7 +143,4 @@ public class ConversationTest {
 		assertThat(alice.getCreatedOn()).isAfter(bob.getCreatedOn());
 		assertThat(alice.getCreatedOn()).isAfter(maximilien.getCreatedOn());
 	}
-
-
-	// TODO: extract integration tests to ConversationIntegrationTest
 }

@@ -43,6 +43,15 @@ public class Conversation {
 		participants.remove(participant);
 	}
 
+	public Participant getParticipant(String userId) {
+		for (Participant participant : participants) {
+			if (participant.getUser().getUserId().equals(userId)) {
+				return participant;
+			}
+		}
+		throw new IllegalArgumentException("Cannot find participant, reason: participant with userId '" + userId + "' does not exist.");
+	}
+
 	public List<Participant> getParticipants() {
 		return participants;
 	}
@@ -68,4 +77,5 @@ public class Conversation {
 	public void setLastActiveOn(Date lastActiveOn) {
 		this.lastActiveOn = lastActiveOn;
 	}
+
 }
