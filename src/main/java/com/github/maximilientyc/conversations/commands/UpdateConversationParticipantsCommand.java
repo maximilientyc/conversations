@@ -9,7 +9,7 @@ import java.util.*;
 /**
  * Created by @maximilientyc on 07/02/2016.
  */
-public class UpdateConversationCommand {
+public class UpdateConversationParticipantsCommand {
 
 	private final String conversationId;
 	private final Iterable<String> userIds;
@@ -18,7 +18,7 @@ public class UpdateConversationCommand {
 	private final ConversationRepository conversationRepository;
 	private UserService userService;
 
-	public UpdateConversationCommand(String conversationId, Iterable<String> userIds, ConversationFactory conversationFactory, ParticipantFactory participantFactory, ConversationRepository conversationRepository, UserService userService) {
+	public UpdateConversationParticipantsCommand(String conversationId, Iterable<String> userIds, ConversationFactory conversationFactory, ParticipantFactory participantFactory, ConversationRepository conversationRepository, UserService userService) {
 		this.conversationId = conversationId;
 		this.userIds = userIds;
 		this.conversationFactory = conversationFactory;

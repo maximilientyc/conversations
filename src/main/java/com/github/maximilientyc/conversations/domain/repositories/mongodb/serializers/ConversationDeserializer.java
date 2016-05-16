@@ -8,6 +8,11 @@ import com.github.maximilientyc.conversations.domain.Conversation;
 import com.github.maximilientyc.conversations.domain.Participant;
 
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.ResourceBundle;
 
 /**
  * Created by @maximilientyc on 14/02/2016.
@@ -24,6 +29,22 @@ public class ConversationDeserializer extends JsonDeserializer<Conversation> {
 		for (JsonNode participantNode : participantsNode) {
 			Participant participant = participantNode.traverse(jsonParser.getCodec()).readValueAs(Participant.class);
 			conversation.addParticipant(participant);
+		}
+
+		JsonNode lastActiveOnNode = node.get("lastActiveOn");
+		if (lastActiveOnNode != null) {
+			String lastActiveOnAsString = lastActiveOnNode.textValue();
+			ResourceBundle formatsProperties = ResourceBundle.getBundle("formats");
+			DateFormat dateFormat = new SimpleDateFormat(
+					formatsProperties.getString("dateFormat.postedOn.javaToJson")
+			);
+			Date lastActiveOn = null;
+			try {
+				lastActiveOn = dateFormat.parse(lastActiveOnAsString);
+			} catch (ParseException e) {
+				throw new IllegalStateException(e);
+			}
+			conversation.setLastActiveOn(lastActiveOn);
 		}
 
 		return conversation;

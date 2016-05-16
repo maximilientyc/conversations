@@ -195,4 +195,6 @@ public class ConversationTest {
 		assertThat(alice.getCreatedOn()).isAfter(maximilien.getCreatedOn());
 	}
 
+
+	// TODO: extract integration tests to ConversationIntegrationTest
 }

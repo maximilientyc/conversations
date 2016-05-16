@@ -17,10 +17,10 @@ public class ConversationCommandValidator {
 		validateCorrectNumberOfParticipants(createConversationCommand.getUserIds());
 	}
 
-	public void validate(UpdateConversationCommand updateConversationCommand) {
-		validateLoggedInUserIsAParticipant(updateConversationCommand.getUserService(), updateConversationCommand.getUserIds());
-		validateCorrectNumberOfParticipants(updateConversationCommand.getUserIds());
-		validateConversationExists(updateConversationCommand.getConversationId(), updateConversationCommand.getConversationRepository());
+	public void validate(UpdateConversationParticipantsCommand updateConversationParticipantsCommand) {
+		validateLoggedInUserIsAParticipant(updateConversationParticipantsCommand.getUserService(), updateConversationParticipantsCommand.getUserIds());
+		validateCorrectNumberOfParticipants(updateConversationParticipantsCommand.getUserIds());
+		validateConversationExists(updateConversationParticipantsCommand.getConversationId(), updateConversationParticipantsCommand.getConversationRepository());
 	}
 
 	// validator collection

@@ -1,8 +1,8 @@
 package com.github.maximilientyc.conversations.commands;
 
 import com.github.maximilientyc.conversations.domain.Conversation;
-import com.github.maximilientyc.conversations.domain.repositories.ConversationRepository;
 import com.github.maximilientyc.conversations.domain.Message;
+import com.github.maximilientyc.conversations.domain.repositories.ConversationRepository;
 import com.github.maximilientyc.conversations.domain.repositories.MessageRepository;
 
 /**
@@ -24,9 +24,12 @@ public class PostMessageCommand {
 		Conversation conversation = conversationRepository.get(message.getConversationId());
 		boolean conversationContainsMessageParticipant = conversation.getParticipants().contains(message.getPostedBy());
 		if (!conversationContainsMessageParticipant) {
+			// TODO: extract into a dedicated validator
 			throw new IllegalArgumentException("Cannot post message, reason: not a participant.");
 		}
-
 		messageRepository.add(message);
+
+		UpdateConversationLastActiveCommand updateConversationLastActiveCommand = new UpdateConversationLastActiveCommand(conversation, message.getPostedOn(), conversationRepository);
+		updateConversationLastActiveCommand.execute();
 	}
 }

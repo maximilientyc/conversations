@@ -159,9 +159,9 @@ public class ConversationIntegrationTest {
 
 		// when
 		ConversationRepository conversationRepositorySpy = Mockito.spy(conversationRepository);
-		UpdateConversationCommand updateConversationCommand = new UpdateConversationCommand(conversationId, userIdSet, conversationFactory, participantFactory, conversationRepositorySpy, userService);
+		UpdateConversationParticipantsCommand updateConversationParticipantsCommand = new UpdateConversationParticipantsCommand(conversationId, userIdSet, conversationFactory, participantFactory, conversationRepositorySpy, userService);
 		Mockito.when(conversationRepositorySpy.exists(conversationId)).thenReturn(false);
-		updateConversationCommand.execute();
+		updateConversationParticipantsCommand.execute();
 	}
 
 	@Test
@@ -176,8 +176,8 @@ public class ConversationIntegrationTest {
 
 		// when
 		userIdSet.add("alice");
-		UpdateConversationCommand updateConversationCommand = new UpdateConversationCommand(conversationId, userIdSet, conversationFactory, participantFactory, conversationRepository, userService);
-		updateConversationCommand.execute();
+		UpdateConversationParticipantsCommand updateConversationParticipantsCommand = new UpdateConversationParticipantsCommand(conversationId, userIdSet, conversationFactory, participantFactory, conversationRepository, userService);
+		updateConversationParticipantsCommand.execute();
 
 		// then
 		Conversation conversationFromRepository = conversationRepository.get(conversationId);
@@ -204,8 +204,8 @@ public class ConversationIntegrationTest {
 
 		// when
 		userIdSet.remove("alice");
-		UpdateConversationCommand updateConversationCommand = new UpdateConversationCommand(conversationId, userIdSet, conversationFactory, participantFactory, conversationRepository, userService);
-		updateConversationCommand.execute();
+		UpdateConversationParticipantsCommand updateConversationParticipantsCommand = new UpdateConversationParticipantsCommand(conversationId, userIdSet, conversationFactory, participantFactory, conversationRepository, userService);
+		updateConversationParticipantsCommand.execute();
 
 		// then
 		Conversation conversationFromRepository = conversationRepository.get(conversationId);
@@ -292,14 +292,24 @@ public class ConversationIntegrationTest {
 	}
 
 	@Test
-	public void should_return_last_five_conversations_where_max_is_a_participant() {
+	public void should_update_conversation_last_active_on_when_a_message_is_posted() {
 		// given
 		Set<String> userIdSet = new HashSet<String>();
 		userIdSet.add("max");
 		userIdSet.add("bob");
 
 		// when
+		CreateConversationCommand createConversationCommand = new CreateConversationCommand(userIdSet, conversationFactory, participantFactory, conversationRepository, userService);
+		Conversation conversation = createConversationCommand.execute();
+
+		// when
+		Message message = messageFactory.buildMessage().setConversationId(conversation.getConversationId()).setContent("Hello ! How are you all ?)").setPostedBy(conversation.getParticipants().get(0));
+		PostMessageCommand postMessageCommand = new PostMessageCommand(message, messageRepository, conversationRepository);
+		postMessageCommand.execute();
 
 		// then
+		Conversation conversationFromRepository = conversationRepository.get(conversation.getConversationId());
+		assertThat(conversationFromRepository.getLastActiveOn().equals(message.getPostedOn()));
 	}
+
 }

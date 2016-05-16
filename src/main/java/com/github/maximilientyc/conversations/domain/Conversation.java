@@ -10,8 +10,8 @@ import java.util.List;
 public class Conversation {
 
 	private final String conversationId;
-	private final List<Participant> participants;
-	private final Date lastActiveOn;
+	private List<Participant> participants;
+	private Date lastActiveOn;
 
 	public Conversation(String conversationId) {
 		this.conversationId = conversationId;
@@ -63,5 +63,9 @@ public class Conversation {
 
 	public Date getLastActiveOn() {
 		return lastActiveOn;
+	}
+
+	public void setLastActiveOn(Date lastActiveOn) {
+		this.lastActiveOn = lastActiveOn;
 	}
 }
