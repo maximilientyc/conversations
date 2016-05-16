@@ -1,5 +1,7 @@
 package com.github.maximilientyc.conversations.domain;
 
+import com.github.maximilientyc.conversations.domain.services.ConversationService;
+
 import java.util.Date;
 
 /**

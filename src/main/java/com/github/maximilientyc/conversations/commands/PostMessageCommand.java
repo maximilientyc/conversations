@@ -1,9 +1,9 @@
 package com.github.maximilientyc.conversations.commands;
 
 import com.github.maximilientyc.conversations.domain.Conversation;
-import com.github.maximilientyc.conversations.domain.ConversationRepository;
+import com.github.maximilientyc.conversations.domain.repositories.ConversationRepository;
 import com.github.maximilientyc.conversations.domain.Message;
-import com.github.maximilientyc.conversations.domain.MessageRepository;
+import com.github.maximilientyc.conversations.domain.repositories.MessageRepository;
 
 /**
  * Created by @maximilientyc on 26/03/2016.

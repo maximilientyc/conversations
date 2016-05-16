@@ -1,4 +1,7 @@
-package com.github.maximilientyc.conversations.domain;
+package com.github.maximilientyc.conversations.domain.repositories;
+
+import com.github.maximilientyc.conversations.domain.Participant;
+import com.github.maximilientyc.conversations.domain.User;
 
 /**
  * Created by @maximilientyc on 29/01/2016.

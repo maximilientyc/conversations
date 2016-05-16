@@ -1,4 +1,9 @@
-package com.github.maximilientyc.conversations.domain;
+package com.github.maximilientyc.conversations.domain.services;
+
+import com.github.maximilientyc.conversations.domain.ConversationSearchCriteria;
+import com.github.maximilientyc.conversations.domain.MessageSearchCriteria;
+import com.github.maximilientyc.conversations.domain.repositories.ConversationRepository;
+import com.github.maximilientyc.conversations.domain.repositories.MessageRepository;
 
 import java.util.UUID;
 

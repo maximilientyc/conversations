@@ -1,7 +1,7 @@
 package com.github.maximilientyc.conversations.commands;
 
-import com.github.maximilientyc.conversations.domain.ConversationRepository;
-import com.github.maximilientyc.conversations.domain.UserService;
+import com.github.maximilientyc.conversations.domain.repositories.ConversationRepository;
+import com.github.maximilientyc.conversations.domain.services.UserService;
 
 import java.util.ArrayList;
 import java.util.Iterator;

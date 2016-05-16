@@ -1,5 +1,7 @@
 package com.github.maximilientyc.conversations.domain;
 
+import com.github.maximilientyc.conversations.domain.repositories.UserRepository;
+
 /**
  * Created by @maximilientyc on 16/01/2016.
  */

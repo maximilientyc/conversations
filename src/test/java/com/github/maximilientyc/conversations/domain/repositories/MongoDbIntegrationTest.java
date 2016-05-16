@@ -1,10 +1,10 @@
-package com.github.maximilientyc.conversations.repositories;
+package com.github.maximilientyc.conversations.domain.repositories;
 
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoDatabase;
 import com.github.maximilientyc.conversations.commands.ConversationIntegrationTest;
-import com.github.maximilientyc.conversations.repositories.mongodb.MongoDbConversationRepository;
-import com.github.maximilientyc.conversations.repositories.mongodb.MongoDbMessageRepository;
+import com.github.maximilientyc.conversations.domain.repositories.mongodb.MongoDbConversationRepository;
+import com.github.maximilientyc.conversations.domain.repositories.mongodb.MongoDbMessageRepository;
 import de.flapdoodle.embed.mongo.distribution.Version;
 import de.flapdoodle.embed.mongo.tests.MongodForTestsFactory;
 

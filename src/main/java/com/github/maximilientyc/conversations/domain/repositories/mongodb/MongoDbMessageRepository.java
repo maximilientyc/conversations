@@ -1,16 +1,16 @@
-package com.github.maximilientyc.conversations.repositories.mongodb;
+package com.github.maximilientyc.conversations.domain.repositories.mongodb;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.github.maximilientyc.conversations.domain.repositories.MessageRepository;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.github.maximilientyc.conversations.domain.Message;
-import com.github.maximilientyc.conversations.domain.MessageRepository;
 import com.github.maximilientyc.conversations.domain.MessageSearchCriteria;
-import com.github.maximilientyc.conversations.repositories.mongodb.serializers.MessageDeserializer;
-import com.github.maximilientyc.conversations.repositories.mongodb.serializers.MessageSerializer;
+import com.github.maximilientyc.conversations.domain.repositories.mongodb.serializers.MessageDeserializer;
+import com.github.maximilientyc.conversations.domain.repositories.mongodb.serializers.MessageSerializer;
 import org.bson.Document;
 
 import static com.mongodb.client.model.Filters.eq;

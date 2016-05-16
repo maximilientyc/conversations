@@ -1,4 +1,4 @@
-package com.github.maximilientyc.conversations.domain;
+package com.github.maximilientyc.conversations.domain.services;
 
 /**
  * Created by @maximilientyc on 09/05/2016.

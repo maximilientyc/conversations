@@ -1,4 +1,4 @@
-package com.github.maximilientyc.conversations.repositories.mongodb.serializers;
+package com.github.maximilientyc.conversations.domain.repositories.mongodb.serializers;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;

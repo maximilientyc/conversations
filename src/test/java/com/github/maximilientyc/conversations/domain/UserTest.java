@@ -1,5 +1,6 @@
 package com.github.maximilientyc.conversations.domain;
 
+import com.github.maximilientyc.conversations.domain.repositories.UserRepository;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;

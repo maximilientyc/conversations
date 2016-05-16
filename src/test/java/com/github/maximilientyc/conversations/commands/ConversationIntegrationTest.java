@@ -1,6 +1,11 @@
 package com.github.maximilientyc.conversations.commands;
 
 import com.github.maximilientyc.conversations.domain.*;
+import com.github.maximilientyc.conversations.domain.repositories.ConversationRepository;
+import com.github.maximilientyc.conversations.domain.repositories.MessageRepository;
+import com.github.maximilientyc.conversations.domain.repositories.UserRepository;
+import com.github.maximilientyc.conversations.domain.services.ConversationService;
+import com.github.maximilientyc.conversations.domain.services.UserService;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;

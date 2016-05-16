@@ -1,5 +1,7 @@
 package com.github.maximilientyc.conversations.domain;
 
+import com.github.maximilientyc.conversations.domain.repositories.UserRepository;
+
 import java.util.ArrayList;
 import java.util.List;
 
