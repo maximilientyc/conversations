@@ -2,8 +2,7 @@ package com.github.maximilientyc.conversations.domain.repositories;
 
 import com.github.maximilientyc.conversations.domain.Conversation;
 import com.github.maximilientyc.conversations.domain.ConversationSearchCriteria;
-
-import java.util.List;
+import com.github.maximilientyc.conversations.infrastructure.searches.PaginatedList;
 
 /**
  * Created by @maximilientyc on 07/02/2016.
@@ -18,7 +17,7 @@ public interface ConversationRepository {
 
 	Conversation get(String conversationId);
 
-	List<Conversation> find(ConversationSearchCriteria conversationSearchCriteria);
+	PaginatedList<Conversation> find(ConversationSearchCriteria conversationSearchCriteria);
 
 	long count(ConversationSearchCriteria criteria);
 }

@@ -4,9 +4,13 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.module.SimpleModule;
-import com.github.maximilientyc.conversations.domain.*;
-import com.github.maximilientyc.conversations.domain.repositories.mongodb.serializers.*;
+import com.github.maximilientyc.conversations.domain.Conversation;
+import com.github.maximilientyc.conversations.domain.ConversationSearchCriteria;
+import com.github.maximilientyc.conversations.domain.Participant;
+import com.github.maximilientyc.conversations.domain.User;
 import com.github.maximilientyc.conversations.domain.repositories.ConversationRepository;
+import com.github.maximilientyc.conversations.domain.repositories.mongodb.serializers.*;
+import com.github.maximilientyc.conversations.infrastructure.searches.PaginatedList;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
@@ -91,7 +95,7 @@ public class MongoDbConversationRepository implements ConversationRepository {
 		return conversationObjectMapper.readValue(document.toJson(), Conversation.class);
 	}
 
-	private List<Conversation> findConversations(ConversationSearchCriteria conversationSearchCriteria) throws IOException {
+	private PaginatedList<Conversation> findConversations(ConversationSearchCriteria conversationSearchCriteria) throws IOException {
 		List<Conversation> foundConversationList = new ArrayList<Conversation>();
 		FindIterable<Document> documents = conversationCollection.find(eq("participants.user.userId", conversationSearchCriteria.getUserId()));
 
@@ -99,11 +103,13 @@ public class MongoDbConversationRepository implements ConversationRepository {
 			Conversation conversation = conversation = conversationObjectMapper.readValue(document.toJson(), Conversation.class);
 			foundConversationList.add(conversation);
 		}
-		return foundConversationList;
+
+		PaginatedList<Conversation> conversationPaginatedList = new PaginatedList<Conversation>(foundConversationList.size(), foundConversationList);
+		return conversationPaginatedList;
 	}
 
 	@Override
-	public List<Conversation> find(ConversationSearchCriteria conversationSearchCriteria) {
+	public PaginatedList<Conversation> find(ConversationSearchCriteria conversationSearchCriteria) {
 		try {
 			return findConversations(conversationSearchCriteria);
 		} catch (IOException e) {

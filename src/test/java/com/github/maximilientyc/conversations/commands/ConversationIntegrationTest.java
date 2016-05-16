@@ -6,6 +6,7 @@ import com.github.maximilientyc.conversations.domain.repositories.MessageReposit
 import com.github.maximilientyc.conversations.domain.repositories.UserRepository;
 import com.github.maximilientyc.conversations.domain.services.ConversationService;
 import com.github.maximilientyc.conversations.domain.services.UserService;
+import com.github.maximilientyc.conversations.infrastructure.searches.PaginatedList;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -13,7 +14,6 @@ import org.junit.rules.ExpectedException;
 import org.mockito.Mockito;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -287,8 +287,8 @@ public class ConversationIntegrationTest {
 		// then
 		ConversationSearchCriteria conversationSearchCriteria = new ConversationSearchCriteria(0, 5);
 		conversationSearchCriteria.setUserId("max");
-		List<Conversation> conversationList = conversationRepository.find(conversationSearchCriteria);
-		assertThat(conversationList.size()).isEqualTo(2);
+		PaginatedList<Conversation> conversationPaginatedList = conversationRepository.find(conversationSearchCriteria);
+		assertThat(conversationPaginatedList.getTotalRowCount()).isEqualTo(2);
 	}
 
 	@Test
