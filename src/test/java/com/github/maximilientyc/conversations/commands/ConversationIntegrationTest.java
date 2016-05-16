@@ -285,9 +285,21 @@ public class ConversationIntegrationTest {
 		createConversationCommand.execute();
 
 		// then
-		ConversationSearchCriteria conversationSearchCriteria = new ConversationSearchCriteria();
+		ConversationSearchCriteria conversationSearchCriteria = new ConversationSearchCriteria(0, 5);
 		conversationSearchCriteria.setUserId("max");
 		List<Conversation> conversationList = conversationRepository.find(conversationSearchCriteria);
 		assertThat(conversationList.size()).isEqualTo(2);
+	}
+
+	@Test
+	public void should_return_last_five_conversations_where_max_is_a_participant() {
+		// given
+		Set<String> userIdSet = new HashSet<String>();
+		userIdSet.add("max");
+		userIdSet.add("bob");
+
+		// when
+
+		// then
 	}
 }

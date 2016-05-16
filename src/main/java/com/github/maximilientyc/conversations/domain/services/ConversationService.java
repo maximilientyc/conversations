@@ -29,7 +29,8 @@ public class ConversationService {
 	}
 
 	public long countConversations() {
-		return conversationRepository.count(new ConversationSearchCriteria());
+		ConversationSearchCriteria conversationSearchCriteria = new ConversationSearchCriteria(0, Integer.MAX_VALUE);
+		return conversationRepository.count(conversationSearchCriteria);
 	}
 
 	public long countMessages(String conversationId) {
