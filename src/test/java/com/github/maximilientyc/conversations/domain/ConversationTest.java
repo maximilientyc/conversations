@@ -54,6 +54,20 @@ public class ConversationTest {
 		assertThat(messageCount).isEqualTo(0);
 	}
 
+	@Test
+	public void should_not_contain_a_last_active_date_when_new() {
+		// given
+		Participant maximilien = participantFactory.buildParticipant("max");
+		Participant bob = participantFactory.buildParticipant("bob");
+
+		// when
+		Conversation conversation = conversationFactory.buildConversation()
+				.addParticipant(maximilien)
+				.addParticipant(bob);
+
+		// then
+		assertThat(conversation.getLastActiveOn()).isNull();
+	}
 
 	@Test
 	public void should_return_an_error_when_a_participant_leaves_a_two_participants_conversation() {

@@ -1,6 +1,7 @@
 package com.github.maximilientyc.conversations.domain;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -10,10 +11,12 @@ public class Conversation {
 
 	private final String conversationId;
 	private final List<Participant> participants;
+	private final Date lastActiveOn;
 
 	public Conversation(String conversationId) {
 		this.conversationId = conversationId;
 		this.participants = new ArrayList<>();
+		this.lastActiveOn = null;
 	}
 
 	public String getConversationId() {
@@ -56,5 +59,9 @@ public class Conversation {
 			}
 		}
 		return false;
+	}
+
+	public Date getLastActiveOn() {
+		return lastActiveOn;
 	}
 }
