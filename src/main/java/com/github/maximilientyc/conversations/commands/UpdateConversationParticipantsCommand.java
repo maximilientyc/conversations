@@ -14,22 +14,19 @@ import java.util.List;
 /**
  * Created by @maximilientyc on 07/02/2016.
  */
-public class UpdateConversationParticipantsCommand {
+public class UpdateConversationParticipantsCommand extends ConversationCommand {
 
 	private final String conversationId;
-	private final Collection<String> userIds;
 	private final ConversationFactory conversationFactory;
 	private final ParticipantFactory participantFactory;
 	private final ConversationRepository conversationRepository;
-	private final UserService userService;
 
 	public UpdateConversationParticipantsCommand(String conversationId, Collection<String> userIds, ConversationFactory conversationFactory, ParticipantFactory participantFactory, ConversationRepository conversationRepository, UserService userService) {
+		super(userIds, userService);
 		this.conversationId = conversationId;
-		this.userIds = userIds;
 		this.conversationFactory = conversationFactory;
 		this.participantFactory = participantFactory;
 		this.conversationRepository = conversationRepository;
-		this.userService = userService;
 		validate();
 	}
 
@@ -37,7 +34,7 @@ public class UpdateConversationParticipantsCommand {
 		Conversation conversation = conversationRepository.get(conversationId);
 
 		// add new participants
-		for (String userId : userIds) {
+		for (String userId : getUserIds()) {
 			if (!conversation.containsParticipant(userId)) {
 				Participant newParticipant = participantFactory.buildParticipant(userId);
 				conversation.addParticipant(newParticipant);
@@ -48,7 +45,7 @@ public class UpdateConversationParticipantsCommand {
 		List<Participant> toBeDeletedParticipants = new ArrayList<Participant>();
 		for (Participant participant : conversation.getParticipants()) {
 			String userId = participant.getUser().getUserId();
-			if (!userIds.contains(userId)) {
+			if (!getUserIds().contains(userId)) {
 				toBeDeletedParticipants.add(participant);
 			}
 		}
@@ -59,26 +56,13 @@ public class UpdateConversationParticipantsCommand {
 		conversationRepository.update(conversation);
 	}
 
+	@Override
 	public void validate() {
-		validateLoggedInUserIsAParticipant();
-		validateCorrectNumberOfParticipants();
 		validateConversationExists();
+		super.validate();
 	}
 
 	// validators collection
-	private void validateLoggedInUserIsAParticipant() {
-		String loggedInUserId = userService.getLoggedInUserId();
-		if (!userIds.contains(loggedInUserId)) {
-			throw new IllegalArgumentException("Current logged in user '" + loggedInUserId + "' is not a conversation member.");
-		}
-	}
-
-	private void validateCorrectNumberOfParticipants() {
-		if (userIds.size() < 2) {
-			throw new IllegalArgumentException("Cannot create conversation, reason: not enough participants.");
-		}
-	}
-
 	private void validateConversationExists() {
 		boolean conversationExists = conversationRepository.exists(conversationId);
 		if (!conversationExists) {
