@@ -1,10 +1,15 @@
 package com.github.maximilientyc.conversations.commands;
 
-import com.github.maximilientyc.conversations.domain.*;
+import com.github.maximilientyc.conversations.domain.Conversation;
+import com.github.maximilientyc.conversations.domain.ConversationFactory;
+import com.github.maximilientyc.conversations.domain.Participant;
+import com.github.maximilientyc.conversations.domain.ParticipantFactory;
 import com.github.maximilientyc.conversations.domain.repositories.ConversationRepository;
 import com.github.maximilientyc.conversations.domain.services.UserService;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * Created by @maximilientyc on 07/02/2016.
@@ -12,42 +17,38 @@ import java.util.*;
 public class UpdateConversationParticipantsCommand {
 
 	private final String conversationId;
-	private final Iterable<String> userIds;
+	private final Collection<String> userIds;
 	private final ConversationFactory conversationFactory;
 	private final ParticipantFactory participantFactory;
 	private final ConversationRepository conversationRepository;
-	private UserService userService;
+	private final UserService userService;
 
-	public UpdateConversationParticipantsCommand(String conversationId, Iterable<String> userIds, ConversationFactory conversationFactory, ParticipantFactory participantFactory, ConversationRepository conversationRepository, UserService userService) {
+	public UpdateConversationParticipantsCommand(String conversationId, Collection<String> userIds, ConversationFactory conversationFactory, ParticipantFactory participantFactory, ConversationRepository conversationRepository, UserService userService) {
 		this.conversationId = conversationId;
 		this.userIds = userIds;
 		this.conversationFactory = conversationFactory;
 		this.participantFactory = participantFactory;
 		this.conversationRepository = conversationRepository;
 		this.userService = userService;
-		new ConversationCommandValidator().validate(this);
+		validate();
 	}
 
 	public void execute() {
 		Conversation conversation = conversationRepository.get(conversationId);
 
 		// add new participants
-		Iterator<String> userIdIterator = userIds.iterator();
-		List<String> userIdList = new ArrayList<String>();
-		while (userIdIterator.hasNext()) {
-			String userId = userIdIterator.next();
+		for (String userId : userIds) {
 			if (!conversation.containsParticipant(userId)) {
 				Participant newParticipant = participantFactory.buildParticipant(userId);
 				conversation.addParticipant(newParticipant);
 			}
-			userIdList.add(userId);
 		}
 
 		// remove old participants
-		Set<Participant> toBeDeletedParticipants = new HashSet<Participant>();
+		List<Participant> toBeDeletedParticipants = new ArrayList<Participant>();
 		for (Participant participant : conversation.getParticipants()) {
 			String userId = participant.getUser().getUserId();
-			if (!userIdList.contains(userId)) {
+			if (!userIds.contains(userId)) {
 				toBeDeletedParticipants.add(participant);
 			}
 		}
@@ -58,19 +59,30 @@ public class UpdateConversationParticipantsCommand {
 		conversationRepository.update(conversation);
 	}
 
-	public UserService getUserService() {
-		return userService;
+	public void validate() {
+		validateLoggedInUserIsAParticipant();
+		validateCorrectNumberOfParticipants();
+		validateConversationExists();
 	}
 
-	public String getConversationId() {
-		return conversationId;
+	// validators collection
+	private void validateLoggedInUserIsAParticipant() {
+		String loggedInUserId = userService.getLoggedInUserId();
+		if (!userIds.contains(loggedInUserId)) {
+			throw new IllegalArgumentException("Current logged in user '" + loggedInUserId + "' is not a conversation member.");
+		}
 	}
 
-	public Iterable<String> getUserIds() {
-		return userIds;
+	private void validateCorrectNumberOfParticipants() {
+		if (userIds.size() < 2) {
+			throw new IllegalArgumentException("Cannot create conversation, reason: not enough participants.");
+		}
 	}
 
-	public ConversationRepository getConversationRepository() {
-		return conversationRepository;
+	private void validateConversationExists() {
+		boolean conversationExists = conversationRepository.exists(conversationId);
+		if (!conversationExists) {
+			throw new IllegalArgumentException("Cannot update conversation, reason: a conversation with id '" + conversationId + "' does not exist.");
+		}
 	}
 }
