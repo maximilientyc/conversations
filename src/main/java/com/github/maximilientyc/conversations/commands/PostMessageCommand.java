@@ -18,18 +18,27 @@ public class PostMessageCommand {
 		this.message = message;
 		this.messageRepository = messageRepository;
 		this.conversationRepository = conversationRepository;
+		validate();
 	}
 
 	public void execute() {
 		Conversation conversation = conversationRepository.get(message.getConversationId());
-		boolean conversationContainsMessageParticipant = conversation.getParticipants().contains(message.getPostedBy());
-		if (!conversationContainsMessageParticipant) {
-			// TODO: extract into a dedicated validator
-			throw new IllegalArgumentException("Cannot post message, reason: not a participant.");
-		}
+
 		messageRepository.add(message);
 
 		UpdateConversationLastActiveCommand updateConversationLastActiveCommand = new UpdateConversationLastActiveCommand(conversation, message.getPostedOn(), conversationRepository);
 		updateConversationLastActiveCommand.execute();
+	}
+
+	private void validate() {
+		validateConversationContainsPostedBy();
+	}
+
+	private void validateConversationContainsPostedBy() {
+		Conversation conversation = conversationRepository.get(message.getConversationId());
+		boolean conversationContainsMessageParticipant = conversation.getParticipants().contains(message.getPostedBy());
+		if (!conversationContainsMessageParticipant) {
+			throw new IllegalArgumentException("Cannot post message, reason: not a participant.");
+		}
 	}
 }
