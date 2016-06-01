@@ -9,7 +9,6 @@ public class PaginatedList<E> {
 	private List<E> itemList = new ArrayList<E>();
 
 	public PaginatedList(int totalRowCount, List<E> itemList) {
-		super();
 		this.totalRowCount = totalRowCount;
 		this.itemList = itemList;
 	}

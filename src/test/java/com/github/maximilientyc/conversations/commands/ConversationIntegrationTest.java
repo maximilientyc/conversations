@@ -286,6 +286,8 @@ public class ConversationIntegrationTest {
 		// then
 		ConversationSearchCriteria conversationSearchCriteria = new ConversationSearchCriteria(0, 5);
 		conversationSearchCriteria.setUserId("max");
+		conversationSearchCriteria.setSortDirection("desc");
+		conversationSearchCriteria.setSortCriteria("lastActiveOn");
 		PaginatedList<Conversation> conversationPaginatedList = conversationRepository.find(conversationSearchCriteria);
 		assertThat(conversationPaginatedList.getTotalRowCount()).isEqualTo(2);
 	}
@@ -337,5 +339,74 @@ public class ConversationIntegrationTest {
 				.setPostedBy(alice);
 		PostMessageCommand postMessageCommand = new PostMessageCommand(message, messageRepository, conversationRepository);
 		postMessageCommand.execute();
+	}
+
+	@Test
+	public void should_contain_one_conversation_when_updated() {
+		// given
+		Set<String> userIdSet = new HashSet<String>();
+		userIdSet.add("max");
+		userIdSet.add("bob");
+
+		CreateConversationCommand createConversationCommand = new CreateConversationCommand(userIdSet, conversationFactory, participantFactory, conversationRepository, userService);
+		Conversation conversation = createConversationCommand.execute();
+
+		// when
+		Message message = messageFactory.buildMessage()
+				.setConversationId(conversation.getConversationId())
+				.setContent("What are you doing max next weekend ? ;)")
+				.setPostedBy(conversation.getParticipant("bob"));
+		PostMessageCommand postMessageCommand = new PostMessageCommand(message, messageRepository, conversationRepository);
+		postMessageCommand.execute();
+
+		// then
+		ConversationSearchCriteria conversationSearchCriteria = new ConversationSearchCriteria(0, Integer.MAX_VALUE);
+		conversationSearchCriteria.setUserId(userService.getLoggedInUserId());
+		conversationSearchCriteria.setSortCriteria("lastActiveOn");
+		conversationSearchCriteria.setSortDirection("desc");
+		PaginatedList<Conversation> conversations = conversationRepository.find(conversationSearchCriteria);
+		assertThat(conversationRepository.count(conversationSearchCriteria)).isEqualTo(1);
+	}
+
+	@Test
+	public void should_contain_conversation_with_bob_and_max_in_first_position() throws InterruptedException {
+		// given
+		Set<String> userIdSet = new HashSet<String>();
+		userIdSet.add("max");
+		userIdSet.add("bob");
+
+		CreateConversationCommand createConversationCommand = new CreateConversationCommand(userIdSet, conversationFactory, participantFactory, conversationRepository, userService);
+		Conversation bobAndMaxConversation = createConversationCommand.execute();
+
+		userIdSet.add("alice");
+		userIdSet.remove("bob");
+		createConversationCommand = new CreateConversationCommand(userIdSet, conversationFactory, participantFactory, conversationRepository, userService);
+		Conversation aliceAndMaxConversation = createConversationCommand.execute();
+
+		// when
+		Message message = messageFactory.buildMessage()
+				.setConversationId(aliceAndMaxConversation.getConversationId())
+				.setContent("What are you doing max next weekend ? ;)")
+				.setPostedBy(aliceAndMaxConversation.getParticipant("alice"));
+		PostMessageCommand postMessageCommand = new PostMessageCommand(message, messageRepository, conversationRepository);
+		postMessageCommand.execute();
+
+		Thread.sleep(100);
+
+		message = messageFactory.buildMessage()
+				.setConversationId(bobAndMaxConversation.getConversationId())
+				.setContent("What are you doing max next weekend ? ;)")
+				.setPostedBy(bobAndMaxConversation.getParticipant("bob"));
+		postMessageCommand = new PostMessageCommand(message, messageRepository, conversationRepository);
+		postMessageCommand.execute();
+
+		// then
+		ConversationSearchCriteria conversationSearchCriteria = new ConversationSearchCriteria(0, Integer.MAX_VALUE);
+		conversationSearchCriteria.setUserId(userService.getLoggedInUserId());
+		conversationSearchCriteria.setSortCriteria("lastActiveOn");
+		conversationSearchCriteria.setSortDirection("desc");
+		PaginatedList<Conversation> conversationPaginatedList = conversationRepository.find(conversationSearchCriteria);
+
+		assertThat(conversationPaginatedList.getItemList().get(0).equals(bobAndMaxConversation)).isTrue();
 	}
 }

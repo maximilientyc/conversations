@@ -11,6 +11,7 @@ import com.github.maximilientyc.conversations.domain.User;
 import com.github.maximilientyc.conversations.domain.repositories.ConversationRepository;
 import com.github.maximilientyc.conversations.domain.repositories.mongodb.serializers.*;
 import com.github.maximilientyc.conversations.infrastructure.searches.PaginatedList;
+import com.mongodb.BasicDBObject;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
@@ -66,9 +67,19 @@ public class MongoDbConversationRepository implements ConversationRepository {
 
 	@Override
 	public void update(Conversation conversation) {
+		try {
+			updateOneConversation(conversation);
+		} catch (JsonProcessingException e) {
+
+		}
+	}
+
+	private void updateOneConversation(Conversation conversation) throws JsonProcessingException {
+		String conversationAsJson = conversationObjectMapper.writeValueAsString(conversation);
+		Document document = Document.parse(conversationAsJson);
+
 		String conversationId = conversation.getConversationId();
-		conversationCollection.deleteOne(eq("conversationId", conversationId));
-		add(conversation);
+		conversationCollection.findOneAndReplace(eq("conversationId", conversationId), document);
 	}
 
 	@Override
@@ -96,9 +107,12 @@ public class MongoDbConversationRepository implements ConversationRepository {
 	}
 
 	private PaginatedList<Conversation> findConversations(ConversationSearchCriteria conversationSearchCriteria) throws IOException {
-		List<Conversation> foundConversationList = new ArrayList<Conversation>();
-		FindIterable<Document> documents = conversationCollection.find(eq("participants.user.userId", conversationSearchCriteria.getUserId()));
+		int sortDirection = (conversationSearchCriteria.getSortDirection().toLowerCase().equals("asc")) ? 1 : -1;
+		FindIterable<Document> documents = conversationCollection.find(eq("participants.user.userId", conversationSearchCriteria.getUserId())).sort(
+				new BasicDBObject("lastActiveOn", sortDirection)
+		);
 
+		List<Conversation> foundConversationList = new ArrayList<Conversation>();
 		for (Document document : documents) {
 			Conversation conversation = conversation = conversationObjectMapper.readValue(document.toJson(), Conversation.class);
 			foundConversationList.add(conversation);

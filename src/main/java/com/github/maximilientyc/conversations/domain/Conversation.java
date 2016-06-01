@@ -3,6 +3,7 @@ package com.github.maximilientyc.conversations.domain;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Created by @maximilientyc on 03/01/2016.
@@ -78,4 +79,16 @@ public class Conversation {
 		this.lastActiveOn = lastActiveOn;
 	}
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		Conversation that = (Conversation) o;
+		return Objects.equals(conversationId, that.conversationId);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(conversationId);
+	}
 }

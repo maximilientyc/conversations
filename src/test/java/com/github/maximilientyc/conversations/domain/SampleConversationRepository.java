@@ -21,11 +21,19 @@ public class SampleConversationRepository implements ConversationRepository {
 	@Override
 	public void update(Conversation conversation) {
 		String conversationId = conversation.getConversationId();
+		List<Conversation> toBeRemovedConversations = new ArrayList<Conversation>();
+		List<Conversation> toBeAddedConversations = new ArrayList<Conversation>();
 		for (Conversation conversation1 : conversationList) {
 			if (conversation.getConversationId().equals(conversation1.getConversationId())) {
-				conversationList.remove(conversation1);
-				conversationList.add(conversation);
+				toBeRemovedConversations.remove(conversation1);
+				toBeAddedConversations.add(conversation);
 			}
+		}
+		for (Conversation conversation1 : toBeRemovedConversations) {
+			conversationList.remove(conversation1);
+		}
+		for (Conversation conversation1 : toBeAddedConversations) {
+			conversationList.add(conversation1);
 		}
 	}
 
