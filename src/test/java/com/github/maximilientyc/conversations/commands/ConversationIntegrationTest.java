@@ -21,7 +21,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 /**
  * Created by @maximilientyc on 07/02/2016.
  */
-public class ConversationIntegrationTest {
+public abstract class ConversationIntegrationTest {
 
 	@Rule
 	public ExpectedException expectedException;

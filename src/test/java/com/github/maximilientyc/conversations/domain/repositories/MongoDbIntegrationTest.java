@@ -29,12 +29,6 @@ public class MongoDbIntegrationTest extends ConversationIntegrationTest {
 		super.messageRepository = new MongoDbMessageRepository(mongoDatabase);
 	}
 
-	@Before
-	@Override
-	public void initComponents() {
-		super.initComponents();
-	}
-
 	public MongoDatabase prepareMongoDatabase() throws IOException {
 		MongodForTestsFactory factory = MongodForTestsFactory.with(Version.Main.PRODUCTION);
 		MongoClient mongo = factory.newMongo();
