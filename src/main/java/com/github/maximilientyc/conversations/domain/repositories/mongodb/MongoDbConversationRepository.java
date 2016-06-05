@@ -106,10 +106,10 @@ public class MongoDbConversationRepository implements ConversationRepository {
 		return conversationObjectMapper.readValue(document.toJson(), Conversation.class);
 	}
 
-	private PaginatedList<Conversation> findConversations(ConversationSearchCriteria conversationSearchCriteria) throws IOException {
-		int sortDirection = (conversationSearchCriteria.getSortDirection().toLowerCase().equals("asc")) ? 1 : -1;
-		FindIterable<Document> documents = conversationCollection.find(eq("participants.user.userId", conversationSearchCriteria.getUserId())).sort(
-				new BasicDBObject("lastActiveOn", sortDirection)
+	private PaginatedList<Conversation> findConversations(ConversationSearchCriteria searchCriteria) throws IOException {
+		int mongoDbSortDirection = (searchCriteria.getSortDirection().toLowerCase().equals("asc")) ? 1 : -1;
+		FindIterable<Document> documents = conversationCollection.find(eq("participants.user.userId", searchCriteria.getUserId())).sort(
+				new BasicDBObject(searchCriteria.getSortCriteria(), mongoDbSortDirection)
 		);
 
 		List<Conversation> foundConversationList = new ArrayList<Conversation>();
